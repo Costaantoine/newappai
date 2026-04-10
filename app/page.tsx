@@ -158,7 +158,7 @@ export default function HomePage() {
   const displayZones = zones.length > 0 ? zones : defaultZones
 
   const heroImage = globalSettings?.hero?.image_url || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'
-  const heroOpacity = (globalSettings?.hero?.background_opacity ?? 40) / 100
+  const heroOpacity = (globalSettings?.hero?.opacity ?? 40) / 100
   const heroBrightness = globalSettings?.hero?.brightness ?? 60
 
   return (
