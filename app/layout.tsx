@@ -14,11 +14,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  console.log("Layout Premium loaded");
   return (
     <html lang="fr" data-branch="master" data-version="v-premium-beta">
       <script src="https://cdn.tailwindcss.com" async></script>
-      <body className="overflow-x-hidden">
+      <body id="premium-root" className="overflow-x-hidden">
         <Providers>
           <SettingsProvider>
             <ClientLayout>
