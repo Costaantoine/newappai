@@ -10,8 +10,9 @@ const nextConfig = {
       'files.catbox.moe',
     ],
   },
-  generateBuildId: () => 'version-premium-final-1',
+  generateBuildId: async () => `build-${Date.now()}`,
 }
+
 
 
 module.exports = nextConfig
