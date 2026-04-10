@@ -164,7 +164,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-950 overflow-x-hidden">
+      <main className="min-h-screen bg-slate-950 overflow-x-hidden" style={{ background: 'yellow', padding: '50px', color: 'black' }}>
         {/* HERO SECTION */}
         <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden">
           {/* Deep backdrop gradient */}
