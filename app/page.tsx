@@ -81,13 +81,17 @@ export default function HomePage() {
           fetch('/api/local/products')
         ])
 
-        const textsData = await textsRes.json()
-        const zonesData = await zonesRes.json()
-        const productsData = await productsRes.json()
+        const textsRaw = await textsRes.json()
+        const zonesRaw = await zonesRes.json()
+        const productsRaw = await productsRes.json()
 
-        setTexts(textsData.texts || textsData || [])
-        setZones(zonesData.zones?.filter((z: Zone) => z.active).sort((a: Zone, b: Zone) => a.order - b.order) || [])
-        setProducts(productsData.products?.filter((p: Product) => p.active).sort((a: Product, b: Product) => a.order - b.order) || [])
+        const textsArray = Array.isArray(textsRaw.texts) ? textsRaw.texts : Array.isArray(textsRaw) ? textsRaw : []
+        const zonesArray = Array.isArray(zonesRaw.zones) ? zonesRaw.zones : Array.isArray(zonesRaw) ? zonesRaw : []
+        const productsArray = Array.isArray(productsRaw.products) ? productsRaw.products : Array.isArray(productsRaw) ? productsRaw : []
+
+        setTexts(textsArray)
+        setZones(zonesArray.filter((z: Zone) => z.active).sort((a: Zone, b: Zone) => a.order - b.order))
+        setProducts(productsArray.filter((p: Product) => p.active).sort((a: Product, b: Product) => a.order - b.order))
       } catch (err) {
         console.error('Failed to fetch data:', err)
       } finally {
