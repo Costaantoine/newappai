@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Solutions | NewAppAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sora', sans-serif;
+            background: radial-gradient(circle at top center, #0a192f 0%, #020c1b 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .neon-text {
+            background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .neon-border {
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.1);
+        }
+
+        .ai-bubble {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .details-content.expanded {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+    <header class="fixed w-full z-50 glass py-4 px-8 flex justify-between items-center">
+        <div class="text-2xl font-bold tracking-tighter">
+            <a href="/" class="flex items-center">
+                <span class="text-white">NewApp</span><span class="text-sky-400">AI</span>
+            </a>
+        </div>
+        <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+            <a href="/" class="hover:text-sky-400 transition">Accueil</a>
+            <a href="/solutions" class="text-sky-400 transition">Nos Solutions</a>
+            <a href="/about" class="hover:text-sky-400 transition">Notre histoire</a>
+            <a href="/contact" class="hover:text-sky-400 transition">Contact</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <select class="bg-transparent text-xs border-none text-slate-400 outline-none">
+                <option class="bg-slate-900">FR</option>
+                <option class="bg-slate-900">EN</option>
+                <option class="bg-slate-900">PT</option>
+                <option class="bg-slate-900">ES</option>
+            </select>
+        </div>
+    </header>
+
+    <section class="relative pt-40 pb-16 px-6 flex flex-col items-center text-center">
+        <div class="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            Des outils intelligents pour chaque étape de votre activité.
+        </h1>
+        <p class="text-slate-400 max-w-2xl text-lg mb-8 leading-relaxed">
+            Choisissez l’innovation qui s'adapte à votre métier.
+        </p>
+    </section>
+
+    <!-- Detailed Solutions Content (Copied from previous index.html with enhancements) -->
+    <section id="solutions" class="max-w-7xl mx-auto px-6 py-10">
+
+        <!-- DigiSmart Dedicated Section -->
+        <div class="glass p-8 md:p-12 rounded-[2.5rem] neon-border mb-16 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+
+            <div class="flex flex-col md:flex-row items-center md:items-start justify-between mb-12">
+                <div class="flex items-center space-x-6 mb-6 md:mb-0">
+                    <div
+                        class="text-sky-400 bg-sky-400/10 w-20 h-20 flex items-center justify-center rounded-2xl font-bold text-3xl shadow-[0_0_30px_rgba(56,189,248,0.2)]">
+                        DS</div>
+                    <div class="text-center md:text-left">
+                        <h3 class="text-3xl md:text-4xl font-bold text-white mb-2">DigiSmart Solutions</h3>
+                        <p class="text-sky-400 text-lg font-semibold tracking-wide">La Suite Tout-en-Un pour Restaurants
+                            & Commerces</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center md:items-end">
+                    <a href="https://digismartai.netlify.app" target="_blank"
+                        class="px-8 py-3 rounded-full bg-sky-500 text-white font-bold hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 flex items-center mb-2">
+                        Visiter le site officiel
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </a>
+                    <span class="text-xs text-slate-500">Ouverture dans un nouvel onglet</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Click & Collect -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-sky-500/5 hover:border-sky-500/20 transition duration-300 flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 mr-4">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">Click & Collect</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image de l'application -->
+                    <div class="mb-6 rounded-xl overflow-hidden border border-white/10">
+                        <img src="click-collect-app.png" alt="Application Click & Collect" class="w-full h-auto">
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Gagnez en efficacité et simplifiez le quotidien
+                        de vos clients.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Le Click & Collect est devenu le lien indispensable entre votre boutique et vos clients. Notre
+                        solution vous permet de gérer vos ventes en ligne avec simplicité, tout en gardant une maîtrise
+                        totale sur votre organisation en magasin.
+                    </p>
+
+                    <!-- Bouton En savoir plus -->
+                    <button onclick="toggleDetails(this)"
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <!-- Détails masqués -->
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-sky-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Gestion simplifiée :</strong> Pilotez vos produits
+                                    et
+                                    vos stocks en quelques clics depuis votre accès administrateur.</span>
+                            </li>
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-sky-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Suivi en temps réel :</strong> Informez vos clients
+                                    automatiquement dès que leur commande est prête.</span>
+                            </li>
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-sky-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Flux optimisé :</strong> Réduisez l'attente en
+                                    point de
+                                    vente et servez plus de clients chaque jour.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-white/5">
+                        <a href="https://digismartai.netlify.app" target="_blank"
+                            class="text-sky-400 font-bold text-sm hover:text-sky-300 transition flex items-center">
+                            Accéder à DigiSmart
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Réservations -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-sky-500/5 hover:border-sky-500/20 transition duration-300 flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 mr-4">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">Réservations</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image de l'application -->
+                    <div class="mb-6 rounded-xl overflow-hidden border border-white/10">
+                        <img src="reservations-app.png" alt="Application Réservations" class="w-full h-auto">
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Valorisez votre savoir-faire en offrant un
+                        service de réservation simple et moderne.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Notre solution s'adapte à tous les professionnels accueillant du public pour vous aider à
+                        développer votre activité. Vous offrez un service pratique à vos clients tout en gardant une
+                        maîtrise totale de votre organisation quotidienne.
+                    </p>
+
+                    <button onclick="toggleDetails(this)"
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-sky-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Maîtrise de votre activité :</strong> Choisissez
+                                    vos
+                                    capacités d'accueil (nombre de tables, créneaux ou rendez-vous) selon vos besoins et
+                                    vos
+                                    disponibilités.</span>
+                            </li>
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-sky-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Disponibilité continue :</strong> Permettez à vos
+                                    clients de réserver à tout moment, vous assurant un agenda rempli sans avoir à gérer
+                                    les
+                                    appels.</span>
+                            </li>
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-sky-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Gestion simplifiée :</strong> Modifiez vos
+                                    paramètres
+                                    en temps réel via un espace administrateur conçu pour vous faciliter la vie.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-white/5">
+                        <a href="https://digismartai.netlify.app" target="_blank"
+                            class="text-sky-400 font-bold text-sm hover:text-sky-300 transition flex items-center">
+                            Accéder à DigiSmart
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- IA Téléphonique -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-indigo-500/5 hover:border-indigo-500/20 transition duration-300 flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-14 h-14 bg-indigo-500/20 rounded-xl flex items-center justify-center text-indigo-400 mr-4">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">IA Téléphonique</h4>
+                            <p class="text-indigo-400 text-sm font-semibold">En cours de développement</p>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Assurez une présence téléphonique constante et
+                        offrez une réponse immédiate à chaque appel.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Plus qu'un simple répondeur, notre intelligence artificielle assure un accueil interactif et
+                        chaleureux. Elle prend le relais de votre secrétariat pour renseigner vos clients et organiser
+                        vos communications de manière fluide et professionnelle.
+                    </p>
+
+                    <button onclick="toggleDetails(this)"
+                        class="mb-4 text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+
+                        <ul class="space-y-3 mb-8 flex-grow">
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-indigo-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Réponse instantanée :</strong> L'IA informe vos
+                                    clients
+                                    sur leur suivi de commande et répond à leurs questions courantes avec
+                                    précision.</span>
+                            </li>
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-indigo-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Transmission intelligente :</strong> En cas
+                                    d'indisponibilité, elle transfère les messages à la bonne personne et programme des
+                                    rappels pour ne perdre aucune opportunité.</span>
+                            </li>
+                            <li class="flex items-start text-sm text-slate-400">
+                                <span class="text-indigo-500 mr-2 mt-1">•</span>
+                                <span><strong class="text-slate-300">Accueil haute qualité :</strong> Profitez d'une
+                                    technologie interactive et naturelle qui valorise l'image de votre entreprise dès la
+                                    première seconde.</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-auto pt-4 border-t border-white/5">
+                            <a href="https://digismartai.netlify.app" target="_blank"
+                                class="text-indigo-400 font-bold text-sm hover:text-indigo-300 transition flex items-center">
+                        </div>
+                        Accéder à DigiSmart
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Suivi Live GPS -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-sky-500/5 hover:border-sky-500/20 transition duration-300 flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 mr-4">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">Suivi Live GPS</h4>
+                            <p class="text-sky-400 text-sm font-semibold">En cours de développement</p>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Offrez une visibilité en temps réel à vos clients
+                        et facilitez le travail de vos livreurs.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Cette option s'intègre à votre organisation pour apporter une transparence totale sur vos
+                        livraisons. Si vous disposez de vos propres livreurs, notre outil leur permet de partager leur
+                        progression en direct, transformant chaque course en une expérience rassurante pour le client.
+                    </p>
+                    <button onclick="toggleDetails(this)" 
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Suivi interactif :</strong> Vos clients visualisent le
+                                trajet de leur commande sur une carte, du départ de votre établissement jusqu'à
+                                l'arrivée.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Sérénité partagée :</strong> Réduisez les appels de
+                                demande d'information en informant automatiquement vos clients sur l'heure d'arrivée
+                                estimée.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Professionnalisme :</strong> Donnez à votre équipe les
+                                outils des plus grandes enseignes pour garantir un service de livraison moderne et
+                                performant.</span>
+                        </li>
+                    </ul>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-white/5">
+                        <a href="https://digismartai.netlify.app" target="_blank"
+                            class="text-sky-400 font-bold text-sm hover:text-sky-300 transition flex items-center">
+                            Accéder à DigiSmart
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Borne de Commande -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-sky-500/5 hover:border-sky-500/20 transition duration-300 flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 mr-4">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">Borne de Commande</h4>
+                            <p class="text-sky-400 text-sm font-semibold">En cours de développement</p>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Optimisez l'accueil dans votre établissement et
+                        boostez votre chiffre d'affaires.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Notre solution de borne interactive permet à vos clients de consulter votre catalogue et de
+                        passer commande en toute autonomie. C’est l’outil idéal pour absorber les pics d’affluence tout
+                        en garantissant une prise de commande précise et rapide.
+                    </p>
+                    <button onclick="toggleDetails(this)" 
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Augmentation du panier moyen :</strong> Grâce à une
+                                présentation visuelle attractive de vos produits, vos clients se laissent plus
+                                facilement tenter par vos suggestions et options.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Réduction de l'attente :</strong> Fluidifiez le passage
+                                en caisse et permettez à vos équipes de se concentrer exclusivement sur la préparation
+                                et la qualité du service.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Contrôle total :</strong> Votre borne est directement
+                                reliée à votre système, vous permettant de mettre à jour vos produits et vos stocks en
+                                temps réel.</span>
+                        </li>
+                    </ul>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-white/5">
+                        <a href="https://digismartai.netlify.app" target="_blank"
+                            class="text-sky-400 font-bold text-sm hover:text-sky-300 transition flex items-center">
+                            Accéder à DigiSmart
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Paiement Intégré -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-sky-500/5 hover:border-sky-500/20 transition duration-300 flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 mr-4">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">Paiement Intégré</h4>
+                            <p class="text-sky-400 text-sm font-semibold">En cours de développement</p>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Sécurisez vos revenus et offrez une expérience
+                        d'achat complète dès la commande.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Cette option pour votre service de Click & Collect permet à vos clients de régler leurs achats
+                        directement depuis l'application. En simplifiant l'étape du paiement, vous garantissez une
+                        transaction rapide et sécurisée, tout en fluidifiant le retrait sur place.
+                    </p>
+                    <button onclick="toggleDetails(this)" 
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Transaction immédiate :</strong> Éliminez l'étape du
+                                paiement en caisse pour un retrait de commande encore plus rapide et efficace.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Sécurité garantie :</strong> Offrez à vos clients la
+                                tranquillité d'esprit grâce à un système de paiement en ligne fiable et conforme aux
+                                standards actuels.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-sky-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Engagement client :</strong> Validez vos commandes
+                                instantanément et gagnez en visibilité sur votre trésorerie au quotidien.</span>
+                        </li>
+                    </ul>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-white/5">
+                        <a href="https://digismartai.netlify.app" target="_blank"
+                            class="text-sky-400 font-bold text-sm hover:text-sky-300 transition flex items-center">
+                            Accéder à DigiSmart
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Industrial Section (Secondary) -->
+        <!-- Pôle Industrie Section -->
+        <div id="industrie" class="mt-20">
+            <div class="flex items-center space-x-6 mb-12 justify-center md:justify-start">
+                <div
+                    class="text-indigo-400 bg-indigo-400/10 w-20 h-20 flex items-center justify-center rounded-2xl font-bold text-3xl shadow-[0_0_30px_rgba(129,140,248,0.2)]">
+                    IN</div>
+                <div class="text-center md:text-left">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-2">Pôle Industrie</h3>
+                    <p class="text-indigo-400 text-lg font-semibold tracking-wide">Smart Factory & Logistique 4.0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                <!-- MB Production -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-indigo-500/5 hover:border-indigo-500/20 transition duration-300 flex flex-col">
+                    <div class="mb-6">
+                        <h4 class="text-2xl font-bold text-white">MB : Solution de gestion d'atelier</h4>
+                        <p class="text-indigo-400 text-sm font-semibold">Le pilote de votre production</p>
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Éliminez l'incertitude et passez à l'atelier 4.0.
+                    </p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Notre solution de gestion d'atelier s'adapte à toute structure souhaitant numériser ses flux de
+                        travail. Elle crée un lien direct et permanent entre la gestion et l'exécution, supprimant les
+                        erreurs de communication et les pertes de temps.
+                    </p>
+                    <button onclick="toggleDetails(this)" 
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-indigo-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Information ciblée :</strong> Chaque collaborateur
+                                reçoit sur sa tablette les consignes spécifiques à son poste. Finies les recherches
+                                d'informations : l'essentiel est à portée de main.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-indigo-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Suivi d'avancement automatique :</strong> Grâce à la
+                                validation des tâches en direct, vous visualisez la progression de chaque commande sans
+                                avoir à vous déplacer ou à solliciter vos équipes.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-indigo-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Analyse de performance :</strong> Mesurez avec
+                                précision le temps de production. Ces données concrètes vous permettent d'ajuster votre
+                                organisation et d'informer vos clients avec une fiabilité totale.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Talkie-Pro -->
+                <div
+                    class="bg-slate-950/40 p-8 rounded-3xl border border-white/5 hover:bg-indigo-500/5 hover:border-indigo-500/20 transition duration-300 flex flex-col">
+                    <div class="mb-6">
+                        <h4 class="text-2xl font-bold text-white">Talkie-Pro</h4>
+                        <p class="text-indigo-400 text-sm font-semibold">Le lien instantané entre vos équipes</p>
+                    </div>
+
+                    <p class="text-slate-300 font-medium mb-4 text-lg">Gardez le contact, où que vous soyez dans
+                        l'entreprise.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Talkie-Pro supprime les interruptions et les déplacements constants au sein de votre entreprise.
+                        En cas de besoin ou d'imprévu, vos collaborateurs de terrain transmettent l'information en un
+                        instant, permettant une résolution rapide sans que personne n'ait à quitter son poste.
+                    </p>
+                    <button onclick="toggleDetails(this)" 
+                        class="mb-4 text-sky-400 hover:text-sky-300 text-sm font-semibold flex items-center transition">
+                        <span class="toggle-text">En savoir plus</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="details-content mb-8">
+                        <ul class="space-y-3 mt-4 flex-grow">
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-indigo-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Communication flexible :</strong> Chaque utilisateur
+                                choisit son mode d’expression : dictée vocale pour rester agile, saisie de texte pour la
+                                précision, ou photo pour un constat visuel immédiat.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-indigo-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Zéro perte d'information :</strong> Les signalements
+                                arrivent directement au bureau avec tous les éléments nécessaires (images, détails) pour
+                                une prise de décision instantanée.</span>
+                        </li>
+                        <li class="flex items-start text-sm text-slate-400">
+                            <span class="text-indigo-500 mr-2 mt-1">•</span>
+                            <span><strong class="text-slate-300">Productivité préservée :</strong> En limitant les
+                                allers-retours physiques, vous maintenez la concentration de vos équipes sur leurs
+                                tâches prioritaires tout en restant parfaitement informé.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="fixed bottom-10 right-10 flex flex-col items-end">
+        <div class="glass p-5 rounded-2xl mb-4 text-sm max-w-[220px] border-sky-500/40 shadow-2xl ai-bubble">
+            Besoin d'un conseil sur mesure ? Je suis là !
+        </div>
+        <button
+            class="w-16 h-16 p-4 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 text-white shadow-lg hover:scale-110 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+            </svg>
+        </button>
+    </div>
+
+    <footer class="py-12 border-t border-white/5 text-center">
+        <p class="text-slate-600 text-xs tracking-widest uppercase">&copy; 2025 NewAppAI.com — Édité par Premium à Juste
+            Prix SAS</p>
+    </footer>
+
+    <script>
+        function toggleDetails(button) {
+            const card = button.closest('.bg-slate-950\\/40');
+            const details = card.querySelector('.details-content');
+            const icon = button.querySelector('.toggle-icon');
+            const text = button.querySelector('.toggle-text');
+
+            details.classList.toggle('expanded');
+            icon.classList.toggle('rotate-180');
+
+            if (details.classList.contains('expanded')) {
+                text.textContent = 'Voir moins';
+            } else {
+                text.textContent = 'En savoir plus';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

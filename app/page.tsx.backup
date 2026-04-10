@@ -1,0 +1,279 @@
+'use client'
+
+import Link from 'next/link'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import { useLanguage } from '@/lib/LanguageContext'
+import { useEffect, useState } from 'react'
+
+interface Product {
+  id: string
+  title: string
+  description: string
+  price: number
+  images: string[]
+  active: boolean
+}
+
+interface SiteSettings {
+  hero: {
+    image_url: string
+    opacity: number
+    brightness: number
+    overlay_opacity: number
+    enabled: boolean
+  }
+  site: {
+    logo_text: string
+    primary_color: string
+    secondary_color: string
+  }
+  widgets: {
+    ai_enabled: boolean
+    cart_enabled: boolean
+  }
+}
+
+interface TextItem {
+  id: string
+  key: string
+  fr: string
+  en: string
+  pt: string
+  es: string
+}
+
+export default function HomePage() {
+  const { lang } = useLanguage()
+  const [products, setProducts] = useState<Product[]>([])
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [texts, setTexts] = useState<TextItem[]>([])
+
+  useEffect(() => {
+    fetchProducts()
+    fetchSettings()
+    fetchTexts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('/api/local/products')
+      const data = await res.json()
+      const activeProducts = (data.products || []).filter((p: Product) => p.active !== false)
+      setProducts(activeProducts)
+    } catch (error) {
+      console.error('Failed to fetch products:', error)
+    }
+  }
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/local/settings')
+      const data = await res.json()
+      if (data.settings) {
+        setSettings(data.settings)
+      }
+    } catch (error) {
+      console.error('Failed to fetch settings:', error)
+    }
+  }
+
+  const fetchTexts = async () => {
+    try {
+      const res = await fetch('/api/local/texts')
+      const data = await res.json()
+      setTexts(data.texts || [])
+    } catch (error) {
+      console.error('Failed to fetch texts:', error)
+    }
+  }
+
+  const getText = (key: string): string => {
+    // Default French values
+    const defaults: Record<string, string> = {
+      'hero_title': 'Pilotez votre entreprise avec l\'Intelligence d\'aujourd\'hui.',
+      'hero_subtitle1': 'Adoptez des solutions intelligentes concues pour simplifier votre quotidien, booster votre productivite et satisfaire vos clients.',
+      'hero_subtitle2': 'Dans un monde qui s\'accelere, la technologie doit etre un moteur. Nous creos des outils sur-mesure qui connectent vos equipes, automatisent vos processus et valorisons votre savoir-faire.',
+      'hero_cta1': 'Explorer nos Solutions',
+      'hero_cta2': 'Parler a un expert',
+      'expertise_title': 'Nos poles d\'Expertise',
+      'commerce_title': 'Pole Commerce',
+      'commerce_subtitle': 'DigiSmart Solutions',
+      'commerce_desc': 'Optimisez l\'experience client et digitalisez vos ventes.',
+      'commerce_cta': 'Voir les 6 modules',
+      'industrie_title': 'Pole Industrie',
+      'industrie_subtitle': 'Smart Factory',
+      'industrie_desc': 'Connectez votre atelier et pilotez votre production en temps reel.',
+      'industrie_cta': 'Decouvrir l\'offre',
+      'products_title': 'Nos Produits',
+      'products_buy': 'Acheter',
+      'about_title': 'Notre Histoire',
+      'about_subtitle': 'Une passion pour l\'innovation, une mission pour votre reussite.',
+      'about_vision_title': 'Notre Vision',
+      'about_vision_desc': 'Chez NewAppAI, nous croyons que la technologie doit servir l\'humain, pas l\'inverse. Notre mission est de rendre l\'innovation accessible a toutes les entreprises, quelle que soit leur taille.',
+      'about_approach_title': 'Notre Approche',
+      'about_approach_desc': 'Nous developpons des solutions sur-mesure qui s\'adaptent a vos besoins specifiques. Chaque projet est unique, et nous nous engageons a vous accompagner a chaque etape de votre transformation digitale.',
+      'about_values_title': 'Nos Valeurs',
+      'about_innovation_title': 'Innovation',
+      'about_innovation_desc': 'Toujours a la pointe des technologies',
+      'about_proximity_title': 'Proximite',
+      'about_proximity_desc': 'Un accompagnement personnalise',
+      'about_excellence_title': 'Excellence',
+      'about_excellence_desc': 'Des solutions de qualite superieure',
+      'contact_title': 'Contactez l\'avenir',
+      'contact_subtitle': 'Vous avez un projet inovant ? Une question sur nos solutions ? Notre equipe (et notre IA) est a votre ecoute.',
+      'contact_name': 'Nom complet',
+      'contact_email': 'Email professionnel',
+      'contact_subject': 'Sujet',
+      'contact_message': 'Votre message',
+      'contact_placeholder': 'Dites-nous tout...',
+      'contact_send': 'Envoyer le message',
+      'contact_sent': 'Message envoye !',
+      'contact_sent_desc': 'Nous vous repondrons dans les plus brefs delais.',
+      'products_page_title': 'Nos Produits',
+      'products_page_subtitle': 'Decouvrez nos solutions innovantes pour votre entreprise.',
+      'products_coming_soon': 'Bientot disponible',
+      'products_coming_soon_desc': 'Nos produits seront bientot en ligne. Revenez nous voir prochainement !',
+      'nav_home': 'Accueil',
+      'nav_solutions': 'Solutions',
+      'nav_produits': 'Produits',
+      'nav_about': 'A propos',
+      'nav_contact': 'Contact'
+    };
+
+    // If no texts loaded, return default
+    if (!texts || texts.length === 0) {
+      return defaults[key] || key;
+    }
+
+    const text = texts.find(t => t.key === key);
+    if (!text) {
+      return defaults[key] || key;
+    }
+    
+    // Return translation in current language, or French as fallback
+    const langToUse = lang || 'fr';
+    return (text as any)[langToUse] || text.fr || key;
+  }
+
+  const heroImage = settings?.hero?.image_url || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'
+  const heroOpacity = settings?.hero?.opacity ?? 100
+  const heroBrightness = settings?.hero?.brightness ?? 110
+  const heroOverlay = settings?.hero?.overlay_opacity ?? 50
+
+  return (
+    <>
+      <Header />
+      
+      <section className="relative pt-40 pb-20 px-6 flex flex-col items-center text-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={heroImage} 
+            alt="Background technologie IA" 
+            className="w-full h-full object-cover"
+            style={{ 
+              opacity: heroOpacity / 100,
+              filter: `brightness(${heroBrightness}%)`
+            }}
+          />
+          <div 
+            className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/30 to-slate-950/90"
+            style={{ opacity: heroOverlay / 100 }}
+          />
+        </div>
+        
+        <div className="relative z-10 w-full flex flex-col items-center">
+          <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight drop-shadow-2xl">
+            {getText('hero_title') || 'Intelligence Artificielle'}
+          </h1>
+          <div className="text-slate-300 max-w-3xl text-lg mb-10 leading-relaxed space-y-4 font-medium drop-shadow-md">
+            <p>{getText('hero_subtitle1')}</p>
+            <p>{getText('hero_subtitle2')}</p>
+          </div>
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+            <Link href="/solutions" className="bg-sky-500 text-white px-8 py-3 rounded-full font-bold hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 transform hover:-translate-y-1">
+              {getText('hero_cta1') || 'Decouvrir'}
+            </Link>
+            <Link href="/contact" className="glass text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition border border-white/10">
+              {getText('hero_cta2') || 'Contact'}
+            </Link>
+          </div>
+        </div>
+      </section>
+      
+      <section id="solutions" className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center">{getText('expertise_title') || 'Nos zones d\'expertise'}</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Link href="/solutions" className="glass p-10 rounded-[2.5rem] neon-border hover:scale-[1.02] transition-all duration-500 cursor-pointer group flex flex-col items-start h-full">
+            <div className="mb-6 text-sky-400 bg-sky-400/10 w-20 h-20 flex items-center justify-center rounded-2xl font-bold text-3xl">DS</div>
+            <h3 className="text-3xl font-bold mb-4 group-hover:text-sky-400 transition">{getText('commerce_title') || 'Commerce Digital'}</h3>
+            <p className="text-slate-300 font-semibold mb-4 text-xl">{getText('commerce_subtitle') || 'Transformez votre presence en ligne'}</p>
+            <p className="text-slate-400 mb-8 leading-relaxed flex-grow>{getText('commerce_desc') || 'Solutions completes pour votre e-commerce'}</p>
+            <div className="flex items-center text-sky-400 font-bold group-hover:translate-x-2 transition">
+              {getText('commerce_cta') || 'Decouvrir'}
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </div>
+          </Link>
+          
+          <Link href="/solutions#industrie" className="glass p-10 rounded-[2.5rem] border-white/5 hover:scale-[1.02] transition-all duration-500 cursor-pointer group flex flex-col items-start h-full">
+            <div className="mb-6 text-indigo-400 bg-indigo-400/10 w-20 h-20 flex items-center justify-center rounded-2xl font-bold text-3xl">IN</div>
+            <h3 className="text-3xl font-bold mb-4 group-hover:text-indigo-400 transition">{getText('industrie_title') || 'Industrie 4.0'}</h3>
+            <p className="text-slate-300 font-semibold mb-4 text-xl>{getText('industrie_subtitle') || 'Revolutionnez vos processus'}</p>
+            <p className="text-slate-400 mb-8 leading-relaxed flex-grow>{getText('industrie_desc') || 'Digitalisation avancee pour l\'industrie'}</p>
+            <div className="flex items-center text-indigo-400 font-bold group-hover:translate-x-2 transition">
+              {getText('industrie_cta') || 'En savoir plus'}
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </div>
+          </Link>
+        </div>
+      </section>
+      
+      {products && products.length > 0 && (
+        <section className="max-w-6xl mx-auto px-6 py-20">
+          <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center>{getText('products_title') || 'Produits'} <span className="neon-text">Produits</span></h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} buyText={getText('products_buy') || 'Acheter'} />
+            ))}
+          </div>
+        </section>
+      )}
+      
+      <Footer />
+    </>
+  )
+}
+
+function ProductCard({ product, buyText }: { product: Product; buyText: string }) {
+  const formatPrice = (cents: number) => {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR',
+    }).format(cents / 100)
+  }
+  
+  return (
+    <div className="glass p-6 rounded-[2rem] border-white/5 hover:scale-[1.02] transition-all duration-300 flex flex-col">
+      {product.images && product.images[0] && (
+        <img src={product.images[0]} alt={product.title} className="w-full h-48 object-cover rounded-xl mb-4" />
+      )}
+      <h3 className="text-xl font-bold mb-2 text-white">{product.title}</h3>
+      <p className="text-slate-400 text-sm mb-4 line-clamp-2 flex-grow>{product.description?.replace(/<[^>]*>/g, '').substring(0, 100)}...</p>
+      <div className="flex items-center justify-between mt-auto">
+        <span className="text-sky-400 font-bold text-lg>{formatPrice(product.price)}</span>
+        <a 
+          href={`/api/stripe/checkout?productId=${product.id}`}
+          className="bg-sky-500 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-sky-400 transition"
+        >
+          {buyText}
+        </a>
+      </div>
+    </div>
+  )
+}

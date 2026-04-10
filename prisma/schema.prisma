@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @default("")
+  price       Int
+  images      String   @default("[]")
+  category    String   @default("")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  orders      Order[]
+}
+
+model Text {
+  id         String   @id @default(uuid())
+  key        String
+  fr         String
+  en         String   @default("")
+  pt         String   @default("")
+  es         String   @default("")
+  section    String   @default("")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Zone {
+  id           String     @id @default(uuid())
+  key          String
+  title_key    String
+  subtitle_key String     @default("")
+  badge        String     @default("")
+  color        String     @default("sky")
+  url          String     @default("")
+  cta_key      String     @default("")
+  newtab_key   String     @default("")
+  order        Int        @default(0)
+  active       Boolean    @default(true)
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  cards        ZoneCard[]
+}
+
+model ZoneCard {
+  id              String   @id @default(uuid())
+  zone_id         String
+  zone            Zone     @relation(fields: [zone_id], references: [id], onDelete: Cascade)
+  title_key       String
+  description_key String   @default("")
+  badge_key       String   @default("")
+  image_url       String   @default("")
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+}
+
+model Solution {
+  id         String   @id @default(uuid())
+  key        String
+  fr         String
+  en         String   @default("")
+  pt         String   @default("")
+  es         String   @default("")
+  section    String   @default("solutions")
+  type       String   @default("description")
+  category   String   @default("general")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Order {
+  id                String   @id @default(uuid())
+  stripe_session_id String   @unique
+  product_id        String?
+  product           Product? @relation(fields: [product_id], references: [id])
+  customer_email    String?
+  amount            Int
+  status            String   @default("pending")
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+}
+
+model Settings {
+  id         String   @id @default("main")
+  data       String
+  updated_at DateTime @updatedAt
+}
