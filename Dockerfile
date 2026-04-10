@@ -39,6 +39,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
+# Set database environment and permissions
+ENV DATABASE_URL="file:/app/prisma/dev.db"
+RUN chown -R nextjs:nodejs /app/prisma
+
 USER nextjs
 
 EXPOSE 3000
