@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card'] as string[],
       line_items: [
         {
           price_data: {
