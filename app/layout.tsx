@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" data-branch="master" data-version="v-premium-beta">
       <script src="https://cdn.tailwindcss.com" async></script>
       <body className="overflow-x-hidden">
         <Providers>

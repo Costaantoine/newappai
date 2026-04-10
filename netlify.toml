@@ -7,6 +7,7 @@
   ADMIN_PASSWORD = "admin"
   SESSION_SECRET = "un-secret-tres-long-et-aleatoire-minimum-32-chars"
   NEXT_PUBLIC_SITE_URL = "https://newappai.netlify.app"
+  NETLIFY_SKIP_NEXT_CACHE = "true"
 
 [functions]
   included_files = ["prisma/dev.db", "prisma/schema.prisma"]
