@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json({ zones })
   } catch (error: any) {
     console.error('Error fetching zones:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ zones: [] })
   }
 }
 
