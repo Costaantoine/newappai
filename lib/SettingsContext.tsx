@@ -235,39 +235,40 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const applyStyles = (merged: any) => {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement
+      root.style.setProperty('--color-primary', merged.site?.primary_color || '#0ea5e9')
+      root.style.setProperty('--color-secondary', merged.site?.secondary_color || '#6366f1')
+      root.style.setProperty('--color-accent', merged.site?.accent_color || '#8b5cf6')
+      root.style.setProperty('--color-background', merged.site?.background_color || '#0f172a')
+      root.style.setProperty('--color-text', merged.site?.text_color || '#ffffff')
+      root.style.setProperty('--color-text-secondary', merged.site?.text_secondary_color || '#94a3b8')
+
+      // Header variables
+      const headerOpacity = (merged.header?.background_opacity || 80) / 100
+      root.style.setProperty('--color-header-bg', merged.header?.transparent ? 'transparent' : `rgba(15, 23, 42, ${headerOpacity})`)
+
+      // Card settings
+      root.style.setProperty('--card-border-radius', `${merged.cards?.border_radius || 16}px`)
+      root.style.setProperty('--card-opacity', `${merged.cards?.background_opacity || 50}%`)
+
+      // Button settings
+      root.style.setProperty('--button-radius', `${merged.buttons?.border_radius || 8}px`)
+    }
+  }
+
   const fetchSettings = async () => {
     try {
       const res = await fetch('/api/local/settings', { cache: 'no-store' })
       const data = await res.json()
-      if (data.settings) {
-        const merged = { ...defaultSettings, ...data.settings }
-        setSettings(merged as SiteSettings)
-
-        // Apply CSS variables
-        if (typeof document !== 'undefined') {
-          const root = document.documentElement
-          root.style.setProperty('--color-primary', merged.site?.primary_color || '#0ea5e9')
-          root.style.setProperty('--color-secondary', merged.site?.secondary_color || '#6366f1')
-          root.style.setProperty('--color-accent', merged.site?.accent_color || '#8b5cf6')
-          root.style.setProperty('--color-background', merged.site?.background_color || '#0f172a')
-          root.style.setProperty('--color-text', merged.site?.text_color || '#ffffff')
-          root.style.setProperty('--color-text-secondary', merged.site?.text_secondary_color || '#94a3b8')
-
-          // Header variables
-          const headerOpacity = (merged.header?.background_opacity || 80) / 100
-          root.style.setProperty('--color-header-bg', merged.header?.transparent ? 'transparent' : `rgba(15, 23, 42, ${headerOpacity})`)
-
-          // Card settings
-          root.style.setProperty('--card-border-radius', `${merged.cards?.border_radius || 16}px`)
-          root.style.setProperty('--card-opacity', `${merged.cards?.background_opacity || 50}%`)
-
-          // Button settings
-          root.style.setProperty('--button-radius', `${merged.buttons?.border_radius || 8}px`)
-        }
-      }
+      const merged = { ...defaultSettings, ...(data.settings || {}) }
+      setSettings(merged as SiteSettings)
+      applyStyles(merged)
     } catch (error) {
       console.error('Failed to fetch settings:', error)
       setSettings(defaultSettings)
+      applyStyles(defaultSettings)
     } finally {
       setLoading(false)
     }

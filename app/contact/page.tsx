@@ -91,19 +91,19 @@ export default function ContactPage() {
 
       <main className="min-h-screen bg-slate-950 overflow-x-hidden">
         <section id="contact" className="relative pt-48 pb-20 px-6 flex flex-col items-center">
-          <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+          <div className="absolute top-10 w-[600px] h-[600px] bg-sky-500/10 blur-[150px] rounded-full -z-10 animate-pulse"></div>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-center text-white">
+          <h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tight text-center text-white leading-tight">
             {contactTitle.includes('avenir') ? (
               <>
                 {contactTitle.split('avenir')[0]}
-                <span className="text-sky-400">avenir</span>
+                <span className="neon-text">avenir</span>
                 {contactTitle.split('avenir')[1]}
               </>
             ) : contactTitle}
           </h1>
           
-          <p className="text-slate-400 max-w-2xl text-lg md:text-xl mb-12 leading-relaxed text-center font-medium">
+          <p className="text-slate-400 max-w-2xl text-lg md:text-2xl mb-14 leading-relaxed text-center font-medium">
             {getText('contact_subtitle', 'Vous avez un projet innovant ? Une question sur nos solutions ? Notre équipe (et notre IA) est à votre écoute.')}
           </p>
 

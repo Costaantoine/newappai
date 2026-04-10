@@ -156,12 +156,18 @@ export default function SolutionsPage() {
       <Header />
       <main className="min-h-screen bg-slate-950 overflow-x-hidden">
         <section className="relative pt-40 pb-16 px-6 flex flex-col items-center text-center">
-          <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+          <div className="absolute top-10 w-[600px] h-[600px] bg-sky-500/10 blur-[150px] rounded-full -z-10 animate-pulse"></div>
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-white">
-              {getText('solutions_title', 'Des outils intelligents pour chaque étape de votre activité.')}
+            <h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tight text-white leading-tight">
+              {getText('solutions_title', 'Des outils intelligents pour chaque étape de votre activité.').includes('intelligents') ? (
+                <>
+                  {getText('solutions_title', 'Des outils intelligents pour chaque étape de votre activité.').split('intelligents')[0]}
+                  <span className="neon-text">intelligents</span>
+                  {getText('solutions_title', 'Des outils intelligents pour chaque étape de votre activité.').split('intelligents')[1]}
+                </>
+              ) : getText('solutions_title', 'Des outils intelligents pour chaque étape de votre activité.')}
             </h1>
-            <p className="text-slate-400 text-lg md:text-xl mb-8 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-slate-400 text-lg md:text-2xl mb-12 leading-relaxed max-w-3xl mx-auto font-medium">
               {getText('solutions_subtitle', 'Choisissez l\'innovation qui s\'adapte à votre métier.')}
             </p>
           </div>

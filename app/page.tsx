@@ -158,16 +158,18 @@ export default function HomePage() {
   const displayZones = zones.length > 0 ? zones : defaultZones
 
   const heroImage = globalSettings?.hero?.image_url || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'
-  const heroOpacity = (globalSettings?.hero?.opacity ?? 100) / 100
-  const heroBrightness = globalSettings?.hero?.brightness ?? 110
-  const heroOverlay = (globalSettings?.hero?.overlay_opacity ?? 50) / 100
+  const heroOpacity = (globalSettings?.hero?.background_opacity ?? 40) / 100
+  const heroBrightness = globalSettings?.hero?.brightness ?? 60
 
   return (
     <>
       <Header />
       <main className="min-h-screen bg-slate-950 overflow-x-hidden">
         {/* HERO SECTION */}
-        <section className="relative pt-40 pb-20 px-6 flex flex-col items-center text-center overflow-hidden min-h-[85vh] justify-center">
+        <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden">
+          {/* Deep backdrop gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-slate-950 z-[1]"></div>
+          
           <div className="absolute inset-0 z-0">
             <img 
               src={heroImage} 
@@ -178,32 +180,32 @@ export default function HomePage() {
                 filter: `brightness(${heroBrightness}%)`
               }}
             />
-            <div 
-              className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/70 to-slate-950"
-              style={{ opacity: heroOverlay }}
-            />
           </div>
           
-          <div className="relative z-10 w-full flex flex-col items-center">
+          {/* Animated glow effects */}
+          <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-sky-500/10 blur-[150px] rounded-full z-[1] animate-pulse"></div>
+          <div className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-indigo-500/10 blur-[150px] rounded-full z-[1]"></div>
+
+          <div className="relative z-10 text-center max-w-5xl mx-auto pt-20 flex flex-col items-center">
             <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight drop-shadow-2xl text-white max-w-4xl">
+            <h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tight drop-shadow-2xl text-white">
               {heroTitle.includes('Intelligence') ? (
                 <>
                   {heroTitle.split('Intelligence')[0]}
-                  <span className="text-sky-400">Intelligence</span>
+                  <span className="neon-text">Intelligence</span>
                   {heroTitle.split('Intelligence')[1]}
                 </>
               ) : heroTitle}
             </h1>
-            <div className="text-slate-300 max-w-3xl text-lg mb-10 leading-relaxed space-y-4 font-medium drop-shadow-md">
+            <div className="text-slate-300 max-w-3xl text-lg md:text-xl mb-12 leading-relaxed space-y-4 font-medium drop-shadow-md">
               <p>{heroSubtitle1}</p>
               <p>{heroSubtitle2}</p>
             </div>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-              <Link href="/solutions" className="bg-sky-500 text-white px-8 py-3 rounded-full font-bold hover:bg-sky-400 transition shadow-lg shadow-sky-500/20 transform hover:-translate-y-1">
+              <Link href="/solutions" className="bg-sky-500 text-white px-10 py-4 rounded-full font-bold hover:bg-sky-400 transition shadow-xl shadow-sky-500/20 transform hover:-translate-y-1">
                 {heroCta1}
               </Link>
-              <Link href="/contact" className="backdrop-blur-md bg-white/5 text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition border border-white/10">
+              <Link href="/contact" className="backdrop-blur-md bg-white/5 text-white px-10 py-4 rounded-full font-bold hover:bg-white/10 transition border border-white/10">
                 {heroCta2}
               </Link>
             </div>

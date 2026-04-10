@@ -82,7 +82,7 @@ export default function Header() {
           ) : (
             <>
               <span className="text-white">{settings?.site?.logo_text || 'NewApp'}</span>
-              <span className="text-[var(--color-primary)]">AI</span>
+              <span className="neon-text ml-0.5">AI</span>
             </>
           )}
         </Link>

@@ -54,17 +54,17 @@ export default function AboutPage() {
         <section className="relative pt-40 pb-20 px-6 flex flex-col items-center">
           <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-center text-white">
+          <h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tight text-center text-white leading-tight">
             {aboutTitle.includes('Histoire') ? (
               <>
                 {aboutTitle.split('Histoire')[0]}
-                <span className="text-sky-400">Histoire</span>
+                <span className="neon-text">Histoire</span>
                 {aboutTitle.split('Histoire')[1]}
               </>
             ) : aboutTitle}
           </h1>
           
-          <p className="text-slate-400 max-w-3xl text-lg md:text-xl mb-12 leading-relaxed text-center">
+          <p className="text-slate-400 max-w-3xl text-lg md:text-2xl mb-14 leading-relaxed text-center font-medium">
             {getText('about_subtitle', 'Une passion pour l\'innovation, une mission pour votre réussite.')}
           </p>
 
