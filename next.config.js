@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   images: {
     domains: [
       'lh3.googleusercontent.com',
@@ -11,7 +10,10 @@ const nextConfig = {
       'files.catbox.moe',
     ],
   },
+  generateBuildId: async () => `build-${Date.now()}`,
 }
+
+
 
 module.exports = nextConfig
 

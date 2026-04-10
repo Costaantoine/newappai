@@ -25,7 +25,7 @@ export default function AboutPage() {
     fetch('/api/local/texts')
       .then(res => res.json())
       .then(data => {
-        setTexts(data.texts || data || [])
+        setTexts(Array.isArray(data.texts) ? data.texts : [])
         setLoading(false)
       })
       .catch(err => {
@@ -34,75 +34,92 @@ export default function AboutPage() {
       })
   }, [pathname])
 
-  const getText = (key: string): string => {
+  const getText = (key: string, fallback: string = ''): string => {
     const text = texts.find(t => t.key === key)
     if (text) {
       const val = text[lang as keyof TextItem]
       if (val && val.trim() !== '') return val
-      return (text.fr && text.fr.trim() !== '') ? text.fr : key
+      return (text.fr && text.fr.trim() !== '') ? text.fr : fallback || key
     }
-    return key
+    return fallback || key
   }
 
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-slate-400">Loading...</div>
-        </div>
-        <Footer />
-      </>
-    )
-  }
+  const aboutTitle = getText('about_title', 'Notre Histoire')
 
   return (
     <>
       <Header />
 
-      <section className="relative pt-40 pb-20 px-6 flex flex-col items-center">
-        <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-center">
-          {getText('about_title').replace('Histoire', <span className="neon-text" key="hist">Histoire</span> as any)}
-        </h1>
-        <p className="text-slate-400 max-w-3xl text-lg mb-12 leading-relaxed text-center">
-          {getText('about_subtitle')}
-        </p>
+      <main className="min-h-screen bg-slate-950 overflow-x-hidden">
+        <section className="relative pt-40 pb-20 px-6 flex flex-col items-center">
+          <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+          
+          <h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tight text-center text-white leading-tight">
+            {aboutTitle.includes('Histoire') ? (
+              <>
+                {aboutTitle.split('Histoire')[0]}
+                <span className="neon-text">Histoire</span>
+                {aboutTitle.split('Histoire')[1]}
+              </>
+            ) : aboutTitle}
+          </h1>
+          
+          <p className="text-slate-400 max-w-3xl text-lg md:text-2xl mb-14 leading-relaxed text-center font-medium">
+            {getText('about_subtitle', 'Une passion pour l\'innovation, une mission pour votre réussite.')}
+          </p>
 
-        <div className="max-w-4xl mx-auto glass p-10 rounded-[2.5rem] border-white/5">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold mb-4 text-sky-400">{getText('about_vision_title')}</h2>
-              <p className="text-slate-300 leading-relaxed">{getText('about_vision_desc')}</p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold mb-4 text-sky-400">{getText('about_approach_title')}</h2>
-              <p className="text-slate-300 leading-relaxed">{getText('about_approach_desc')}</p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold mb-4 text-sky-400">{getText('about_values_title')}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                <div className="bg-slate-950/40 p-6 rounded-2xl">
-                  <h3 className="text-lg font-bold mb-2 text-white">{getText('about_innovation_title')}</h3>
-                  <p className="text-slate-400 text-sm">{getText('about_innovation_desc')}</p>
+          <div className="w-full max-w-5xl mx-auto backdrop-blur-md bg-white/5 p-8 md:p-14 rounded-[3rem] border border-white/10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sky-500/5 blur-[100px] rounded-full -z-10"></div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20">
+              <div className="space-y-10">
+                <div className="group">
+                  <h2 className="text-3xl font-bold mb-6 text-white flex items-center">
+                    <span className="w-2 h-8 bg-sky-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
+                    {getText('about_vision_title', 'Notre Vision')}
+                  </h2>
+                  <p className="text-slate-300 text-lg leading-relaxed">
+                    {getText('about_vision_desc', 'Chez NewAppAI, nous croyons que la technologie doit servir l\'humain, pas l\'inverse. Notre mission est de rendre l\'innovation accessible à toutes les entreprises, quelle que soit leur taille.')}
+                  </p>
                 </div>
-                <div className="bg-slate-950/40 p-6 rounded-2xl">
-                  <h3 className="text-lg font-bold mb-2 text-white">{getText('about_proximity_title')}</h3>
-                  <p className="text-slate-400 text-sm">{getText('about_proximity_desc')}</p>
+
+                <div className="group">
+                  <h2 className="text-3xl font-bold mb-6 text-white flex items-center">
+                    <span className="w-2 h-8 bg-sky-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
+                    {getText('about_approach_title', 'Notre Approche')}
+                  </h2>
+                  <p className="text-slate-300 text-lg leading-relaxed">
+                    {getText('about_approach_desc', 'Nous développons des solutions sur-mesure qui s\'adaptent à vos besoins spécifiques. Chaque projet est unique, et nous nous engageons à vous accompagner à chaque étape de votre transformation digitale.')}
+                  </p>
                 </div>
-                <div className="bg-slate-950/40 p-6 rounded-2xl">
-                  <h3 className="text-lg font-bold mb-2 text-white">{getText('about_excellence_title')}</h3>
-                  <p className="text-slate-400 text-sm">{getText('about_excellence_desc')}</p>
+              </div>
+
+              <div className="space-y-8">
+                <h2 className="text-3xl font-bold mb-8 text-white">{getText('about_values_title', 'Nos Valeurs')}</h2>
+                <div className="grid grid-cols-1 gap-6">
+                  {[
+                    { key: 'innovation', title: 'Innovation', desc: 'Toujours à la pointe des technologies' },
+                    { key: 'proximity', title: 'Proximité', desc: 'Un accompagnement personnalisé' },
+                    { key: 'excellence', title: 'Excellence', desc: 'Des solutions de qualité supérieure' }
+                  ].map((value) => (
+                    <div key={value.key} className="bg-slate-900/60 p-8 rounded-2xl border border-white/5 hover:border-sky-500/30 transition-all duration-300 group">
+                      <h3 className="text-xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">
+                        {getText(`about_${value.key}_title`, value.title)}
+                      </h3>
+                      <p className="text-slate-400 leading-relaxed font-medium">
+                        {getText(`about_${value.key}_desc`, value.desc)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       <Footer />
     </>
   )
 }
+

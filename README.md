@@ -55,13 +55,13 @@ npm run dev
 ```
 
 Visit:
-- http://localhost:3000 - Main site
-- http://localhost:3000/admin - Admin panel
+- http://localhost:3001 - Main site
+- http://localhost:3001/admin - Admin panel
 
 ### 6. Test Stripe Webhooks Locally
 
 ```bash
-npx stripe listen --forward-to localhost:3000/api/stripe/webhook
+npx stripe listen --forward-to localhost:3001/api/stripe/webhook
 ```
 
 ## File Structure

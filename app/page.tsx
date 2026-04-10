@@ -1,5 +1,9 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+// Build-Marker: v-premium-beta-final-deploy
+
+
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -81,13 +85,17 @@ export default function HomePage() {
           fetch('/api/local/products')
         ])
 
-        const textsData = await textsRes.json()
-        const zonesData = await zonesRes.json()
-        const productsData = await productsRes.json()
+        const textsRaw = await textsRes.json()
+        const zonesRaw = await zonesRes.json()
+        const productsRaw = await productsRes.json()
 
-        setTexts(textsData.texts || textsData || [])
-        setZones(zonesData.zones?.filter((z: Zone) => z.active).sort((a: Zone, b: Zone) => a.order - b.order) || [])
-        setProducts(productsData.products?.filter((p: Product) => p.active).sort((a: Product, b: Product) => a.order - b.order) || [])
+        const textsArray = Array.isArray(textsRaw.texts) ? textsRaw.texts : Array.isArray(textsRaw) ? textsRaw : []
+        const zonesArray = Array.isArray(zonesRaw.zones) ? zonesRaw.zones : Array.isArray(zonesRaw) ? zonesRaw : []
+        const productsArray = Array.isArray(productsRaw.products) ? productsRaw.products : Array.isArray(productsRaw) ? productsRaw : []
+
+        setTexts(textsArray)
+        setZones(zonesArray.filter((z: Zone) => z.active).sort((a: Zone, b: Zone) => a.order - b.order))
+        setProducts(productsArray.filter((p: Product) => p.active).sort((a: Product, b: Product) => a.order - b.order))
       } catch (err) {
         console.error('Failed to fetch data:', err)
       } finally {
@@ -97,10 +105,8 @@ export default function HomePage() {
     fetchData()
   }, [pathname])
 
-  // Scroll animations with IntersectionObserver
+  // Scroll animations
   useEffect(() => {
-    if (!globalSettings?.animations?.enabled || !globalSettings?.animations?.scroll_animation) return
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -116,185 +122,175 @@ export default function HomePage() {
     if (productsRef.current) observer.observe(productsRef.current)
 
     return () => observer.disconnect()
-  }, [globalSettings?.animations?.enabled, globalSettings?.animations?.scroll_animation])
-
-  const getAnimationDelay = (index: number) => {
-    const delay = globalSettings?.animations?.stagger_delay || 100
-    return { animationDelay: `${index * delay}ms` }
-  }
-
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <main className="min-h-screen bg-slate-950 flex items-center justify-center">
-          <div className="text-slate-400">Loading...</div>
-        </main>
-        <Footer />
-      </>
-    )
-  }
+  }, [])
 
   const heroTitle = getText(texts, 'hero_title', lang, 'Pilotez votre entreprise avec l\'Intelligence d\'aujourd\'hui.')
-  const heroSubtitle1 = getText(texts, 'hero_subtitle1', lang, 'Adoptez des solutions intelligentes conçues pour simplifier votre quotidien.')
-  const heroSubtitle2 = getText(texts, 'hero_subtitle2', lang, 'Dans un monde qui s\'accélère, la technologie doit être un moteur.')
+  const heroSubtitle1 = getText(texts, 'hero_subtitle1', lang, 'Adoptez des solutions intelligentes conçues pour simplifier votre quotidien, booster votre productivité et satisfaire vos clients.')
+  const heroSubtitle2 = getText(texts, 'hero_subtitle2', lang, 'Dans un monde qui s\'accélère, la technologie doit être un moteur. Nous créons des outils sur-mesure qui connectent vos équipes, automatisent vos processus et valorisent votre savoir-faire.')
   const heroCta1 = getText(texts, 'hero_cta1', lang, 'Explorer nos Solutions')
   const heroCta2 = getText(texts, 'hero_cta2', lang, 'Parler à un expert')
   const expertiseTitle = getText(texts, 'expertise_title', lang, 'Nos pôles d\'Expertise')
   const productsTitle = getText(texts, 'products_title', lang, 'Nos Produits')
 
-  const heroStyle = {
-    backgroundImage: globalSettings?.hero?.image_url ? `url(${globalSettings.hero.image_url})` : undefined,
-    opacity: (globalSettings?.hero?.opacity || 100) / 100,
-    filter: `brightness(${globalSettings?.hero?.brightness || 110}%)`,
-  }
+  const defaultZones: Zone[] = [
+    {
+      id: 'default-1',
+      key: 'commerce',
+      title_key: 'commerce_title',
+      subtitle_key: 'commerce_subtitle',
+      badge: 'DS',
+      color: 'sky',
+      url: '/solutions',
+      cta_key: 'commerce_cta',
+      active: true,
+      order: 0
+    },
+    {
+      id: 'default-2',
+      key: 'industrie',
+      title_key: 'industrie_title',
+      subtitle_key: 'industrie_subtitle',
+      badge: 'IN',
+      color: 'indigo',
+      url: '/solutions#industrie',
+      cta_key: 'industrie_cta',
+      active: true,
+      order: 1
+    }
+  ]
 
-  const overlayStyle = {
-    backgroundColor: globalSettings?.hero?.overlay_color || '#000000',
-    opacity: (globalSettings?.hero?.overlay_opacity || 50) / 100,
-  }
+  const displayZones = zones.length > 0 ? zones : defaultZones
 
-  const primaryColor = globalSettings?.site?.primary_color || '#0ea5e9'
-  const cardRadius = globalSettings?.cards?.border_radius || 16
-
-  const cardStyle = {
-    borderRadius: `${cardRadius}px`,
-  }
-
-  const cardHoverEffect = globalSettings?.cards?.hover_effect || 'scale'
-  const cardHoverClass = cardHoverEffect === 'scale' ? 'hover:scale-[1.02]' : cardHoverEffect === 'lift' ? 'hover:-translate-y-1' : ''
+  const heroImage = globalSettings?.hero?.image_url || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'
+  const heroOpacity = (globalSettings?.hero?.opacity ?? 40) / 100
+  const heroBrightness = globalSettings?.hero?.brightness ?? 60
 
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-950">
-        {globalSettings?.hero?.enabled !== false && (
-          <section
-            className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
-            style={heroStyle}
-          >
-            <div className="absolute inset-0" style={overlayStyle} />
-            <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
-                {heroTitle}
-              </h1>
-              <p className="text-lg md:text-xl text-white/80 mb-4 max-w-3xl mx-auto">
-                {heroSubtitle1}
-              </p>
-              <p className="text-md md:text-lg text-white/60 mb-8 max-w-3xl mx-auto">
-                {heroSubtitle2}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/solutions"
-                  className="btn-primary hover:brightness-110 px-8 py-4 font-semibold"
-                >
-                  {heroCta1}
-                </Link>
-                <Link
-                  href="/contact"
-                  className="btn-secondary hover:brightness-110 px-8 py-4 font-semibold"
-                >
-                  {heroCta2}
-                </Link>
-              </div>
-            </div>
-          </section>
-        )}
+      <main className="min-h-screen bg-slate-950 overflow-x-hidden">
+        {/* HERO SECTION */}
+        <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden">
+          {/* Deep backdrop gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-slate-950 z-[1]"></div>
+          
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={heroImage} 
+              alt="Background technology" 
+              className="w-full h-full object-cover"
+              style={{ 
+                opacity: heroOpacity,
+                filter: `brightness(${heroBrightness}%)`
+              }}
+            />
+          </div>
+          
+          {/* Animated glow effects */}
+          <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-sky-500/10 blur-[150px] rounded-full z-[1] animate-pulse"></div>
+          <div className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-indigo-500/10 blur-[150px] rounded-full z-[1]"></div>
 
-        {zones.length > 0 && (
-          <section id="zones-section" ref={zonesRef} className={`py-20 px-4 bg-slate-900/50 ${globalSettings?.animations?.enabled && globalSettings?.animations?.scroll_animation ? 'fade-in-section' : ''} ${visibleSections.has('zones-section') ? 'visible' : ''}`}>
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
-                {expertiseTitle}
-              </h2>
-              <div className="grid md:grid-cols-2 gap-8">
-                {zones.map((zone, index) => (
-                  <Link
-                    key={zone.id}
-                    href={zone.url}
-                    className={`group p-8 border border-white/10 bg-slate-800/50 hover:bg-slate-800 transition-all duration-300 ${cardHoverClass} ${globalSettings?.animations?.enabled && globalSettings?.animations?.scroll_animation && visibleSections.has('zones-section') ? 'fade-in-up' : ''}`}
-                    style={{ ...cardStyle, ...getAnimationDelay(index) }}
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${zone.color === 'sky' ? 'bg-sky-500/20 text-sky-400' : 'bg-indigo-500/20 text-indigo-400'
-                        }`}>
-                        {zone.badge}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">
-                      {getText(texts, zone.title_key, lang, zone.title_key)}
-                    </h3>
-                    <p className="text-[var(--color-primary)] mb-4">
-                      {getText(texts, zone.subtitle_key, lang, zone.subtitle_key)}
-                    </p>
-                    <span className={`inline-flex items-center text-[var(--color-primary)] font-medium group-hover:gap-3 gap-2 transition-all`}>
-                      {getText(texts, zone.cta_key, lang, 'En savoir plus')}
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </span>
-                  </Link>
-                ))}
-              </div>
+          <div className="relative z-10 text-center max-w-5xl mx-auto pt-20 flex flex-col items-center">
+            <div className="absolute top-10 w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full -z-10"></div>
+            <h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tight drop-shadow-2xl text-white">
+              {heroTitle.includes('Intelligence') ? (
+                <>
+                  {heroTitle.split('Intelligence')[0]}
+                  <span className="neon-text">Intelligence</span>
+                  {heroTitle.split('Intelligence')[1]}
+                </>
+              ) : heroTitle}
+            </h1>
+            <div className="text-slate-300 max-w-3xl text-lg md:text-xl mb-12 leading-relaxed space-y-4 font-medium drop-shadow-md">
+              <p>{heroSubtitle1}</p>
+              <p>{heroSubtitle2}</p>
             </div>
-          </section>
-        )}
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+              <Link href="/solutions" className="bg-sky-500 text-white px-10 py-4 rounded-full font-bold hover:bg-sky-400 transition shadow-xl shadow-sky-500/20 transform hover:-translate-y-1">
+                {heroCta1}
+              </Link>
+              <Link href="/contact" className="backdrop-blur-md bg-white/5 text-white px-10 py-4 rounded-full font-bold hover:bg-white/10 transition border border-white/10">
+                {heroCta2}
+              </Link>
+            </div>
+          </div>
+        </section>
 
-        {products.length > 0 && (
-          <section id="products-section" ref={productsRef} className={`py-20 px-4 ${globalSettings?.animations?.enabled && globalSettings?.animations?.scroll_animation ? 'fade-in-section' : ''} ${visibleSections.has('products-section') ? 'visible' : ''}`}>
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-                {productsTitle}
-              </h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                {products.slice(0, 6).map((product, index) => (
-                  <div
-                    key={product.id}
-                    className={`group rounded-2xl border border-white/10 bg-slate-800/50 overflow-hidden hover:border-[var(--color-primary)]/50 transition-all duration-300 ${cardHoverClass} ${globalSettings?.animations?.enabled && globalSettings?.animations?.scroll_animation && visibleSections.has('products-section') ? 'fade-in-up' : ''}`}
-                    style={{ ...cardStyle, ...getAnimationDelay(index) }}
-                  >
-                    <div className="relative h-48 bg-slate-700">
-                      {product.images && product.images[0] ? (
-                        <Image
-                          src={product.images[0]}
-                          alt={getLocalizedText(product.title, lang)}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full text-slate-500">
-                          No image
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-white mb-2">{getLocalizedText(product.title, lang)}</h3>
-                      <p className="text-slate-400 text-sm mb-4 line-clamp-2">{getLocalizedText(product.description, lang)}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-[var(--color-primary)]">
-                          {(product.price / 100).toFixed(2)} €
-                        </span>
-                        <button
-                          className="btn-primary hover:brightness-110 px-4 py-2 text-sm font-medium"
-                        >
-                          {getText(texts, 'products_buy', lang, 'Acheter')}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {products.length > 6 && (
-                <div className="text-center mt-12">
-                  <Link
-                    href="/produits"
-                    className="btn-secondary hover:brightness-110 inline-block px-8 py-3 font-medium"
-                  >
-                    Voir tous les produits
-                  </Link>
+        {/* EXPERTISE SECTION */}
+        <section id="solutions" ref={zonesRef} className="max-w-6xl mx-auto px-6 py-20">
+          <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center text-white">
+            {expertiseTitle.includes('Expertise') ? (
+              <>
+                {expertiseTitle.split('Expertise')[0]}
+                <span className="text-sky-400">Expertise</span>
+                {expertiseTitle.split('Expertise')[1]}
+              </>
+            ) : expertiseTitle}
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {displayZones.map((zone, index) => (
+              <Link 
+                key={zone.id} 
+                href={zone.url} 
+                className={`backdrop-blur-md bg-white/5 p-10 rounded-[2.5rem] border border-white/10 hover:scale-[1.02] transition-all duration-500 cursor-pointer group flex flex-col items-start h-full ${zone.order === 0 ? 'border-sky-500/30 shadow-[0_0_25px_rgba(56,189,248,0.1)]' : ''}`}
+              >
+                <div className={`mb-6 w-20 h-20 flex items-center justify-center rounded-2xl font-bold text-3xl ${
+                  zone.color === 'indigo' ? 'text-indigo-400 bg-indigo-400/10' : 'text-sky-400 bg-sky-400/10'
+                }`}>
+                  {zone.badge}
                 </div>
-              )}
+                <h3 className={`text-3xl font-bold mb-4 transition ${
+                  zone.color === 'indigo' ? 'group-hover:text-indigo-400' : 'group-hover:text-sky-400'
+                }`}>
+                  {getText(texts, zone.title_key, lang, zone.key === 'commerce' ? 'Pôle Commerce' : zone.key === 'industrie' ? 'Pôle Industrie' : zone.title_key)}
+                </h3>
+                <p className="text-slate-300 font-semibold mb-4 text-xl">
+                  {getText(texts, zone.subtitle_key, lang, zone.key === 'commerce' ? 'DigiSmart Solutions' : zone.key === 'industrie' ? 'Smart Factory' : zone.subtitle_key)}
+                </p>
+                <p className="text-slate-400 mb-8 leading-relaxed flex-grow">
+                  {getText(texts, zone.key + '_desc', lang, zone.key === 'commerce' ? 'Optimisez l\'expérience client et digitalisez vos ventes.' : zone.key === 'industrie' ? 'Connectez votre atelier et pilotez votre production en temps réel.' : '')}
+                </p>
+                <div className={`flex items-center font-bold group-hover:translate-x-2 transition ${
+                  zone.color === 'indigo' ? 'text-indigo-400' : 'text-sky-400'
+                }`}>
+                  {getText(texts, zone.cta_key, lang, zone.key === 'commerce' ? 'Voir les 6 modules' : 'Découvrir l\'offre')}
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* PRODUCTS SECTION (Only if DB works or if we want defaults here too) */}
+        {products.length > 0 && (
+          <section id="products" ref={productsRef} className="max-w-6xl mx-auto px-6 py-20">
+            <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center text-white">
+              {productsTitle}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {products.map((product) => (
+                <div key={product.id} className="backdrop-blur-md bg-white/5 p-6 rounded-[2rem] border border-white/10 hover:scale-[1.02] transition-all duration-300 flex flex-col">
+                  {product.images && product.images[0] && (
+                    <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                      <Image src={product.images[0]} alt={getLocalizedText(product.title, lang)} fill className="object-cover" />
+                    </div>
+                  )}
+                  <h3 className="text-xl font-bold mb-2 text-white">{getLocalizedText(product.title, lang)}</h3>
+                  <p className="text-slate-400 text-sm mb-4 line-clamp-2 flex-grow">{getLocalizedText(product.description, lang)}</p>
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-sky-400 font-bold text-lg">{(product.price / 100).toFixed(2)} €</span>
+                    <Link 
+                      href={`/api/stripe/checkout?productId=${product.id}`}
+                      className="bg-sky-500 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-sky-400 transition"
+                    >
+                      {getText(texts, 'products_buy', lang, 'Acheter')}
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         )}
