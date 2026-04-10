@@ -11,6 +11,7 @@ const nextConfig = {
     ],
   },
   generateBuildId: async () => `build-${Date.now()}`,
+  output: 'standalone',
 }
 
 
