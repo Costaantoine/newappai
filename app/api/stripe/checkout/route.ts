@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'] as string[],
+      payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
             product_data: {
               name: product.title,
               description: product.description?.replace(/<[^>]*>/g, '').substring(0, 500) || undefined,
-              images: product.images || [],
+              images: product.images ? JSON.parse(product.images) : [],
             },
             unit_amount: product.price,
           },
