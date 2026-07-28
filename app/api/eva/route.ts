@@ -189,81 +189,38 @@ export async function POST(request: NextRequest) {
     let reply = ''
 
     try {
-      const freeLlmUrl = process.env.FREELLM_API_URL || 'http://100.101.125.48:3001/v1/chat/completions'
+      const freeLlmUrl = process.env.FREELLM_API_URL || 'http://localhost:3001/v1/chat/completions'
       const freeLlmKey = process.env.FREELLM_API_KEY || ''
-      const models = ['deepseek-chat']
-      
-      for (const model of models) {
-        try {
-          const controller = new AbortController()
-          const timeoutId = setTimeout(() => controller.abort(), 30000)
-          const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-            signal: controller.signal,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY || ''}`
-            },
-            body: JSON.stringify({
-              model,
-              messages,
-              temperature: 0.6,
-              max_tokens: 150
-            })
-          })
-          clearTimeout(timeoutId)
 
-          if (response.ok) {
-            const data = await response.json()
-            reply = data.choices?.[0]?.message?.content || ''
-            if (reply) break
-          } else {
-            const errData = await response.json().catch(() => ({}))
-            // Rate limit -> skip to next model quickly
-            if (errData?.error?.type === 'rate_limit_error') continue
-            console.error(`Eva model ${model} failed:`, response.status, errData.error?.message || '')
-          }
-        } catch (fetchErr: any) {
-          if (fetchErr.name === 'AbortError') {
-            console.warn(`Eva model ${model} timed out`)
-          } else {
-            console.error(`Eva model ${model} fetch error:`, fetchErr.message)
-          }
-          continue // essayer le modele suivant
-        }
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30000)
+      const response = await fetch(freeLlmUrl, {
+        signal: controller.signal,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${freeLlmKey}`
+        },
+        body: JSON.stringify({
+          model: 'deepseek-v4-flash',
+          messages,
+          temperature: 0.6,
+          max_tokens: 150
+        })
+      })
+      clearTimeout(timeoutId)
+
+      if (response.ok) {
+        const data = await response.json()
+        reply = data.choices?.[0]?.message?.content || ''
+      } else {
+        const errText = await response.text().catch(() => '')
+        console.error('FreeLLM API failed:', response.status, errText)
       }
     } catch (error) {
-      console.error('DeepSeek failed:', error)
+      console.error('FreeLLM API error:', error)
     }
 
-    // Fallback: tenter DeepSeek API directe
-    if (!reply) {
-      const deepSeekKey = process.env.DEEPSEEK_API_KEY
-      if (deepSeekKey) {
-        try {
-          const dsRes = await fetch('https://api.deepseek.com/v1/chat/completions', {
-            signal: AbortSignal.timeout(15000),
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${deepSeekKey}`
-            },
-            body: JSON.stringify({
-              model: 'deepseek-chat',
-              messages,
-              temperature: 0.6,
-              max_tokens: 150
-            })
-          })
-          if (dsRes.ok) {
-            const dsData = await dsRes.json()
-            reply = dsData.choices?.[0]?.message?.content || ''
-          }
-        } catch (dsErr) {
-          console.error('DeepSeek direct fallback failed:', dsErr)
-        }
-      }
-    }
 
     // Dernier fallback : message generic
     if (!reply) {
