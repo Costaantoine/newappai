@@ -67,6 +67,7 @@ interface ProductCardProps {
     price: number
     images?: string[]
     image_settings?: Record<string, ImageSettings>
+    status?: string
   }
 }
 
@@ -105,6 +106,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const imgSettings = product.image_settings?.[0] || {}
 
   const inCart = items.find(item => item.id === product.id)
+  const isDevelopment = product.status === 'development'
   const productUrl = getProductUrl(product.title)
 
   const handleAddToCart = () => {
@@ -128,6 +130,13 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="group glass p-6 rounded-[2rem] border-white/5 hover:border-violet-400/40 hover:scale-[1.04] hover:-translate-y-1.5 hover:shadow-[0_25px_60px_-15px_rgba(139,92,246,0.35)] transition-all duration-300 flex flex-col">
+      {isDevelopment && (
+        <div className="absolute top-3 left-3 z-10">
+          <span className="px-3 py-1.5 bg-amber-500/90 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
+            {t?.product?.development || 'En cours de développement'}
+          </span>
+        </div>
+      )}
       {imageUrl ? (
         <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
           <img
@@ -154,7 +163,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="flex items-center justify-between mt-auto">
         <span className="text-violet-400 font-bold text-lg">{formatPrice(product.price)}</span>
         <div className="flex gap-2">
-          {productUrl && (
+          {isDevelopment ? (
+            <Link href={productUrl || "/"}
+              className="px-4 py-2 rounded-full text-sm font-bold border border-amber-500/30 text-amber-400 opacity-60 cursor-not-allowed pointer-events-none">
+              {t?.product?.see_details || 'Voir détails'}
+            </Link>
+          ) : productUrl && (
             <Link href={productUrl}
               className="px-4 py-2 rounded-full text-sm font-bold border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 transition">
               {t?.product?.see_details || 'Voir détails'}

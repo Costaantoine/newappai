@@ -28,7 +28,7 @@ async function main() {
       price: 99900, // 999€ en centimes
       images: '[]',
       category: 'production',
-      active: true,
+      status: 'visible',
     },
   })
 

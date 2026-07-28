@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
         price: parsed.price,
         images: JSON.stringify(parsed.images || []),
         category: parsed.category || '',
-        active: parsed.active ?? true,
+        status: parsed.status ?? "visible",
       }
     })
     return NextResponse.json(product, { status: 201 })

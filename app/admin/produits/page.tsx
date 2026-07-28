@@ -17,7 +17,7 @@ interface Product {
   images: string[]
   image_settings?: Record<string, { opacity?: number; brightness?: number; contrast?: number; saturation?: number; sepia?: number }>
   category: string
-  active: boolean
+  status: string
   order: number
 }
 
@@ -53,7 +53,7 @@ export default function AdminProduitsPage() {
       ])
       const productsData = await productsRes.json()
       const settingsData = await settingsRes.json()
-      setProducts((productsData.products || []).filter((p: Product) => p.active !== false))
+      setProducts(productsData.products || [])
       if (settingsData.settings) setSettings(settingsData.settings)
     } catch (error) { console.error('Error:', error) }
     finally { setLoading(false) }
@@ -179,7 +179,22 @@ export default function AdminProduitsPage() {
     { name: 'description', label: 'Description', type: 'languages' },
     { name: 'price', label: 'Prix (€)', type: 'number' },
     { name: 'category', label: 'Categorie', type: 'text' },
-    { name: 'order', label: 'Ordre', type: 'number' }
+    { name: 'order', label: 'Ordre', type: 'number' },
+    { name: 'status', label: 'Statut', type: 'select', options: [
+      { value: 'visible', label: 'Visible sur le site' },
+      { value: 'hidden', label: 'Caché' },
+      { value: 'development', label: 'En cours de développement' }
+    ] },
+    { name: 'status', label: 'Statut', type: 'select', options: [
+      { value: 'visible', label: 'Visible sur le site' },
+      { value: 'hidden', label: 'Caché' },
+      { value: 'development', label: 'En cours de développement' }
+    ] },
+    { name: 'status', label: 'Statut', type: 'select', options: [
+      { value: 'visible', label: 'Visible sur le site' },
+      { value: 'hidden', label: 'Caché' },
+      { value: 'development', label: 'En cours de développement' }
+    ] }
   ]
 
   if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Chargement...</div>
@@ -210,7 +225,7 @@ export default function AdminProduitsPage() {
 
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">Administration - Produits</h1>
-          <AdminButton showAdd addLabel="Produit" onAdd={() => openAdd('product', 'Ajouter un Produit', productFields, { price: 9900, order: products.length + 1, active: true })} />
+          <AdminButton showAdd addLabel="Produit" onAdd={() => openAdd('product', 'Ajouter un Produit', productFields, { price: 9900, order: products.length + 1, status: 'visible' })} />
         </div>
 
         {products.length === 0 ? (
@@ -269,7 +284,25 @@ export default function AdminProduitsPage() {
                   <p className="text-slate-400 text-sm mb-4 line-clamp-2">{product.description?.fr?.replace(/<[^>]*>/g, '') || ''}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-violet-400 font-bold text-xl">{formatPrice(product.price)}</span>
-                    <span className="text-xs text-slate-500">{product.category}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      product.status === 'visible' ? 'bg-green-500/20 text-green-400' :
+                      product.status === 'development' ? 'bg-amber-500/20 text-amber-400' :
+                      'bg-red-500/20 text-red-400'
+                    }`}>
+                      {product.status === 'visible' ? 'Visible' :
+                       product.status === 'development' ? 'En développement' : 'Caché'}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        product.status === 'visible' ? 'bg-green-500/20 text-green-400' :
+                        product.status === 'development' ? 'bg-amber-500/20 text-amber-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {product.status === 'visible' ? 'Visible' :
+                         product.status === 'development' ? 'En développement' : 'Caché'}
+                      </span>
+                      <span className="text-xs text-slate-500">{product.category}</span>
+                    </div>
                   </div>
                 </div>
               )

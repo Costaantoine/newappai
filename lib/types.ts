@@ -5,7 +5,7 @@ export type Product = {
   price: number
   images: string[]
   category: string
-  active: boolean
+  status: string
   created_at: string
   updated_at: string
 }

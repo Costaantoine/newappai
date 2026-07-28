@@ -8,7 +8,7 @@ export const CreateProductSchema = z.object({
   price: z.number('Le prix est requis').int().min(0, 'Le prix doit être positif'),
   images: z.array(z.string().url('URL image invalide')).optional().default([]),
   category: z.string().max(100).optional().default(''),
-  active: z.boolean().optional().default(true),
+  status: z.enum(["visible", "hidden", "development"]).optional().default("visible"),
 })
 
 export const UpdateProductSchema = z.object({
@@ -17,7 +17,7 @@ export const UpdateProductSchema = z.object({
   price: z.number().int().min(0).optional(),
   images: z.array(z.string().url()).optional(),
   category: z.string().max(100).optional(),
-  active: z.boolean().optional(),
+  status: z.enum(["visible", "hidden", "development"]).optional(),
 })
 
 // ─── Texts ───────────────────────────────────────────────────────────────────

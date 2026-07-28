@@ -11,7 +11,7 @@ interface Product {
   price: number
   images: string[]
   category: string
-  active: boolean
+  status: string
 }
 
 export default function EditProductPage() {
@@ -21,7 +21,7 @@ export default function EditProductPage() {
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('')
-  const [active, setActive] = useState(true)
+  const [status, setStatus] = useState('visible')
   const [images, setImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -45,7 +45,7 @@ export default function EditProductPage() {
       setDescription(data.product.description || '')
       setPrice((data.product.price / 100).toFixed(2))
       setCategory(data.product.category || '')
-      setActive(data.product.active)
+      setStatus(data.product.status || 'visible')
       setImages(data.product.images || [])
     }
     setLoading(false)
@@ -99,7 +99,7 @@ export default function EditProductPage() {
           price: Math.round(parseFloat(price) * 100),
           images,
           category,
-          active,
+          status,
         }),
       })
 
@@ -232,15 +232,17 @@ export default function EditProductPage() {
             )}
           </div>
 
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="active"
-              checked={active}
-              onChange={(e) => setActive(e.target.checked)}
-              className="w-5 h-5 rounded"
-            />
-            <label htmlFor="active" className="text-slate-300">Produit actif (visible sur le site)</label>
+          <div>
+            <label className="block text-sm font-semibold text-slate-300 mb-2">Statut</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500"
+            >
+              <option value="visible" className="bg-slate-900">Visible sur le site</option>
+              <option value="hidden" className="bg-slate-900">Caché</option>
+              <option value="development" className="bg-slate-900">En cours de développement</option>
+            </select>
           </div>
 
           <button

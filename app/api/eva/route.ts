@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
 
     // Charger les produits
     const products = await prisma.product.findMany({
-      where: { active: true },
+      where: { status: "visible" },
       orderBy: { price: 'desc' }
     })
 

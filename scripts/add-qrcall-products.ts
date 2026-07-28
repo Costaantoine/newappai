@@ -19,7 +19,7 @@ const products = [
     price: 499,
     images: JSON.stringify([]),
     category: 'qrcall',
-    active: true,
+    status: 'visible',
   },
   {
     title: JSON.stringify({
@@ -37,7 +37,7 @@ const products = [
     price: 1299,
     images: JSON.stringify([]),
     category: 'qrcall',
-    active: true,
+    status: 'visible',
   },
   {
     title: JSON.stringify({
@@ -55,7 +55,7 @@ const products = [
     price: 1999,
     images: JSON.stringify([]),
     category: 'qrcall',
-    active: true,
+    status: 'visible',
   },
   {
     title: JSON.stringify({
@@ -73,7 +73,7 @@ const products = [
     price: 0, // Prix de base à définir, l'abonnement est géré séparément
     images: JSON.stringify([]),
     category: 'qrcall-building',
-    active: true,
+    status: 'visible',
   },
 ];
 

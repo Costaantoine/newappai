@@ -168,7 +168,7 @@ function ProductsGrid({ products, lang }: { products: any[]; lang: string }) {
 export default async function ProduitsPage() {
   const lang = getLang()
   const products = await getProducts()
-  const activeProducts = products.filter((p: any) => p.active !== false)
+  const activeProducts = products.filter((p: any) => p.status === 'visible' || p.status === 'development')
 
   return (
     <>

@@ -30,7 +30,7 @@ model Product {
   price       Int
   images      String   @default("[]")
   category    String   @default("")
-  active      Boolean  @default(true)
+  status String @default("visible")
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   orders      Order[]

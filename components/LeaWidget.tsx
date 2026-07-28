@@ -465,7 +465,7 @@ export default function LeaWidget() {
             {t.products_title}
           </h3>
           <div ref={carouselRef} className="flex gap-4 overflow-x-hidden pb-4 scrollbar-thin scrollbar-thumb-white/[0.08] scrollbar-track-transparent">
-            {[...products.filter((p: any) => p.active !== false), ...products.filter((p: any) => p.active !== false)].map((p: any, idx: number) => {
+            {[...products.filter((p: any) => p.status === 'visible' || p.status === 'development'), ...products.filter((p: any) => p.status === 'visible' || p.status === 'development')].map((p: any, idx: number) => {
               const title = getLocalizedText(p.title, lang)
               const imgUrl = getImageUrl(p.images?.[0])
               return (

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Récupérer les produits pour le contexte
-    const products = await prisma.product.findMany({ where: { active: true } })
+    const products = await prisma.product.findMany({ where: { status: "visible" } })
     const catalog = products.map(p => {
       let title = p.title
       try {

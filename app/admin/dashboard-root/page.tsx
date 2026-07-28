@@ -33,14 +33,7 @@ export default function AdminDashboard() {
     setLoading(false)
   }
 
-  const toggleActive = async (id: string, active: boolean) => {
-    await fetch('/api/supabase/products', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, active }),
-    })
-    fetchProducts()
-  }
+
 
   const deleteProduct = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return
@@ -127,16 +120,14 @@ export default function AdminDashboard() {
                     <td className="py-4 px-4 text-slate-400">{product.category || '-'}</td>
                     <td className="py-4 px-4 text-violet-400 font-bold">{formatPrice(product.price)}</td>
                     <td className="py-4 px-4">
-                      <button
-                        onClick={() => toggleActive(product.id, !product.active)}
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          product.active
-                            ? 'bg-green-500/20 text-green-400'
-                            : 'bg-slate-500/20 text-slate-400'
-                        }`}
-                      >
-                        {product.active ? 'Actif' : 'Inactif'}
-                      </button>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        product.status === 'visible' ? 'bg-green-500/20 text-green-400' :
+                        product.status === 'development' ? 'bg-amber-500/20 text-amber-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {product.status === 'visible' ? 'Visible' :
+                         product.status === 'development' ? 'En développement' : 'Caché'}
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-right space-x-2">
                       <Link

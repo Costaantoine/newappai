@@ -37,7 +37,7 @@ async function main() {
       continue
     }
     const created = await prisma.product.create({
-      data: { ...p, images: '[]', active: true },
+      data: { ...p, images: '[]', status: 'visible' },
     })
     console.log(`+ cree: ${p.title} — ${(p.price / 100).toFixed(2)}€ (id: ${created.id})`)
   }

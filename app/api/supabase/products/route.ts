@@ -10,12 +10,12 @@ function parseJson(str: string) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const active = searchParams.get('active')
+    const status = searchParams.get('status')
     const id = searchParams.get('id')
 
     const where: Record<string, unknown> = {}
     if (id) where.id = id
-    if (active === 'true') where.active = true
+    if (status) where.status = status
 
     const data = await prisma.product.findMany({
       where,
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { title, description, price, images, category, active } = body
+    const { title, description, price, images, category, status } = body
 
     if (!title || price === undefined) {
       return NextResponse.json({ error: 'Title and price are required' }, { status: 400 })
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         price: Number(price),
         images: Array.isArray(images) ? JSON.stringify(images) : (images || '[]'),
         category: category || '',
-        active: active !== undefined ? active : true,
+        status: status || "visible",
       },
     })
 
@@ -85,7 +85,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, title, description, price, images, category, active } = body
+    const { id, title, description, price, images, category, status } = body
 
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 })
@@ -97,7 +97,7 @@ export async function PUT(request: NextRequest) {
     if (price !== undefined) updateData.price = Number(price)
     if (images !== undefined) updateData.images = Array.isArray(images) ? JSON.stringify(images) : images
     if (category !== undefined) updateData.category = category
-    if (active !== undefined) updateData.active = active
+    if (status !== undefined) updateData.status = status
 
     const data = await prisma.product.update({
       where: { id },

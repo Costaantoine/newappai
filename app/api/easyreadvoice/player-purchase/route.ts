@@ -15,7 +15,7 @@ async function getOrCreatePlayerProduct() {
       description: 'Lecteur audio EasyReadVoice telechargeable : multi-format, multi-voix, lecture continue.',
       price: PLAYER_PRODUCT_PRICE,
       category: 'easyreadvoice',
-      active: true,
+      status: "visible",
     },
   })
 }

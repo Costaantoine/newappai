@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (parsed.price !== undefined) data.price = parsed.price
     if (parsed.images !== undefined) data.images = JSON.stringify(parsed.images)
     if (parsed.category !== undefined) data.category = parsed.category
-    if (parsed.active !== undefined) data.active = parsed.active
+    if (parsed.status !== undefined) data.status = parsed.status
 
     const product = await prisma.product.update({
       where: { id: params.id },

@@ -10,7 +10,7 @@ export interface ProductInfo {
 export async function getProductsContext(): Promise<string> {
   try {
     const products = await prisma.product.findMany({
-      where: { active: true },
+      where: { status: "visible" },
       select: { title: true, description: true, price: true, category: true },
     })
 
