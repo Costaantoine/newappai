@@ -1,0 +1,139 @@
+# Project: newappai
+
+## Project Context
+
+Plateforme multi-services Next.js 14 avec Supabase, Stripe, et assistant IA. Marketplace de services avec paiements, gestion admin, authentification utilisateur, et assistant IA intégré.
+
+## Coding Rules
+
+- Use **mixed** naming convention
+- Use **absolute** imports
+- File organization: **feature-based**
+- Test files follow pattern: `*.test.ts`
+- Design patterns in use: command, helper, middleware, provider, repository, router, service
+
+### Python Rules
+- All function signatures must have type hints
+- Use Google-style docstrings on all public functions and classes
+- Never use bare `except:`
+
+### JavaScript/TypeScript Rules
+- Prefer `const` over `let`, avoid `var`
+- Use async/await over raw promises where possible
+
+## Architecture
+
+- **Type:** monolith
+- **Entry points:** `lib/supabase/server.ts`
+- **Infrastructure:** Frontend, Database, Docker
+
+## File Structure
+
+```
+__tests__/
+  __tests__/validators.test.ts
+  __tests__/dbHelpers.test.ts
+  __tests__/auth.test.ts
+  __tests__/rateLimit.test.ts
+app/
+  app/globals.css
+  app/page.tsx
+  app/layout.tsx
+  app/marketplace/page.tsx
+  app/privacy/page.tsx
+  app/easyreadvoice/page.tsx
+  app/produits/page.tsx
+  app/admin/page.tsx
+  app/qrcall/page.tsx
+  app/cgv/page.tsx
+  ... and 67 more files
+components/
+  components/BackToTop.tsx
+  components/ChatInterface.tsx
+  components/ParticlesBackground.tsx
+  components/Providers.tsx
+  components/CartWidget.tsx
+  components/TestimonialCarousel.tsx
+  components/AssistantWidget.tsx
+  components/AnimatedTitle.tsx
+  components/EvaAssistant.tsx
+  components/SoundPlayer.tsx
+  ... and 19 more files
+evidence/
+  evidence/stack.json
+  evidence/routes.json
+  evidence/audit_analysis.json
+  evidence/ultime_report.json
+  evidence/api_live/settings_get.json
+  evidence/api_live/tts_get.json
+  evidence/api_live/supabase_texts_get.json
+  evidence/api_live/zones_get.json
+  evidence/api_live/supabase_products_get.json
+  evidence/api_live/texts_get.json
+  ... and 48 more files
+lib/
+  lib/errors.ts
+  lib/logger.ts
+  lib/utils.ts
+  lib/rateLimit.ts
+  lib/soundEffects.ts
+  lib/musicManager.ts
+  lib/prisma.ts
+  lib/email.ts
+  lib/session.ts
+  lib/supabase.ts
+  ... and 29 more files
+prisma/
+  prisma/schema.prisma
+  prisma/dev.db
+  prisma/schema.postgresql.prisma
+public/
+  public/contact.html
+  public/solutions.html
+  public/header-bg.png
+  public/click-collect-app.png
+  public/about.html
+  public/uploads/1775744956847-thumb-thumb.webp
+  public/uploads/1775743429558-thumb-thumb.webp
+  public/uploads/1775743592486-thumb-thumb.webp
+  public/uploads/1776156294382-thumb-thumb.webp
+  public/uploads/1775746060303-olharosol.webp
+  ... and 37 more files
+reports/
+  reports/qa/screenshots_success.png
+  reports/qa/screenshots_.png
+  reports/qa/qa_report.json
+  reports/qa/screenshots_messages.png
+  reports/qa/screenshots_solutions.png
+  reports/qa/screenshots_mentions-legales.png
+  reports/qa/screenshots_cgv.png
+  reports/qa/screenshots_finances.png
+  reports/qa/screenshots_admin_login.png
+  reports/qa/screenshots_privacy.png
+  ... and 108 more files
+scripts/
+  scripts/insert-texts-erv-qrcall.sql
+  scripts/insert-texts.sql
+  scripts/add-product.ts
+  scripts/seed-texts.js
+  scripts/add-qrcall-products.js
+  scripts/add-qrcall-products.ts
+  scripts/test-supabase.js
+  scripts/check-db.js
+  scripts/debug-db.js
+  scripts/seed-solutions.js
+  ... and 1 more files
+supabase/
+  supabase/seed.sql
+  supabase/migrations/001_initial_schema.sql
+types/
+  types/supabase.ts
+  types/stripe.ts
+  types/ai.ts
+```
+
+## Tech Stack
+
+- **Languages:** typescript, javascript, python
+- **Key packages:** @prisma/client, @supabase/ssr, @supabase/supabase-js, clsx, iron-session, next, nodemailer, openai, prisma, react, react-dom, sharp, stripe, tailwind-merge, zod, @types/node, @types/nodemailer, @types/react, @vitejs/plugin-react, @vitest/coverage-v8
+  _(and 4 more)_

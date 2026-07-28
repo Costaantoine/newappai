@@ -1,0 +1,178 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "auth"]
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  supabase_id   String?  @unique
+  avatar_url    String?
+  role          String   @default("user")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  orders        Order[]
+
+  @@schema("public")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @default("")
+  price       Int
+  images      String   @default("[]")
+  category    String   @default("")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  orders      Order[]
+
+  @@schema("public")
+}
+
+model Text {
+  id         String   @id @default(uuid())
+  key        String
+  fr         String
+  en         String   @default("")
+  pt         String   @default("")
+  es         String   @default("")
+  section    String   @default("")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model Zone {
+  id           String     @id @default(uuid())
+  key          String
+  title_key    String
+  subtitle_key String     @default("")
+  badge        String     @default("")
+  color        String     @default("sky")
+  url          String     @default("")
+  site_url     String     @default("")
+  cta_key      String     @default("")
+  newtab_key   String   @default("")
+  icon_url     String   @default("")
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  cards        ZoneCard[]
+
+  @@schema("public")
+}
+
+model ZoneCard {
+  id              String   @id @default(uuid())
+  zone_id         String
+  zone            Zone     @relation(fields: [zone_id], references: [id], onDelete: Cascade)
+  title_key       String
+  description_key String   @default("")
+  badge_key       String   @default("")
+  image_url       String   @default("")
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model Solution {
+  id         String   @id @default(uuid())
+  key        String
+  fr         String
+  en         String   @default("")
+  pt         String   @default("")
+  es         String   @default("")
+  section    String   @default("solutions")
+  type       String   @default("description")
+  category   String   @default("general")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model Order {
+  id                String    @id @default(uuid())
+  stripe_session_id String    @unique
+  product_id        String?
+  product           Product?  @relation(fields: [product_id], references: [id])
+  user_id           String?
+  user              User?     @relation(fields: [user_id], references: [id])
+  customer_email    String?
+  amount            Int
+  status            String    @default("pending")
+  paid_at           DateTime?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  @@schema("public")
+}
+
+model Settings {
+  id         String   @id @default("main")
+  data       String
+  updated_at DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model AudioBook {
+  chapter_markers Json @default("[]")
+  id            String   @id @default(uuid())
+  user_email    String
+  title         String
+  original_file String?
+  file_type     String   @default("txt")
+  char_count    Int      @default(0)
+  plan_id       String   @default("decouverte")
+  status        String   @default("pending")
+  audio_path    String?
+  duration_sec  Int      @default(0)
+  chapters      Int      @default(1)
+  chapters_done Int      @default(0)
+  progress_pct  Int      @default(0)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  expires_at    DateTime?
+
+  @@schema("public")
+}
+
+model LeaTestUser {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password_hash String
+  lang          String   @default("fr")
+  email_sent    Boolean  @default(false)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model LeaSession {
+  id            String   @id @default(uuid())
+  user_email    String
+  message_count Int      @default(0)
+  lang          String   @default("fr")
+  is_closed     Boolean  @default(false)
+  email_sent    Boolean  @default(false)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@schema("public")
+}

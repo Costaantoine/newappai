@@ -1,0 +1,63 @@
+# Windsurf Rules — newappai
+
+## Project Context
+
+Plateforme multi-services Next.js 14 avec Supabase, Stripe, et assistant IA. Marketplace de services avec paiements, gestion admin, authentification utilisateur, et assistant IA intégré.
+
+## Rules
+
+### Naming & Style
+- Naming convention: **mixed**
+- Import style: **absolute**
+- File organization: **feature-based**
+
+### Testing
+- Test pattern: `*.test.ts`
+
+### Design Patterns
+- command
+- helper
+- middleware
+- provider
+- repository
+- router
+- service
+
+### Python
+- Type hints on all function signatures
+- Google-style docstrings on public APIs
+- No bare `except:` clauses
+
+### JavaScript/TypeScript
+- Prefer `const` over `let`
+- Use async/await
+- Avoid `any` type where possible
+
+## Architecture
+
+**Type:** monolith
+
+**Entry Points:**
+- `lib/supabase/server.ts`
+- `.claude/worktrees/agent-a218e697f919db3c9/lib/supabase/server.ts`
+
+**Infrastructure:** Frontend, Database, Docker
+
+## File Structure
+
+- `__tests__/` [typescript]
+- `app/` [typescript]
+- `components/` [typescript]
+- `evidence/`
+- `lib/` [typescript]
+- `prisma/`
+- `public/` [javascript]
+- `reports/`
+- `scripts/` [javascript]
+- `supabase/`
+- `types/` [typescript]
+
+## Tech Stack
+
+- **Languages:** typescript, javascript, python, shell
+- **npm:** @prisma/client, @supabase/ssr, @supabase/supabase-js, clsx, iron-session, next, nodemailer, openai, prisma, react (+15 more)

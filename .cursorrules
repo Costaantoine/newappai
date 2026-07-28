@@ -1,0 +1,139 @@
+# Project: newappai
+
+## Project Context
+
+Plateforme multi-services Next.js 14 avec Supabase, Stripe, et assistant IA. Marketplace de services avec paiements, gestion admin, authentification utilisateur, et assistant IA intégré.
+
+## Coding Rules
+
+- Use **mixed** naming convention
+- Use **absolute** imports
+- File organization: **feature-based**
+- Test files follow pattern: `*.test.ts`
+- Design patterns in use: command, helper, middleware, provider, repository, router, service
+
+### Python Rules
+- All function signatures must have type hints
+- Use Google-style docstrings on all public functions and classes
+- Never use bare `except:`
+
+### JavaScript/TypeScript Rules
+- Prefer `const` over `let`, avoid `var`
+- Use async/await over raw promises where possible
+
+## Architecture
+
+- **Type:** monolith
+- **Entry points:** `lib/supabase/server.ts`, `.claude/worktrees/agent-a218e697f919db3c9/lib/supabase/server.ts`
+- **Infrastructure:** Frontend, Database, Docker
+
+## File Structure
+
+```
+__tests__/
+  __tests__/validators.test.ts
+  __tests__/dbHelpers.test.ts
+  __tests__/auth.test.ts
+  __tests__/rateLimit.test.ts
+app/
+  app/globals.css
+  app/panier/page.tsx
+  app/recherche/page.tsx
+  app/recherche/layout.tsx
+  app/privacy/page.tsx
+  app/easyreadvoice/page.tsx
+  app/easyreadvoice/layout.tsx
+  app/produits/page.tsx
+  app/admin/page.tsx
+  app/qrcall/page.tsx
+  ... and 117 more files
+components/
+  components/BackToTop.tsx
+  components/MatrixRain.tsx
+  components/ChatInterface.tsx
+  components/ParticlesBackground.tsx
+  components/Providers.tsx
+  components/CartWidget.tsx
+  components/TestimonialCarousel.tsx
+  components/AssistantWidget.tsx
+  components/AnimatedTitle.tsx
+  components/EvaAssistant.tsx
+  ... and 26 more files
+evidence/
+  evidence/stack.json
+  evidence/routes.json
+  evidence/audit_analysis.json
+  evidence/ultime_report.json
+  evidence/api_live/settings_get.json
+  evidence/api_live/tts_get.json
+  evidence/api_live/supabase_texts_get.json
+  evidence/api_live/zones_get.json
+  evidence/api_live/supabase_products_get.json
+  evidence/api_live/texts_get.json
+  ... and 48 more files
+lib/
+  lib/validations/auth.ts
+  lib/validations/contact.ts
+  lib/validations/product.ts
+  lib/validations/order.ts
+  lib/stripe/client.ts
+  lib/stripe/webhook.ts
+  lib/supabase/server.ts
+  lib/supabase/client.ts
+  lib/supabase/middleware.ts
+  lib/eva/agent.py
+  ... and 30 more files
+prisma/
+  prisma/schema.prisma
+  prisma/dev.db
+  prisma/schema.postgresql.prisma
+public/
+  public/contact.html
+  public/favicon.svg
+  public/og-image.svg
+  public/solutions.html
+  public/apple-touch-icon.png
+  public/robots.txt
+  public/og-image.jpg
+  public/og-image.png
+  public/pricing.md
+  public/header-bg.png
+  ... and 102 more files
+reports/
+  reports/qa/screenshots_success.png
+  reports/qa/screenshots_.png
+  reports/qa/qa_report.json
+  reports/qa/screenshots_messages.png
+  reports/qa/screenshots_solutions.png
+  reports/qa/screenshots_mentions-legales.png
+  reports/qa/screenshots_cgv.png
+  reports/qa/screenshots_finances.png
+  reports/qa/screenshots_admin_login.png
+  reports/qa/screenshots_privacy.png
+  ... and 108 more files
+scripts/
+  scripts/insert-texts-erv-qrcall.sql
+  scripts/deploy-easyreadvoice.sh
+  scripts/insert-texts.sql
+  scripts/add-translations.sql
+  scripts/add-product.ts
+  scripts/seed-texts.js
+  scripts/add-qrcall-products.js
+  scripts/register-book.ts
+  scripts/add-qrcall-products.ts
+  scripts/check-translations.mjs
+  ... and 14 more files
+supabase/
+  supabase/seed.sql
+  supabase/migrations/001_initial_schema.sql
+types/
+  types/supabase.ts
+  types/stripe.ts
+  types/ai.ts
+```
+
+## Tech Stack
+
+- **Languages:** typescript, javascript, python, shell
+- **Key packages:** @prisma/client, @supabase/ssr, @supabase/supabase-js, clsx, iron-session, next, nodemailer, openai, prisma, react, react-dom, sharp, stripe, tailwind-merge, zod, @types/node, @types/nodemailer, @types/react, @vitejs/plugin-react, @vitest/coverage-v8
+  _(and 5 more)_

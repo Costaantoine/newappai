@@ -1,0 +1,5 @@
+// REPLACE this placeholder file with your actual music track
+// Original file should be named: produits.mp3
+// Format: MP3
+// Location: /public/music/
+// Description: Background music for products page

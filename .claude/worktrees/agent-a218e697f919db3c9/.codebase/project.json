@@ -1,0 +1,3984 @@
+{
+  "name": "newappai",
+  "description": "Plateforme multi-services Next.js 14 avec Supabase, Stripe, et assistant IA. Marketplace de services avec paiements, gestion admin, authentification utilisateur, et assistant IA int\u00e9gr\u00e9.",
+  "root_path": "/root/newappai",
+  "languages": [
+    "typescript",
+    "javascript",
+    "python"
+  ],
+  "frameworks": [
+    "docker",
+    "nextjs",
+    "prisma",
+    "react",
+    "tailwind",
+    "vitest"
+  ],
+  "build_commands": [
+    "npm run dev",
+    "npm run build",
+    "npm run test",
+    "npm run lint",
+    "npm run start"
+  ],
+  "architecture": {
+    "architecture_type": "monolith",
+    "entry_points": [
+      "lib/supabase/server.ts"
+    ],
+    "services": [],
+    "has_frontend": true,
+    "has_backend": false,
+    "has_database": true,
+    "has_docker": true,
+    "has_ci": false
+  },
+  "modules": [
+    {
+      "name": "__tests__",
+      "path": "__tests__",
+      "purpose": "",
+      "files": [
+        {
+          "path": "__tests__/validators.test.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "vitest",
+            "../lib/validators"
+          ],
+          "purpose": "tests"
+        },
+        {
+          "path": "__tests__/dbHelpers.test.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "vitest"
+          ],
+          "purpose": "utilities"
+        },
+        {
+          "path": "__tests__/auth.test.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "vitest"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "__tests__/rateLimit.test.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "vitest",
+            "../lib/rateLimit"
+          ],
+          "purpose": "tests"
+        }
+      ],
+      "language": "typescript",
+      "framework": null
+    },
+    {
+      "name": "app",
+      "path": "app",
+      "purpose": "",
+      "files": [
+        {
+          "path": "app/globals.css",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "app/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "HomePage"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "next/image",
+            "next/navigation",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/components/AudioButton",
+            "@/lib/LanguageContext",
+            "@/lib/SettingsContext",
+            "next/navigation",
+            "@/components/ParticlesBackground",
+            "@/components/ScrollReveal",
+            "@/components/AnimatedTitle",
+            "@/components/ProductCarousel"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/layout.tsx",
+          "language": "typescript",
+          "exports": [
+            "RootLayout",
+            "metadata"
+          ],
+          "imports": [
+            "next",
+            "@/components/Providers",
+            "@/components/ClientLayout",
+            "@/lib/SettingsContext"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "app/marketplace/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "MarketplacePage"
+          ],
+          "imports": [
+            "react",
+            "@/components/ProductCard",
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/privacy/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "PrivacyPage",
+            "metadata"
+          ],
+          "imports": [
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "app/easyreadvoice/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "EasyReadVoicePage"
+          ],
+          "imports": [
+            "react",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/lib/LanguageContext",
+            "next/link"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/produits/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "dynamic"
+          ],
+          "imports": [
+            "@/components/Header",
+            "@/components/Footer",
+            "next/link",
+            "@/components/ProductCard",
+            "@/components/AnimatedTitle",
+            "@/components/ParticlesBackground"
+          ],
+          "purpose": "utilities"
+        },
+        {
+          "path": "app/admin/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminPage"
+          ],
+          "imports": [
+            "next/navigation"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "app/qrcall/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "QRcallPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/lib/LanguageContext",
+            "next/link"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/cgv/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "CGVPage",
+            "metadata"
+          ],
+          "imports": [
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "CLI commands"
+        },
+        {
+          "path": "app/about/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AboutPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/lib/LanguageContext",
+            "next/navigation",
+            "@/components/AnimatedTitle",
+            "@/components/ParticlesBackground"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/mentions-legales/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "MentionsLegalesPage",
+            "metadata"
+          ],
+          "imports": [
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "app/success/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "SuccessPage"
+          ],
+          "imports": [
+            "react",
+            "./SuccessContent"
+          ],
+          "purpose": ""
+        },
+        {
+          "path": "app/success/SuccessContent.tsx",
+          "language": "typescript",
+          "exports": [
+            "SuccessContent"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/lib/LanguageContext"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/profile/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "ProfilePage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/contact/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "ContactPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/lib/LanguageContext",
+            "next/navigation",
+            "@/lib/SettingsContext",
+            "@/components/AnimatedTitle",
+            "@/components/ParticlesBackground"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "app/assistant/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AssistantPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/components/ChatInterface"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/solutions/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "SolutionsPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/Header",
+            "@/components/Footer",
+            "next/link",
+            "@/lib/LanguageContext",
+            "@/components/AnimatedTitle",
+            "@/components/ParticlesBackground",
+            "@/components/TestimonialCarousel"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/marketplace/[id]/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "ProductDetailPage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link",
+            "@/components/Header",
+            "@/components/Footer",
+            "@/components/CheckoutButton",
+            "@/lib/cartContext",
+            "@/components/AnimatedTitle",
+            "@/components/ParticlesBackground"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/commandes/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminCommandesPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/admin/AdminSidebar"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/accueil/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminAccueilPage"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "@/components/admin/EditModal",
+            "@/components/admin/DeleteConfirm",
+            "@/components/admin/AdminButton"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/texts/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "UnifiedTextsManager"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/admin/login/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminLoginPage"
+          ],
+          "imports": [
+            "react",
+            "next/link"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "app/admin/produits/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminProduitsPage"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "@/components/admin/EditModal",
+            "@/components/admin/DeleteConfirm",
+            "@/components/admin/AdminButton",
+            "@/components/admin/Lightbox",
+            "@/components/admin/ImageSettingsPanel",
+            "@/components/admin/ImageUploader"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/settings/SoundEffectPlayer.tsx",
+          "language": "typescript",
+          "exports": [
+            "SoundEffectPlayer"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/settings/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminSettingsPage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link",
+            "./PageMusicPlayer",
+            "./SoundEffectPlayer",
+            "@/lib/soundEffects"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "app/admin/settings/PageMusicPlayer.tsx",
+          "language": "typescript",
+          "exports": [
+            "stopAllAdminPlayers",
+            "PageMusicPlayer"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/settings/MusicPlayer.tsx",
+          "language": "typescript",
+          "exports": [
+            "MusicPlayer"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/parametres/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminParametresPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/admin/AdminSidebar"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/dashboard/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminDashboard"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link",
+            "@/lib/types"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/admin/about/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminAboutPage"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "@/components/admin/EditModal"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/contact/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminContactPage"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "@/components/admin/EditModal"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/zones/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "ZonesManager"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/admin/medias/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminMediasPage"
+          ],
+          "imports": [
+            "react",
+            "@/components/admin/AdminSidebar"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/solutions/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminSolutionsPage"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "@/components/admin/EditModal",
+            "@/components/admin/DeleteConfirm",
+            "@/components/admin/AdminButton"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/admin/products/new/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "NewProductPage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/admin/products/[id]/edit/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "EditProductPage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/products/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/texts/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/upload/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/supabase",
+            "fs/promises",
+            "path"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/translate/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/orders/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/settings/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/tts/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "child_process",
+            "util",
+            "fs",
+            "path"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/eva/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/auth/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "crypto",
+            "@/lib/session",
+            "@/lib/validators",
+            "@/lib/rateLimit",
+            "@/lib/logger"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/contact/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/validators",
+            "@/lib/email"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/zones/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/assistant/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/assistantContext"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/solutions/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/local/upload/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "fs/promises",
+            "fs",
+            "path",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/local/upload-media/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "fs/promises",
+            "path",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/local/upload-audio/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "fs/promises",
+            "fs",
+            "path",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/products/[id]/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/texts/[id]/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/stripe/session/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/stripe",
+            "@/lib/supabaseNewappai"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/stripe/checkout/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/stripe",
+            "@/lib/supabaseNewappai"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/stripe/checkout-cart/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/stripe",
+            "@/lib/prisma"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/stripe/webhook/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/stripe",
+            "@/lib/prisma"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/stripe/create-checkout/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/stripe",
+            "@/lib/prisma"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/products/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/texts/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/orders/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/settings/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/cards/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/zones/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/supabase/solutions/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/session"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/auth/supabase/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/supabase"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/zones/[id]/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/zones/[id]/cards/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/zones/[id]/cards/[cardId]/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/ai/chat/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/ai"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/api/solutions/[id]/route.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "next/server",
+            "@/lib/prisma",
+            "@/lib/validators"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/checkout/cancel/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "CheckoutCancelPage"
+          ],
+          "imports": [
+            "next/link",
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/checkout/success/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "CheckoutSuccessPage"
+          ],
+          "imports": [
+            "react",
+            "react",
+            "next/navigation",
+            "next/link",
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "app/auth/login/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "LoginPage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link",
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "app/auth/register/page.tsx",
+          "language": "typescript",
+          "exports": [
+            "RegisterPage"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "next/link",
+            "@/components/Header",
+            "@/components/Footer"
+          ],
+          "purpose": "API routes"
+        }
+      ],
+      "language": "typescript",
+      "framework": null
+    },
+    {
+      "name": "components",
+      "path": "components",
+      "purpose": "",
+      "files": [
+        {
+          "path": "components/BackToTop.tsx",
+          "language": "typescript",
+          "exports": [
+            "BackToTop"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/ChatInterface.tsx",
+          "language": "typescript",
+          "exports": [
+            "ChatInterface"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "components/ParticlesBackground.tsx",
+          "language": "typescript",
+          "exports": [
+            "ParticlesBackground"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/Providers.tsx",
+          "language": "typescript",
+          "exports": [
+            "Providers"
+          ],
+          "imports": [
+            "@/lib/LanguageContext"
+          ],
+          "purpose": ""
+        },
+        {
+          "path": "components/CartWidget.tsx",
+          "language": "typescript",
+          "exports": [
+            "CartWidget"
+          ],
+          "imports": [
+            "react",
+            "@/lib/cartContext",
+            "next/link"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/TestimonialCarousel.tsx",
+          "language": "typescript",
+          "exports": [
+            "TestimonialCarousel"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/AssistantWidget.tsx",
+          "language": "typescript",
+          "exports": [
+            "AssistantWidget"
+          ],
+          "imports": [
+            "react",
+            "@/lib/LanguageContext"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/AnimatedTitle.tsx",
+          "language": "typescript",
+          "exports": [
+            "AnimatedTitle"
+          ],
+          "imports": [],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "components/EvaAssistant.tsx",
+          "language": "typescript",
+          "exports": [
+            "EvaAssistant"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/SoundPlayer.tsx",
+          "language": "typescript",
+          "exports": [
+            "SoundPlayer"
+          ],
+          "imports": [
+            "react",
+            "next/navigation"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/CheckoutButton.tsx",
+          "language": "typescript",
+          "exports": [
+            "CheckoutButton"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "components/ProductCard.tsx",
+          "language": "typescript",
+          "exports": [
+            "ProductCard"
+          ],
+          "imports": [
+            "@/lib/cartContext",
+            "@/lib/LanguageContext",
+            "next/link"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "components/Footer.tsx",
+          "language": "typescript",
+          "exports": [
+            "Footer"
+          ],
+          "imports": [
+            "next/link",
+            "@/lib/LanguageContext",
+            "@/lib/SettingsContext"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "components/AIChat.tsx",
+          "language": "typescript",
+          "exports": [
+            "AIChat"
+          ],
+          "imports": [
+            "@/lib/LanguageContext"
+          ],
+          "purpose": ""
+        },
+        {
+          "path": "components/AudioButton.tsx",
+          "language": "typescript",
+          "exports": [
+            "AudioButton"
+          ],
+          "imports": [
+            "react",
+            "@/lib/SettingsContext"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "components/ClientLayout.tsx",
+          "language": "typescript",
+          "exports": [
+            "ClientLayout"
+          ],
+          "imports": [
+            "react",
+            "next/navigation",
+            "./EvaAssistant",
+            "./SoundPlayer",
+            "./CartWidget",
+            "./BackToTop",
+            "@/lib/cartContext",
+            "@/lib/SettingsContext",
+            "./admin/FrontendEditor"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/ScrollReveal.tsx",
+          "language": "typescript",
+          "exports": [
+            "ScrollReveal"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/ProductCarousel.tsx",
+          "language": "typescript",
+          "exports": [
+            "ProductCarousel"
+          ],
+          "imports": [
+            "react",
+            "next/link",
+            "next/image"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/Header.tsx",
+          "language": "typescript",
+          "exports": [
+            "Header"
+          ],
+          "imports": [
+            "next/link",
+            "next/navigation",
+            "@/lib/LanguageContext",
+            "@/lib/SettingsContext"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "components/admin/ImageUploader.tsx",
+          "language": "typescript",
+          "exports": [
+            "ImageUploader"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "components/admin/FrontendEditor.tsx",
+          "language": "typescript",
+          "exports": [
+            "FrontendEditor"
+          ],
+          "imports": [
+            "react",
+            "./EditModal"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "components/admin/Lightbox.tsx",
+          "language": "typescript",
+          "exports": [
+            "Lightbox"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "CLI commands"
+        },
+        {
+          "path": "components/admin/EditModal.tsx",
+          "language": "typescript",
+          "exports": [
+            "EditModal"
+          ],
+          "imports": [
+            "react",
+            "./ImageUploader",
+            "./ColorPicker"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/admin/ColorPicker.tsx",
+          "language": "typescript",
+          "exports": [
+            "ColorPicker"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "components/admin/ImageSettingsPanel.tsx",
+          "language": "typescript",
+          "exports": [
+            "ImageSettingsPanel"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "components/admin/DeleteConfirm.tsx",
+          "language": "typescript",
+          "exports": [
+            "DeleteConfirm"
+          ],
+          "imports": [],
+          "purpose": "CLI commands"
+        },
+        {
+          "path": "components/admin/ImageCropModal.tsx",
+          "language": "typescript",
+          "exports": [
+            "ImageCropModal"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "components/admin/AdminButton.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminButton"
+          ],
+          "imports": [],
+          "purpose": "CLI commands"
+        },
+        {
+          "path": "components/admin/AdminSidebar.tsx",
+          "language": "typescript",
+          "exports": [
+            "AdminSidebar"
+          ],
+          "imports": [
+            "next/link",
+            "next/navigation"
+          ],
+          "purpose": "configuration"
+        }
+      ],
+      "language": "typescript",
+      "framework": null
+    },
+    {
+      "name": "evidence",
+      "path": "evidence",
+      "purpose": "",
+      "files": [
+        {
+          "path": "evidence/stack.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/routes.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/audit_analysis.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/ultime_report.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/settings_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/tts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/supabase_texts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/zones_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/supabase_products_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/texts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/orders_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/supabase_solutions_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/supabase_zones_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/supabase_settings_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/supabase_cards_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api_live/products_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_cards_delete.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_orders_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_stripe_checkout_cart_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_auth_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_settings_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_solutions_delete.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_stripe_session_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_eva_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_products_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_stripe_webhook_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_texts_delete.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_zones_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_contact_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_solutions_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_tts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_auth_delete.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_auth_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_cards_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_assistant_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_texts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_cards_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_zones_delete.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_products_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_orders_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_products_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_products_delete.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_solutions_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_local_upload_media_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_texts_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_orders_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_translate_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_cards_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_tts_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_solutions_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_local_upload_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_stripe_checkout_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_texts_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_upload_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_settings_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_zones_put.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_supabase_zones_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "evidence/api/_api_local_upload_audio_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        }
+      ],
+      "language": null,
+      "framework": null
+    },
+    {
+      "name": "lib",
+      "path": "lib",
+      "purpose": "",
+      "files": [
+        {
+          "path": "lib/errors.ts",
+          "language": "typescript",
+          "exports": [
+            "ApiError",
+            "AuthError",
+            "ValidationError",
+            "NotFoundError",
+            "StripeError",
+            "RateLimitError"
+          ],
+          "imports": [],
+          "purpose": "error handling"
+        },
+        {
+          "path": "lib/logger.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/utils.ts",
+          "language": "typescript",
+          "exports": [
+            "cn",
+            "formatPrice",
+            "formatDate",
+            "slugify",
+            "truncate",
+            "randomId"
+          ],
+          "imports": [
+            "clsx",
+            "tailwind-merge"
+          ],
+          "purpose": "utilities"
+        },
+        {
+          "path": "lib/rateLimit.ts",
+          "language": "typescript",
+          "exports": [
+            "checkRateLimit",
+            "getClientIp"
+          ],
+          "imports": [],
+          "purpose": "tests"
+        },
+        {
+          "path": "lib/soundEffects.ts",
+          "language": "typescript",
+          "exports": [
+            "initSoundEffects",
+            "destroySoundEffects",
+            "getSoundEffectSettings"
+          ],
+          "imports": [],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/musicManager.ts",
+          "language": "typescript",
+          "exports": [
+            "musicManager"
+          ],
+          "imports": [],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/prisma.ts",
+          "language": "typescript",
+          "exports": [
+            "prisma"
+          ],
+          "imports": [
+            "@prisma/client"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/email.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "nodemailer",
+            "@/lib/logger"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/session.ts",
+          "language": "typescript",
+          "exports": [
+            "sessionOptions"
+          ],
+          "imports": [
+            "iron-session",
+            "next/headers",
+            "iron-session"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "lib/supabase.ts",
+          "language": "typescript",
+          "exports": [
+            "supabase",
+            "supabaseAdmin"
+          ],
+          "imports": [
+            "@supabase/supabase-js"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/types.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "lib/validators.ts",
+          "language": "typescript",
+          "exports": [
+            "formatZodError",
+            "CreateProductSchema",
+            "UpdateProductSchema",
+            "CreateTextSchema",
+            "UpdateTextSchema",
+            "CreateZoneSchema",
+            "UpdateZoneSchema",
+            "CreateZoneCardSchema",
+            "UpdateZoneCardSchema",
+            "CreateSolutionSchema",
+            "UpdateSolutionSchema",
+            "LoginSchema",
+            "ContactSchema",
+            "UpdateSettingsSchema"
+          ],
+          "imports": [
+            "zod"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/cartContext.tsx",
+          "language": "typescript",
+          "exports": [
+            "CartProvider",
+            "useCart"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "lib/assistantContext.ts",
+          "language": "typescript",
+          "exports": [
+            "buildSystemPrompt",
+            "detectContactIntent"
+          ],
+          "imports": [
+            "./prisma"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/dynamicTranslations.tsx",
+          "language": "typescript",
+          "exports": [
+            "DynamicLanguageProvider",
+            "useDynamicLanguage",
+            "getNestedValue"
+          ],
+          "imports": [
+            "react"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "lib/translator.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "error handling"
+        },
+        {
+          "path": "lib/stripe.ts",
+          "language": "typescript",
+          "exports": [
+            "formatPrice",
+            "stripe"
+          ],
+          "imports": [
+            "stripe"
+          ],
+          "purpose": "error handling"
+        },
+        {
+          "path": "lib/SupabaseAuthContext.tsx",
+          "language": "typescript",
+          "exports": [
+            "SupabaseAuthProvider",
+            "useAuth"
+          ],
+          "imports": [
+            "react",
+            "./supabase"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "lib/firebase.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/dbHelpers.ts",
+          "language": "typescript",
+          "exports": [
+            "serializeImages",
+            "deserializeImages",
+            "normalizeProduct"
+          ],
+          "imports": [],
+          "purpose": "utilities"
+        },
+        {
+          "path": "lib/rate-limit.ts",
+          "language": "typescript",
+          "exports": [
+            "checkRateLimit",
+            "getClientIp"
+          ],
+          "imports": [],
+          "purpose": "tests"
+        },
+        {
+          "path": "lib/api-response.ts",
+          "language": "typescript",
+          "exports": [
+            "successResponse",
+            "errorResponse",
+            "paginatedResponse"
+          ],
+          "imports": [
+            "next/server"
+          ],
+          "purpose": "API routes"
+        },
+        {
+          "path": "lib/translations.ts",
+          "language": "typescript",
+          "exports": [
+            "translations"
+          ],
+          "imports": [],
+          "purpose": "CLI commands"
+        },
+        {
+          "path": "lib/supabaseNewappai.ts",
+          "language": "typescript",
+          "exports": [
+            "supabaseNewappai",
+            "supabaseNewappaiAdmin"
+          ],
+          "imports": [
+            "@supabase/supabase-js"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/SettingsContext.tsx",
+          "language": "typescript",
+          "exports": [
+            "SettingsProvider",
+            "useSettings"
+          ],
+          "imports": [
+            "react",
+            "next/navigation"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/LanguageContext.tsx",
+          "language": "typescript",
+          "exports": [
+            "LanguageProvider",
+            "useLanguage"
+          ],
+          "imports": [
+            "react",
+            "./translations"
+          ],
+          "purpose": "UI components"
+        },
+        {
+          "path": "lib/ai.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "configuration"
+        },
+        {
+          "path": "lib/validations/auth.ts",
+          "language": "typescript",
+          "exports": [
+            "LoginSchema",
+            "RegisterSchema",
+            "PasswordResetSchema",
+            "PasswordUpdateSchema"
+          ],
+          "imports": [
+            "zod"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "lib/validations/contact.ts",
+          "language": "typescript",
+          "exports": [
+            "ContactFormSchema"
+          ],
+          "imports": [
+            "zod"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/validations/product.ts",
+          "language": "typescript",
+          "exports": [
+            "CreateProductSchema",
+            "UpdateProductSchema"
+          ],
+          "imports": [
+            "zod"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/validations/order.ts",
+          "language": "typescript",
+          "exports": [
+            "CreateOrderSchema",
+            "UpdateOrderSchema"
+          ],
+          "imports": [
+            "zod"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/stripe/client.ts",
+          "language": "typescript",
+          "exports": [
+            "formatPrice",
+            "stripe"
+          ],
+          "imports": [
+            "stripe"
+          ],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "lib/stripe/webhook.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "stripe",
+            "./client"
+          ],
+          "purpose": "error handling"
+        },
+        {
+          "path": "lib/supabase/server.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "@supabase/ssr",
+            "next/headers"
+          ],
+          "purpose": "authentication"
+        },
+        {
+          "path": "lib/supabase/client.ts",
+          "language": "typescript",
+          "exports": [
+            "createClient"
+          ],
+          "imports": [
+            "@supabase/ssr"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/supabase/middleware.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "@supabase/ssr",
+            "next/server"
+          ],
+          "purpose": "middleware"
+        },
+        {
+          "path": "lib/eva/agent.py",
+          "language": "python",
+          "exports": [
+            "create_eva_agent"
+          ],
+          "imports": [
+            "crewai"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/eva/sales_prompt.py",
+          "language": "python",
+          "exports": [
+            "build_eva_prompt"
+          ],
+          "imports": [],
+          "purpose": "database models"
+        },
+        {
+          "path": "lib/ai/openai.ts",
+          "language": "typescript",
+          "exports": [
+            "openai"
+          ],
+          "imports": [
+            "openai"
+          ],
+          "purpose": "configuration"
+        }
+      ],
+      "language": "typescript",
+      "framework": null
+    },
+    {
+      "name": "prisma",
+      "path": "prisma",
+      "purpose": "",
+      "files": [
+        {
+          "path": "prisma/schema.prisma",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "prisma/dev.db",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "prisma/schema.postgresql.prisma",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        }
+      ],
+      "language": null,
+      "framework": null
+    },
+    {
+      "name": "public",
+      "path": "public",
+      "purpose": "",
+      "files": [
+        {
+          "path": "public/contact.html",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/solutions.html",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/header-bg.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/click-collect-app.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/about.html",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744956847-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775743429558-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775743592486-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1776156294382-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775746060303-olharosol.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744343353-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1776156247691-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744343374-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1776156247681-Capture_d__cran_du_2026-04-13_18-39-59.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744935457-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/logo_site.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744935434-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775743273094-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744152234-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744590398-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744050051-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744152207-pizzapepperoni.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/favicon-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/logo_site-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744050079-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/favicon.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744590366-novopizza.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775743592462-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744582204-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775743273114-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775743429540-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1776156294369-Capture_d__cran_du_2026-04-13_18-40-12.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775742928478-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775746060551-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744563161-thumb-thumb.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744956813-hamburgerolharosol.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744563138-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775744582172-olharosol.webp",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/1775742928460-logo.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/uploads/logo_site.jpg",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/music/contact.txt",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/music/accueil.txt",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/music/solutions.txt",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/music/produits.txt",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/music/histoire.txt",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/audio/1775746611475-AERORadio_Drone_1__ID_3545__LaSonotheque.fr.wav",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "public/audio/1775747162012-AERORadio_Drone_1__ID_3545__LaSonotheque.fr.wav",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        }
+      ],
+      "language": null,
+      "framework": null
+    },
+    {
+      "name": "reports",
+      "path": "reports",
+      "purpose": "",
+      "files": [
+        {
+          "path": "reports/qa/screenshots_success.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/qa_report.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_messages.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_solutions.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_mentions-legales.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_cgv.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_finances.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_admin_login.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_privacy.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_calendar.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_settings.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_produits.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_about.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots_voice.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/produits.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_register.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_about.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_solutions.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_about.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_admin_login.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/admin_login_result.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_home.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/solutions.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_admin.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_assistant.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/marketplace.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/services.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_produits.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/privacy.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_cgv.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/admin_accueil.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/checkout.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_contact.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/about.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_privacy.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_checkout_success.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/login.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_admin.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/mentions-legales.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/cgv.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pricing.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_success.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/admin.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/admin_products.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_home.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/contact.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_contact.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_mentions.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_privacy.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/admin_login.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_profile.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_produits.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/success.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_checkout_cancel.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/playwright_marketplace.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/homepage.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/admin_login_form.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/screenshots/pw_login.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_eva_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_products_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_tts_200.bin",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_texts_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_cards_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_auth_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_zones_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_texts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_products_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_contact_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_stripe_checkout_cart_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_auth_401.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_settings_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_eva2.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_translate_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_products_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_texts_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_assistant_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_ai_chat_400.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_settings_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_stripe_checkout_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_zones_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_tts2.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_translate2.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_auth.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_auth_login.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_orders_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_stripe_500.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_solutions_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/homepage.html",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_assistant_405.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_solutions_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_settings_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_products_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_orders_200.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_upload.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_eva.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_solutions_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_settings.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_tts_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_tts.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_translate.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_zones_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_contact_400.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_stripe_session_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_assistant.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_translate_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_eva_405.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_upload_400.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_stripe_webhook_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_local_upload_401.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_contact.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_supabase_orders_get.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/qa/responses/api_auth_post.json",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/ultime/screenshots/finances.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/ultime/screenshots/settings.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/ultime/screenshots/messages.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/ultime/screenshots/calendar.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "reports/ultime/screenshots/home.png",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        }
+      ],
+      "language": null,
+      "framework": null
+    },
+    {
+      "name": "scripts",
+      "path": "scripts",
+      "purpose": "",
+      "files": [
+        {
+          "path": "scripts/insert-texts-erv-qrcall.sql",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "scripts/insert-texts.sql",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "scripts/add-product.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "@prisma/client"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "scripts/seed-texts.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "firebase/app",
+            "firebase/firestore"
+          ],
+          "purpose": "configuration"
+        },
+        {
+          "path": "scripts/add-qrcall-products.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "@supabase/supabase-js",
+            "fs",
+            "path"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "scripts/add-qrcall-products.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [
+            "@prisma/client"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "scripts/test-supabase.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "@supabase/supabase-js",
+            "fs",
+            "path"
+          ],
+          "purpose": "database models"
+        },
+        {
+          "path": "scripts/check-db.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "pg",
+            "fs",
+            "path"
+          ],
+          "purpose": "data access"
+        },
+        {
+          "path": "scripts/debug-db.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "@supabase/supabase-js",
+            "fs",
+            "path"
+          ],
+          "purpose": "data access"
+        },
+        {
+          "path": "scripts/seed-solutions.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "firebase-admin/app",
+            "firebase-admin/firestore"
+          ],
+          "purpose": "data access"
+        },
+        {
+          "path": "scripts/seed-texts-admin.js",
+          "language": "javascript",
+          "exports": [],
+          "imports": [
+            "firebase-admin/app",
+            "firebase-admin/firestore"
+          ],
+          "purpose": "configuration"
+        }
+      ],
+      "language": "javascript",
+      "framework": null
+    },
+    {
+      "name": "supabase",
+      "path": "supabase",
+      "purpose": "",
+      "files": [
+        {
+          "path": "supabase/seed.sql",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        },
+        {
+          "path": "supabase/migrations/001_initial_schema.sql",
+          "language": "unknown",
+          "exports": [],
+          "imports": [],
+          "purpose": ""
+        }
+      ],
+      "language": null,
+      "framework": null
+    },
+    {
+      "name": "types",
+      "path": "types",
+      "purpose": "",
+      "files": [
+        {
+          "path": "types/supabase.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "database models"
+        },
+        {
+          "path": "types/stripe.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "type definitions"
+        },
+        {
+          "path": "types/ai.ts",
+          "language": "typescript",
+          "exports": [],
+          "imports": [],
+          "purpose": "type definitions"
+        }
+      ],
+      "language": "typescript",
+      "framework": null
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@prisma/client",
+      "version": "5.22.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "@supabase/ssr",
+      "version": "^0.12.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "@supabase/supabase-js",
+      "version": "^2.78.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "clsx",
+      "version": "^2.1.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "iron-session",
+      "version": "^8.0.4",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "next",
+      "version": "^14.2.35",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "nodemailer",
+      "version": "^8.0.2",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "openai",
+      "version": "^6.45.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "prisma",
+      "version": "5.22.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "react",
+      "version": "^18.3.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "react-dom",
+      "version": "^18.3.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "sharp",
+      "version": "^0.33.5",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "stripe",
+      "version": "^20.3.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "tailwind-merge",
+      "version": "^3.6.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "zod",
+      "version": "^4.3.6",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "runtime"
+    },
+    {
+      "name": "@types/node",
+      "version": "^25.2.3",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "@types/nodemailer",
+      "version": "^7.0.11",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "@types/react",
+      "version": "^19.2.14",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "version": "^4.7.0",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "@vitest/coverage-v8",
+      "version": "^1.6.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "autoprefixer",
+      "version": "^10.4.24",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "tailwindcss",
+      "version": "^3.4.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "typescript",
+      "version": "^5.9.3",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    },
+    {
+      "name": "vitest",
+      "version": "^1.6.1",
+      "latest": null,
+      "health": "unknown",
+      "health_score": 0.0,
+      "usage_locations": [],
+      "breaking_changes": [],
+      "ecosystem": "npm",
+      "dep_type": "dev"
+    }
+  ],
+  "conventions": {
+    "naming": "mixed",
+    "file_org": "feature-based",
+    "import_style": "absolute",
+    "test_pattern": "*.test.ts",
+    "patterns_used": [
+      "command",
+      "helper",
+      "middleware",
+      "provider",
+      "repository",
+      "router",
+      "service"
+    ]
+  },
+  "tech_debt": [],
+  "security": [],
+  "testing": [],
+  "decisions": [],
+  "api_surface": [],
+  "git_insights": {
+    "total_commits": 52,
+    "contributors": [
+      "Alice Costa",
+      "NewAppAI Deploy",
+      "NewAppAI Admin"
+    ],
+    "hotspots": [
+      "app/page.tsx",
+      "Dockerfile",
+      "CLAUDE.md",
+      "app/contact/page.tsx",
+      ".codebase/project.json",
+      "AGENTS.md",
+      "PROJECT_CONTEXT.md",
+      "app/solutions/page.tsx",
+      "app/about/page.tsx",
+      "components/Header.tsx"
+    ],
+    "recent_files": [
+      ".codebase/project.json",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "PROJECT_CONTEXT.md",
+      "app/admin/accueil/page.tsx",
+      "app/page.tsx",
+      "app/produits/page.tsx",
+      "app/solutions/page.tsx",
+      "components/ProductCarousel.tsx",
+      "components/TestimonialCarousel.tsx"
+    ],
+    "branch": "master"
+  },
+  "metadata": {
+    "scanned_at": "2026-07-16T15:09:38.229268Z",
+    "version": "0.1.0",
+    "git_sha": "3c571c743ee8eb2ca0fc263cdde8a7ab57c21ee2",
+    "scan_duration": 11.901
+  }
+}

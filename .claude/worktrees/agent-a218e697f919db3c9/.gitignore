@@ -1,0 +1,44 @@
+node_modules/
+.pnp
+.pnp.js
+.next/
+out/
+build/
+dist/
+*.standalone/
+.DS_Store
+*.pem
+nul
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env*.local
+!.env.example
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+*.db
+*.db-shm
+*.db-wal
+prisma/dev.db
+prisma/dev.db-journal
+# Uploads (large binary files)
+public/assets/audio/
+public/assets/header/
+public/assets/logo/
+tunnel.log
+
+
+
+# Misc files
+*.backup
+
+# Audit/report dumps (contain potential secrets)
+delivery_report.json
+db_dump.json
+settings_dump.json
+phase6_test.js
+ultime_report.json
+audit_map.json
+plan.json

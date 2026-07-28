@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap');
+
+:root {
+  --color-primary: #8b5cf6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Default header background — détaché du fond lumineux */
+#premium-root .site-header {
+  background-color: rgba(2, 6, 23, 0.85) !important;
+  backdrop-filter: blur(12px);
+}
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: #000000;
+  color: #f5f5f7;
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Apple-style section alternance */
+.bg-apple-black {
+  background-color: #000000;
+}
+
+.bg-apple-dark {
+  background-color: #1d1d1f;
+}
+
+#premium-root .glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ai-bubble {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.details-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.details-content.expanded {
+  max-height: 500px;
+  transition: max-height 0.5s ease-in;
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === NOUVELLES ANIMATIONS === */
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+a,
+button {
+  transition: all 200ms ease;
+}
+
+/* Navigation underline animation */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: #a78bfa;
+  transition: width 0.25s ease;
+  border-radius: 1px;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Smooth opacity-only transition on route change.
+ * NO transform animation — even `transform: none` on keyframes creates a
+ * containing block that breaks `position: fixed` on child elements. */
+.route-transition {
+  animation: route-fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Bandeaux pub EasyReadVoice — défilement ticker droite -> gauche */
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ad-ticker-track {
+  animation: ticker-scroll 28s linear infinite;
+}
+
+/* Bandeau pub HAUT — meme ticker mais defilement gauche -> droite */
+@keyframes ticker-scroll-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.ad-ticker-track-reverse {
+  animation: ticker-scroll-reverse 28s linear infinite;
+}

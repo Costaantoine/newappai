@@ -1,0 +1,20 @@
+# NewAppAI — Innovation Logicielle
+
+## Description
+NewAppAI crée des solutions IA pour les commerces, industries, comptables, avocats et indépendants. Basé à Bordeaux, France.
+
+## Key products
+- EasyReadVoice: Transforme vos documents (PDF, EPUB, Word) en audio multi-voix avec détection automatique des personnages
+- QRcall: Générez des QR codes pour appeler ou envoyer un SMS en un scan
+- Chatbot Client Intelligent: Assistant IA pour votre site web
+- Click and Delivery: Solution de commande et livraison
+- Talkie Walkie Connecté: Communication vocale instantanée
+- Paperasse: Services IA pour votre entreprise
+
+## Key pages
+- Accueil: https://newappai.com/
+- Solutions: https://newappai.com/solutions
+- Produits: https://newappai.com/produits
+- Contact: https://newappai.com/contact
+- EasyReadVoice: https://newappai.com/easyreadvoice
+- QRcall: https://newappai.com/qrcall

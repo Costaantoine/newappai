@@ -1,0 +1,104 @@
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+
+export const metadata = {
+  title: "Notre Histoire",
+  description: 'Découvrez qui nous sommes, notre mission et les valeurs qui guident NewAppAI.',
+  alternates: { canonical: "https://newappai.com/notre-histoire" },
+}
+
+export default function NotreHistoirePage() {
+  const values = [
+    { title: 'Innovation', desc: 'Toujours à la pointe des technologies d\'intelligence artificielle pour offrir des solutions performantes et durables.' },
+    { title: 'Proximité', desc: 'Un accompagnement personnalisé, à l\'écoute des besoins réels de chaque client.' },
+    { title: 'Excellence', desc: 'Des solutions de qualité supérieure, pensées et développées avec rigueur.' },
+    { title: 'Transparence', desc: 'Une relation de confiance basée sur une communication claire à chaque étape du projet.' },
+  ]
+
+  const team = [
+    { role: 'Direction & Stratégie', desc: 'Pilotage des projets et vision produit, au service de la réussite de nos clients.' },
+    { role: 'Ingénierie IA', desc: 'Conception et développement de nos solutions d\'intelligence artificielle sur-mesure.' },
+    { role: 'Design & Expérience', desc: 'Création d\'interfaces claires, accessibles et pensées pour l\'utilisateur final.' },
+  ]
+
+  return (
+    <>
+      <Header />
+      <main className="min-h-screen bg-black text-slate-100 pt-40 pb-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-center">
+            Notre <span className="neon-text">Histoire</span>
+          </h1>
+          <p className="text-[#33ff33] text-lg text-center mb-16 max-w-2xl mx-auto">
+            Une passion pour l&apos;innovation, une mission pour votre réussite.
+          </p>
+
+          <div className="space-y-16">
+            <section>
+              <h2 className="text-2xl font-bold text-[#33ff33] mb-4 flex items-center">
+                <span className="w-2 h-8 bg-green-500 rounded-full mr-4"></span>
+                Qui sommes-nous
+              </h2>
+              <p className="text-[#33ff33] leading-relaxed">
+                NewAppAI est une agence française spécialisée dans la conception de solutions d&apos;intelligence
+                artificielle sur-mesure. Nous accompagnons les entreprises, de la startup au grand groupe, dans
+                leur transformation digitale en développant des outils intelligents, accessibles et adaptés à
+                leurs enjeux métier.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-[#33ff33] mb-4 flex items-center">
+                <span className="w-2 h-8 bg-green-500 rounded-full mr-4"></span>
+                Mission
+              </h2>
+              <p className="text-[#33ff33] leading-relaxed">
+                Notre mission est de rendre l&apos;intelligence artificielle accessible à toutes les entreprises,
+                quelle que soit leur taille. Nous croyons que la technologie doit servir l&apos;humain, pas l&apos;inverse :
+                chaque solution que nous développons vise à simplifier le quotidien de nos clients et de leurs
+                utilisateurs.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-[#33ff33] mb-8 flex items-center">
+                <span className="w-2 h-8 bg-green-500 rounded-full mr-4"></span>
+                Valeurs
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {values.map((value) => (
+                  <div
+                    key={value.title}
+                    className="bg-black/60 p-6 rounded-2xl border border-white/5 hover:border-[#33ff33]/30 transition-all duration-300"
+                  >
+                    <h3 className="text-lg font-bold text-[#33ff33] mb-2">{value.title}</h3>
+                    <p className="text-[#33ff33] leading-relaxed text-sm">{value.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-[#33ff33] mb-8 flex items-center">
+                <span className="w-2 h-8 bg-green-500 rounded-full mr-4"></span>
+                Équipe
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {team.map((member) => (
+                  <div
+                    key={member.role}
+                    className="bg-black/60 p-6 rounded-2xl border border-white/5 hover:border-[#33ff33]/30 transition-all duration-300"
+                  >
+                    <h3 className="text-base font-bold text-[#33ff33] mb-2">{member.role}</h3>
+                    <p className="text-[#33ff33] leading-relaxed text-sm">{member.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
+  )
+}
