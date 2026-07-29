@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Utiliser FreeLLM API (newPC) qui aggregate 65+ modèles et 22 providers
-    const url = process.env.FREELLM_API_URL || 'http://100.101.125.48:3001/v1/chat/completions'
+    const url = process.env.FREELLM_API_URL || 'http://localhost:3001/v1/chat/completions'
     const freeLlmKey = process.env.FREELLM_API_KEY || ''
     const response = await fetch(url, {
       method: 'POST',
