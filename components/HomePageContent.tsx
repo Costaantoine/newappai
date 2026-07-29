@@ -156,7 +156,7 @@ export default function HomePageContent() {
   // Hero texts
   const heroTitle = globalSettings?.hero_texts?.title?.[lang as keyof typeof globalSettings.hero_texts.title]
     || globalSettings?.hero_texts?.title?.fr
-    || 'Pilotez votre entreprise avec l\'Intelligence d\'aujourd\'hui.'
+    || 'Donnez une voix humaine à tous vos documents, en moins de 2 minutes.'
   const heroSubtitle1 = globalSettings?.hero_texts?.subtitle?.[lang as keyof typeof globalSettings.hero_texts.subtitle]
     || globalSettings?.hero_texts?.subtitle?.fr
     || 'Adoptez des solutions intelligentes conçues pour simplifier votre quotidien, booster votre productivité et satisfaire vos clients.'

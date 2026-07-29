@@ -15,7 +15,7 @@ export const translations = {
       tagline: 'by premiumajusteprix',
     },
     hero: {
-      title: 'Pilotez votre entreprise avec l\'Intelligence d\'aujourd\'hui.',
+      title: 'Donnez une voix humaine à tous vos documents, en moins de 2 minutes.',
       subtitle1: 'Adoptez des solutions intelligentes conçues pour simplifier votre quotidien, booster votre productivité et satisfaire vos clients.',
       subtitle2: 'Dans un monde qui s\'accélère, la technologie doit être un moteur. Nous créons des outils sur-mesure qui connectent vos équipes, automatisent vos processus et valorisent votre savoir-faire.',
       cta1: 'Explorer nos Solutions',

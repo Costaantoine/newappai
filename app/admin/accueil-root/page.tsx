@@ -421,7 +421,7 @@ export default function AdminAccueilPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-800/50 p-3 rounded-lg">
                   <p className="text-xs text-slate-500 mb-1">Titre Principal</p>
-                  <p className="text-white text-sm truncate">{settings?.hero_texts?.title?.fr || 'Pilotez votre entreprise...'}</p>
+                  <p className="text-white text-sm truncate">{settings?.hero_texts?.title?.fr || 'Donnez une voix humaine...'}</p>
                   <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts_title: settings?.hero_texts?.title || {} }, 'Titre Hero (multilingue)', [
                     { name: 'hero_texts_title', label: 'Titre Hero', type: 'languages' }
                   ]) }} className="mt-2 px-3 py-1 bg-sky-500 text-white rounded text-xs hover:bg-sky-400">Modifier</button>

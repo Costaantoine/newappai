@@ -274,7 +274,7 @@ export default function AdminSettingsPage() {
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <h3 className="text-2xl font-bold text-white text-center px-4">
-                    {settings.hero_title || 'Pilotez votre entreprise avec l\'Intelligence d\'aujourd\'hui.'}
+                    {settings.hero_title || 'Donnez une voix humaine à tous vos documents, en moins de 2 minutes.'}
                   </h3>
                 </div>
               </div>

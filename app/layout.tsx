@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma'
 const META_BY_LANG: Record<string, Metadata> = {
   fr: {
     title: 'NewAppAI | Innovation Logicielle — IA pour votre entreprise',
-    description: "Pilotez votre entreprise avec l'intelligence d'aujourd'hui. EasyReadVoice, QRcall, solutions IA pour commerces, industries et services.",
+    description: "Donnez une voix humaine à vos documents avec EasyReadVoice. NewAppAI crée aussi QRcall et des solutions IA sur-mesure pour PME industrielles (Pro'Up) et commerces (DigiSmart).",
   },
   en: {
     title: 'NewAppAI | Software Innovation — AI for your Business',

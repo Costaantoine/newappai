@@ -32,7 +32,7 @@ export default function HtmlLangUpdater() {
     }
 
     const ogDescMap: Record<string, string> = {
-      fr: "Pilotez votre entreprise avec l'intelligence d'aujourd'hui. EasyReadVoice, QRcall, solutions IA pour commerces, industries et services.",
+      fr: "Donnez une voix humaine à tous vos documents avec EasyReadVoice. QRcall, solutions IA pour commerces, industries et services.",
       en: 'Drive your business with today\'s intelligence. EasyReadVoice, QRcall, AI solutions for retail, industry and services.',
       pt: 'Pilote sua empresa com a inteligência de hoje. EasyReadVoice, QRcall, soluções de IA para comércios, indústrias e serviços.',
       es: 'Pilote su empresa con la inteligencia de hoy. EasyReadVoice, QRcall, soluciones de IA para comercios, industrias y servicios.',
@@ -46,7 +46,7 @@ export default function HtmlLangUpdater() {
     }
 
     const twitterDescMap: Record<string, string> = {
-      fr: "Pilotez votre entreprise avec l'intelligence d'aujourd'hui.",
+      fr: "Donnez une voix humaine à tous vos documents, en moins de 2 minutes.",
       en: "Drive your business with today's intelligence.",
       pt: 'Pilote sua empresa com a inteligência de hoje.',
       es: 'Pilote su empresa con la inteligencia de hoy.',
