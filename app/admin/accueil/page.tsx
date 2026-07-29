@@ -422,29 +422,29 @@ export default function AdminAccueilPage() {
                 <div className="bg-slate-800/50 p-3 rounded-lg">
                   <p className="text-xs text-slate-500 mb-1">Titre Principal</p>
                   <p className="text-white text-sm truncate">{settings?.hero_texts?.title?.fr || 'Donnez une voix humaine...'}</p>
-                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts_title: settings?.hero_texts?.title || {} }, 'Titre Hero (multilingue)', [
-                    { name: 'hero_texts_title', label: 'Titre Hero', type: 'languages' }
+                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts: { title: settings?.hero_texts?.title || {} } }, 'Titre Hero (multilingue)', [
+                    { name: 'hero_texts.title', label: 'Titre Hero', type: 'languages' }
                   ]) }} className="mt-2 px-3 py-1 bg-sky-500 text-white rounded text-xs hover:bg-sky-400">Modifier</button>
                 </div>
                 <div className="bg-slate-800/50 p-3 rounded-lg">
                   <p className="text-xs text-slate-500 mb-1">Sous-titre</p>
                   <p className="text-white text-sm truncate">{settings?.hero_texts?.subtitle?.fr || 'Adoptez des solutions...'}</p>
-                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts_subtitle: settings?.hero_texts?.subtitle || {} }, 'Sous-titre Hero (multilingue)', [
-                    { name: 'hero_texts_subtitle', label: 'Sous-titre', type: 'languages' }
+                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts: { subtitle: settings?.hero_texts?.subtitle || {} } }, 'Sous-titre Hero (multilingue)', [
+                    { name: 'hero_texts.subtitle', label: 'Sous-titre', type: 'languages' }
                   ]) }} className="mt-2 px-3 py-1 bg-sky-500 text-white rounded text-xs hover:bg-sky-400">Modifier</button>
                 </div>
                 <div className="bg-slate-800/50 p-3 rounded-lg">
                   <p className="text-xs text-slate-500 mb-1">Bouton 1 (Explorer)</p>
                   <p className="text-white text-sm">{settings?.hero_texts?.cta1?.fr || 'Explorer nos Solutions'}</p>
-                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts_cta1: settings?.hero_texts?.cta1 || {} }, 'Bouton 1 (multilingue)', [
-                    { name: 'hero_texts_cta1', label: 'Bouton Explorer', type: 'languages' }
+                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts: { cta1: settings?.hero_texts?.cta1 || {} } }, 'Bouton 1 (multilingue)', [
+                    { name: 'hero_texts.cta1', label: 'Bouton Explorer', type: 'languages' }
                   ]) }} className="mt-2 px-3 py-1 bg-sky-500 text-white rounded text-xs hover:bg-sky-400">Modifier</button>
                 </div>
                 <div className="bg-slate-800/50 p-3 rounded-lg">
                   <p className="text-xs text-slate-500 mb-1">Bouton 2 (Expert)</p>
                   <p className="text-white text-sm">{settings?.hero_texts?.cta2?.fr || 'Parler à un expert'}</p>
-                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts_cta2: settings?.hero_texts?.cta2 || {} }, 'Bouton 2 (multilingue)', [
-                    { name: 'hero_texts_cta2', label: 'Bouton Expert', type: 'languages' }
+                  <button onClick={(e) => { e.preventDefault(); openEdit('settings', { hero_texts: { cta2: settings?.hero_texts?.cta2 || {} } }, 'Bouton 2 (multilingue)', [
+                    { name: 'hero_texts.cta2', label: 'Bouton Expert', type: 'languages' }
                   ]) }} className="mt-2 px-3 py-1 bg-sky-500 text-white rounded text-xs hover:bg-sky-400">Modifier</button>
                 </div>
               </div>
