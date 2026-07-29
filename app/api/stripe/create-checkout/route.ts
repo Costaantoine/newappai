@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
-    const { productId, successUrl, cancelUrl } = await request.json()
+    const { productId, successUrl, cancelUrl, waiver_accepted, waiver_timestamp } = await request.json()
     
     const product = await prisma.product.findUnique({ where: { id: productId } })
     if (!product) {
@@ -31,6 +31,10 @@ export async function POST(request: NextRequest) {
       cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/checkout/cancel`,
       metadata: {
         product_id: product.id,
+        ...(waiver_accepted ? {
+          waiver_accepted: 'true',
+          waiver_timestamp: waiver_timestamp || new Date().toISOString(),
+        } : {}),
       },
     })
 

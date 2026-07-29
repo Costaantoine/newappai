@@ -207,7 +207,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                     <span className="text-violet-400 font-bold text-lg">{(variant.price / 100).toFixed(2)} €</span>
                     {variant.id ? (
                       <Link
-                        href={`/api/stripe/checkout?productId=${variant.id}`}
+                        href={`/checkout?productId=${variant.id}`}
                         className="bg-violet-500 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-violet-400 transition"
                       >
                         {t?.product?.add_cart || 'Acheter'}
@@ -245,7 +245,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                 <div className="flex items-center justify-between mt-auto">
                   <span className="text-violet-400 font-bold text-lg">{(product.price / 100).toFixed(2)} €</span>
                   <Link
-                    href={`/api/stripe/checkout?productId=${product.id}`}
+                    href={`/checkout?productId=${product.id}`}
                     className="bg-violet-500 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-violet-400 transition"
                   >
                     {t?.product?.add_cart || 'Acheter'}

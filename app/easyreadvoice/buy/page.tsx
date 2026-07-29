@@ -59,27 +59,8 @@ export default function BuyPlayerPage() {
 
   async function handleBuy() {
     if (!productId) return
-    setCheckoutLoading(true)
-    try {
-      const origin = window.location.origin
-      const res = await fetch('/api/stripe/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId,
-          successUrl: `${origin}/easyreadvoice/buy?success=1`,
-          cancelUrl: `${origin}/easyreadvoice/buy`,
-        }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setCheckoutLoading(false)
-      }
-    } catch {
-      setCheckoutLoading(false)
-    }
+    const origin = window.location.origin
+    window.location.href = '/checkout?productId=' + productId + '&successUrl=' + encodeURIComponent(origin + '/easyreadvoice/buy?success=1') + '&cancelUrl=' + encodeURIComponent(origin + '/easyreadvoice/buy')
   }
 
   return (

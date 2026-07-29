@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { items, customer } = body
+    const { items, customer, waiver_accepted, waiver_timestamp } = body
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'Panier vide' }, { status: 400 })
@@ -43,7 +43,11 @@ export async function POST(request: NextRequest) {
       success_url: `${request.nextUrl.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${request.nextUrl.origin}/produits`,
       metadata: {
-        items: JSON.stringify(items.map((i: any) => ({ id: i.productId, qty: i.quantity })))
+        items: JSON.stringify(items.map((i: any) => ({ id: i.productId, qty: i.quantity }))),
+        ...(waiver_accepted ? {
+          waiver_accepted: 'true',
+          waiver_timestamp: waiver_timestamp || new Date().toISOString(),
+        } : {}),
       },
     }
 

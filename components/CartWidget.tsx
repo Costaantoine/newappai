@@ -4,15 +4,37 @@ import { useState, useEffect } from 'react'
 import { useCart } from '@/lib/cartContext'
 import Link from 'next/link'
 
+const IMMEDIATE_PRODUCT_IDS = new Set([
+  '1020f90c-7355-4353-8e45-907777cdeffd',
+  '33c9d282-7154-4ae6-ae2e-87e8d7d02bd3',
+  'cd0ab50d-d479-4671-a723-841e7068a791',
+  'd4f985d2-803b-4c28-93f7-79a8cf1ec5c0',
+  'b1c8a28c-c5ab-41c3-aeed-f48068b08bb3',
+  'c234b8d8-e829-4d7b-81b9-9f401d88fa1c',
+  '8a8677a3-c519-4f40-9464-940b2cfcdc09',
+  'ae2ac1ef-1b73-4f86-bc9f-63a3977aa9d3',
+  '256ecb1e-d92a-469c-91da-24a5215af2ca',
+])
+
+const WAIVER_TEXT = "Je renonce à mon droit de rétractation conformément à l'article L221-28 du Code de la consommation, le téléchargement/l'activation commençant immédiatement après validation du paiement."
+
 export default function CartWidget() {
   const { items, removeItem, updateQuantity, total, itemCount, clearCart } = useCart()
   const [isOpen, setIsOpen] = useState(false)
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'summary' | 'processing'>('cart')
+  const [waiverAccepted, setWaiverAccepted] = useState(false)
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
     phone: ''
   })
+
+  const hasImmediateProduct = items.some(item => IMMEDIATE_PRODUCT_IDS.has(item.id))
+  const needsWaiver = hasImmediateProduct
+
+  useEffect(() => {
+    if (isOpen) setWaiverAccepted(false)
+  }, [isOpen])
 
   useEffect(() => {
     const handleOpenCart = () => setIsOpen(true)
@@ -36,6 +58,7 @@ export default function CartWidget() {
   }
 
   const handleCheckout = async () => {
+    if (needsWaiver && !waiverAccepted) return
     setCheckoutStep('processing')
     try {
       const response = await fetch('/api/stripe/checkout-cart', {
@@ -49,7 +72,11 @@ export default function CartWidget() {
             quantity: item.quantity,
             image: item.image
           })),
-          customer: customerInfo
+          customer: customerInfo,
+          ...(needsWaiver ? {
+            waiver_accepted: true,
+            waiver_timestamp: new Date().toISOString(),
+          } : {}),
         })
       })
 
@@ -183,6 +210,19 @@ export default function CartWidget() {
               {/* SUMMARY STEP */}
               {checkoutStep === 'summary' && (
                 <div className="p-6 pt-0">
+                  {needsWaiver && (
+                    <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-4">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={waiverAccepted}
+                          onChange={(e) => setWaiverAccepted(e.target.checked)}
+                          className="mt-1 w-5 h-5 rounded border-gray-600 bg-slate-700 text-violet-500 focus:ring-violet-500"
+                        />
+                        <span className="text-amber-200 text-sm leading-relaxed">{WAIVER_TEXT}</span>
+                      </label>
+                    </div>
+                  )}
                   <h3 className="text-white font-semibold mb-4 text-sm">Détails de la commande</h3>
 
                   <div className="bg-slate-800/50 rounded-xl p-4 mb-4 border border-white/5">
@@ -232,7 +272,8 @@ export default function CartWidget() {
                 ) : (
                   <button
                     onClick={handleCheckout}
-                    className="w-full bg-green-500 text-white py-3 rounded-full font-bold hover:bg-green-400 transition shadow-lg shadow-green-500/20"
+                    disabled={needsWaiver && !waiverAccepted}
+                    className="w-full bg-green-500 text-white py-3 rounded-full font-bold hover:bg-green-400 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-green-500/20"
                   >
                     Confirmer et payer
                   </button>
