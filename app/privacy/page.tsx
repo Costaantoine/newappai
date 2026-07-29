@@ -1,42 +1,50 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import { prisma } from '@/lib/prisma'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { useLanguage } from '@/lib/LanguageContext'
+import { cookies } from 'next/headers'
+import { Metadata } from 'next'
 
-interface TextItem { id: string; key: string; fr: string; en: string; pt: string; es: string }
+export const revalidate = 60
 
-export default function PrivacyPage() {
-  const { lang } = useLanguage()
-  const [texts, setTexts] = useState<TextItem[]>([])
-  const [loading, setLoading] = useState(true)
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Politique de confidentialité | NewAppAI',
+    description: 'Politique de confidentialité de NewAppAI — collecte, traitement et protection de vos données personnelles conformément au RGPD.',
+    alternates: { canonical: 'https://newappai.com/privacy' },
+    openGraph: {
+      title: 'Politique de confidentialité | NewAppAI',
+      description: 'Politique de confidentialité de NewAppAI — données personnelles et RGPD.',
+      url: 'https://newappai.com/privacy',
+    },
+  }
+}
 
-  useEffect(() => {
-    fetch('/api/supabase/texts?section=legal')
-      .then(res => res.json())
-      .then(data => { setTexts(data.texts || []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+interface TextRow { key: string; fr: string; en: string; pt: string; es: string }
+
+export default async function PrivacyPage() {
+  const cookieStore = cookies()
+  const lang = cookieStore.get('lang')?.value || 'fr'
+
+  const texts = await prisma.text.findMany({
+    where: { section: 'legal' },
+  }) as TextRow[]
 
   const t = (key: string, fb: string = ''): string => {
     const found = texts.find(x => x.key === key)
-    if (found) { const v = found[lang as 'fr'|'en'|'pt'|'es']; return v || found.fr || fb }
-    return fb || key
+    if (!found) return fb || key
+    const val = found[lang as 'fr' | 'en' | 'pt' | 'es']
+    return val || found.fr || fb || key
   }
 
   const companyEmail = 'contact@newappai.com'
   const fill = (text: string) => text.replace(/{company}/g, 'NewAppAI').replace(/{email}/g, companyEmail)
 
-  useEffect(() => { document.title = t('legal_privacy_title', 'Confidentialité') + ' | NewAppAI' }, [lang, texts])
-
-  const numItems = (prefix: string, count: number) => Array.from({ length: count }, (_, i) => i + 1).map(i => ({ num: i, text: t(`${prefix}_${i}`, '') }))
-
   const dateStr = new Date().toLocaleDateString(
     lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es-ES' : 'en-US'
   )
 
-  if (loading) return <div className="min-h-screen bg-[#000000] flex items-center justify-center text-white"><Header /></div>
+  const numItems = (prefix: string, count: number) =>
+    Array.from({ length: count }, (_, i) => i + 1).map(i => ({ num: i, text: t(`${prefix}_${i}`, '') }))
 
   return (
     <>

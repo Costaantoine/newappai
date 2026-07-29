@@ -1,36 +1,57 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import { prisma } from '@/lib/prisma'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { useLanguage } from '@/lib/LanguageContext'
+import { cookies } from 'next/headers'
+import { Metadata } from 'next'
 
-interface TextItem { id: string; key: string; fr: string; en: string; pt: string; es: string }
+export const revalidate = 60
 
-export default function CGVPage() {
-  const { lang } = useLanguage()
-  const [texts, setTexts] = useState<TextItem[]>([])
-  const [loading, setLoading] = useState(true)
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Conditions Générales de Vente | NewAppAI',
+    description: 'Conditions Générales de Vente de NewAppAI — commandes, prix, paiement Stripe, droit de rétractation, garanties.',
+    alternates: { canonical: 'https://newappai.com/cgv' },
+    openGraph: {
+      title: 'CGV | NewAppAI',
+      description: 'Conditions Générales de Vente de NewAppAI.',
+      url: 'https://newappai.com/cgv',
+    },
+  }
+}
 
-  useEffect(() => {
-    fetch('/api/supabase/texts?section=legal')
-      .then(res => res.json())
-      .then(data => { setTexts(data.texts || []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+interface TextRow { key: string; fr: string; en: string; pt: string; es: string }
+
+export default async function CGVPage() {
+  const cookieStore = cookies()
+  const lang = cookieStore.get('lang')?.value || 'fr'
+
+  const texts = await prisma.text.findMany({
+    where: { section: 'legal' },
+  }) as TextRow[]
 
   const t = (key: string, fb: string = ''): string => {
     const found = texts.find(x => x.key === key)
-    if (found) { const v = found[lang as 'fr'|'en'|'pt'|'es']; return v || found.fr || fb }
-    return fb || key
+    if (!found) return fb || key
+    const val = found[lang as 'fr' | 'en' | 'pt' | 'es']
+    return val || found.fr || fb || key
   }
 
   const companyEmail = 'contact@newappai.com'
   const fill = (text: string) => text.replace(/{company}/g, 'NewAppAI').replace(/{email}/g, companyEmail)
 
-  useEffect(() => { document.title = t('legal_cgv_title', 'CGV') + ' | NewAppAI' }, [lang, texts])
-
-  if (loading) return <div className="min-h-screen bg-[#000000] flex items-center justify-center text-white"><Header /></div>
+  // Each section: { num (for display), keySuffix (for DB lookup) }
+  const sections = [
+    { num: 1, key: '1', label: 'Objet' },
+    { num: 2, key: '2', label: 'Commandes' },
+    { num: 3, key: '3', label: 'Prix' },
+    { num: 4, key: '4', label: 'Paiement' },
+    { num: null as number | null, key: '4bis', label: 'TVA' },
+    { num: 5, key: '5', label: 'Livraison' },
+    { num: 6, key: '6', label: 'Droit de rétractation' },
+    { num: 7, key: '7', label: 'Garanties' },
+    { num: 8, key: '8', label: 'Responsabilité' },
+    { num: 9, key: '9', label: 'Litiges' },
+  ]
 
   return (
     <>
@@ -41,20 +62,12 @@ export default function CGVPage() {
             {t('legal_cgv_title', 'Conditions Générales de Vente')}
           </h1>
           <div className="space-y-10 text-[#86868b] leading-relaxed">
-            {[
-              { num: 1, label: 'Objet' },
-              { num: 2, label: 'Commandes' },
-              { num: 3, label: 'Prix' },
-              { num: 4, label: 'Paiement' },
-              { num: 5, label: 'Livraison' },
-              { num: 6, label: 'Droit de rétractation' },
-              { num: 7, label: 'Garanties' },
-              { num: 8, label: 'Responsabilité' },
-              { num: 9, label: 'Litiges' },
-            ].map(s => (
-              <section key={s.num}>
-                <h2 className="text-xl font-semibold text-[#f5f5f7] mb-3">{t(`legal_cgv_section_${s.num}_title`, `${s.num}. ${s.label}`)}</h2>
-                <p>{fill(t(`legal_cgv_section_${s.num}_content`, ''))}</p>
+            {sections.map(s => (
+              <section key={s.key}>
+                <h2 className="text-xl font-semibold text-[#f5f5f7] mb-3">
+                  {t(`legal_cgv_section_${s.key}_title`, `${s.num !== null ? s.num + '. ' : ''}${s.label}`)}
+                </h2>
+                <p>{fill(t(`legal_cgv_section_${s.key}_content`, ''))}</p>
               </section>
             ))}
           </div>

@@ -1,39 +1,59 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import { prisma } from '@/lib/prisma'
+import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { useLanguage } from '@/lib/LanguageContext'
+import { cookies } from 'next/headers'
+import { Metadata } from 'next'
 
-interface TextItem { id: string; key: string; fr: string; en: string; pt: string; es: string }
+export const revalidate = 60
 
-export default function MentionsLegalesPage() {
-  const { lang } = useLanguage()
-  const [texts, setTexts] = useState<TextItem[]>([])
-  const [loading, setLoading] = useState(true)
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Mentions légales | NewAppAI',
+    description: 'Mentions légales du site NewAppAI (Premium à juste prix) — éditeur, hébergement OVH, SIRET 980 127 591 00017, directrice de publication Brigitte VALADIE.',
+    alternates: { canonical: 'https://newappai.com/mentions-legales' },
+    openGraph: {
+      title: 'Mentions légales | NewAppAI',
+      description: 'Mentions légales du site NewAppAI — SIRET 980 127 591 00017, RCS Bordeaux.',
+      url: 'https://newappai.com/mentions-legales',
+    },
+  }
+}
 
-  useEffect(() => {
-    fetch('/api/supabase/texts?section=legal')
-      .then(res => res.json())
-      .then(data => { setTexts(data.texts || []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+interface TextRow { key: string; fr: string; en: string; pt: string; es: string }
+
+export default async function MentionsLegalesPage() {
+  const cookieStore = cookies()
+  const lang = cookieStore.get('lang')?.value || 'fr'
+
+  const texts = await prisma.text.findMany({
+    where: { section: 'legal' },
+  }) as TextRow[]
 
   const t = (key: string, fb: string = ''): string => {
     const found = texts.find(x => x.key === key)
-    if (found) { const v = found[lang as 'fr'|'en'|'pt'|'es']; return v || found.fr || fb }
-    return fb || key
+    if (!found) return fb || key
+    const val = found[lang as 'fr' | 'en' | 'pt' | 'es']
+    return val || found.fr || fb || key
   }
+
+  const sections = [
+    { num: 1, label: 'Éditeur du site' },
+    { num: 2, label: 'Hébergement' },
+    { num: 3, label: 'Propriété intellectuelle' },
+    { num: 4, label: 'Limitation de responsabilité' },
+    { num: 5, label: 'Données personnelles' },
+    { num: 6, label: 'Cookies' },
+    { num: 7, label: 'Droit applicable' },
+    { num: 8, label: 'Directrice de la publication' },
+  ]
 
   const companyName = 'NewAppAI'
   const companyEmail = 'contact@newappai.com'
-  const companyAddress = 'France'
-  const hostName = 'Coolify / OVH'
-  const fill = (text: string) => text.replace(/{company}/g, companyName).replace(/{email}/g, companyEmail).replace(/{address}/g, companyAddress).replace(/{host}/g, hostName)
-
-  useEffect(() => { document.title = t('legal_mentions_title', 'Mentions légales') + ' | NewAppAI' }, [lang, texts])
-
-  if (loading) return <div className="min-h-screen bg-[#000000] flex items-center justify-center text-white"><Header /></div>
+  const companyAddress = '4 impasse ZA Landegrand, 33290 Parempuyre, France'
+  const hostName = 'OVH SAS, 2 rue Kellermann, 59100 Roubaix, France'
+  const fill = (text: string) =>
+    text.replace(/{company}/g, companyName).replace(/{email}/g, companyEmail).replace(/{address}/g, companyAddress).replace(/{host}/g, hostName)
 
   return (
     <>
@@ -44,17 +64,11 @@ export default function MentionsLegalesPage() {
             {t('legal_mentions_title', 'Mentions légales')}
           </h1>
           <div className="space-y-10 text-[#86868b] leading-relaxed">
-            {[
-              { num: 1, label: 'Éditeur du site' },
-              { num: 2, label: 'Hébergement' },
-              { num: 3, label: 'Propriété intellectuelle' },
-              { num: 4, label: 'Limitation de responsabilité' },
-              { num: 5, label: 'Données personnelles' },
-              { num: 6, label: 'Cookies' },
-              { num: 7, label: 'Droit applicable' },
-            ].map(s => (
+            {sections.map(s => (
               <section key={s.num}>
-                <h2 data-section={`legal-mentions-section-${s.num}`} className="text-xl font-semibold text-[#f5f5f7] mb-3">{t(`legal_mentions_section_${s.num}_title`, `${s.num}. ${s.label}`)}</h2>
+                <h2 data-section={`legal-mentions-section-${s.num}`} className="text-xl font-semibold text-[#f5f5f7] mb-3">
+                  {t(`legal_mentions_section_${s.num}_title`, `${s.num}. ${s.label}`)}
+                </h2>
                 <p>{fill(t(`legal_mentions_section_${s.num}_content`, ''))}</p>
               </section>
             ))}
