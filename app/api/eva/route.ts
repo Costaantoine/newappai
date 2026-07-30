@@ -185,40 +185,43 @@ export async function POST(request: NextRequest) {
       { role: 'user' as const, content: message + '\n\nRappel: reponds directement sans preamble, sans raisonnement, sans analyse.' }
     ]
 
-    // Appeler DeepSeek via FreeLLM API (newPC)
+    // Appeler DeepSeek directement
     let reply = ''
 
     try {
-      const freeLlmUrl = process.env.FREELLM_API_URL || 'http://localhost:3001/v1/chat/completions'
-      const freeLlmKey = process.env.FREELLM_API_KEY || ''
+      const deepseekKey = process.env.DEEPSEEK_API_KEY
 
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 30000)
-      const response = await fetch(freeLlmUrl, {
-        signal: controller.signal,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${freeLlmKey}`
-        },
-        body: JSON.stringify({
-          model: 'deepseek-v4-flash',
-          messages,
-          temperature: 0.6,
-          max_tokens: 150
-        })
-      })
-      clearTimeout(timeoutId)
-
-      if (response.ok) {
-        const data = await response.json()
-        reply = data.choices?.[0]?.message?.content || ''
+      if (!deepseekKey) {
+        console.error('DEEPSEEK_API_KEY not configured')
       } else {
-        const errText = await response.text().catch(() => '')
-        console.error('FreeLLM API failed:', response.status, errText)
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 30000)
+        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+          signal: controller.signal,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${deepseekKey}`
+          },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            messages,
+            temperature: 0.6,
+            max_tokens: 150
+          })
+        })
+        clearTimeout(timeoutId)
+
+        if (response.ok) {
+          const data = await response.json()
+          reply = data.choices?.[0]?.message?.content || ''
+        } else {
+          const errText = await response.text().catch(() => '')
+          console.error('DeepSeek API failed:', response.status, errText)
+        }
       }
     } catch (error) {
-      console.error('FreeLLM API error:', error)
+      console.error('DeepSeek API error:', error)
     }
 
 

@@ -33,10 +33,15 @@ export async function sendContactEmail(opts: ContactEmailOptions): Promise<boole
 
   const recipientEmail = process.env.CONTACT_EMAIL || process.env.SMTP_USER!
   const siteName = process.env.SITE_NAME || 'NewAppAI'
+  const contactFrom = process.env.SMTP_FROM || `"${siteName}" <${process.env.SMTP_USER}>`
 
+  let notifyOk = false
+  let confirmOk = false
+
+  // 1. Notification interne (vers CONTACT_EMAIL)
   try {
     await transporter.sendMail({
-      from: `"${siteName}" <${process.env.SMTP_USER}>`,
+      from: contactFrom,
       replyTo: `"${opts.name}" <${opts.email}>`,
       to: recipientEmail,
       subject: `[Contact] ${opts.subject} — ${opts.name}`,
@@ -66,11 +71,49 @@ export async function sendContactEmail(opts: ContactEmailOptions): Promise<boole
       `,
     })
     logger.info({ to: recipientEmail, from: opts.email }, 'Contact email sent')
-    return true
+    notifyOk = true
   } catch (error) {
-    logger.error({ error }, 'Failed to send contact email')
-    return false
+    logger.error({ error }, 'Failed to send contact notification')
   }
+
+  // 2. Confirmation client (vers l'adresse laissée dans le formulaire)
+  try {
+    await transporter.sendMail({
+      from: contactFrom,
+      replyTo: process.env.CONTACT_REPLY_TO || 'contact@newappai.com',
+      to: opts.email,
+      subject: `Confirmation de votre demande — ${siteName}`,
+      text: [
+        `Bonjour ${opts.name},`,
+        ``,
+        `Nous vous confirmons la bonne réception de votre demande au sujet de :`,
+        `« ${opts.subject} »`,
+        ``,
+        `Nous vous répondrons dans les plus brefs délais à l'adresse : ${opts.email}`,
+        ``,
+        `Merci de votre confiance,`,
+        `L'équipe ${siteName}`,
+      ].join('\n'),
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0ea5e9;">Confirmation de votre demande</h2>
+          <p>Bonjour ${escapeHtml(opts.name)},</p>
+          <p>Nous vous confirmons la bonne réception de votre demande au sujet de :</p>
+          <p style="padding: 12px; background: #f8fafc; border-radius: 8px; font-style: italic;">« ${escapeHtml(opts.subject)} »</p>
+          <p>Nous vous répondrons dans les plus brefs délais à l'adresse : <strong>${escapeHtml(opts.email)}</strong></p>
+          <p style="margin-top: 24px;">Merci de votre confiance,<br><strong>L'équipe ${escapeHtml(siteName)}</strong></p>
+          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
+          <p style="color: #94a3b8; font-size: 12px;">Ce message a été envoyé automatiquement suite à votre demande sur ${escapeHtml(siteName)}. Merci de ne pas répondre directement à cet email.</p>
+        </div>
+      `,
+    })
+    logger.info({ to: opts.email }, 'Contact confirmation sent')
+    confirmOk = true
+  } catch (error) {
+    logger.error({ error }, 'Failed to send contact confirmation')
+  }
+
+  return notifyOk || confirmOk
 }
 
 export interface LeaDemoEmailOptions {
