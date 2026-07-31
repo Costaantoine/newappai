@@ -324,7 +324,7 @@ export default function HomePageContent() {
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <Link
                 data-section="hero-cta-1"
-                href="/solutions"
+                href="/contact"
                 className="inline-block text-white px-8 py-3.5 rounded-full font-semibold text-base transition"
                 style={{
                   backgroundColor: globalSettings?.buttons?.primary_color || '#8b5cf6',
@@ -334,7 +334,7 @@ export default function HomePageContent() {
               </Link>
               <Link
                 data-section="hero-cta-2"
-                href="/contact"
+                href="/solutions"
                 className="inline-block text-[#f5f5f7] px-8 py-3.5 rounded-full font-semibold text-base transition border border-white/20 hover:border-white/40"
               >
                 {heroCta2}
