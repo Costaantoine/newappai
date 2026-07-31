@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
-import { supabaseNewappaiAdmin } from '@/lib/supabaseNewappai'
+import { prisma } from '@/lib/prisma'
 
 function parseText(value: string): string {
   try {
@@ -26,22 +26,14 @@ export async function GET(request: NextRequest) {
 
     let productName = ''
 
-    const { data: order } = await supabaseNewappaiAdmin
-      .from('orders')
-      .select('*')
-      .eq('stripe_session_id', sessionId)
-      .single()
+    // Lire la commande en base locale (Prisma/PG local 127.0.0.1:5444)
+    const order = await prisma.order.findUnique({
+      where: { stripe_session_id: sessionId },
+      include: { product: true },
+    })
 
-    if (order?.product_id) {
-      const { data: product } = await supabaseNewappaiAdmin
-        .from('products')
-        .select('title')
-        .eq('id', order.product_id)
-        .single()
-
-      if (product?.title) {
-        productName = parseText(product.title)
-      }
+    if (order?.product?.title) {
+      productName = parseText(order.product.title)
     }
 
     return NextResponse.json({

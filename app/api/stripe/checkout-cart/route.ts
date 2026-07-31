@@ -62,6 +62,22 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create(sessionParams)
 
+    // Enregistrer la commande en base locale (Prisma/PG local 127.0.0.1:5444)
+    // pour que la page de succès puisse afficher les infos produit sans dépendre de Supabase PJP
+    const totalAmount = lineItems.reduce((sum: number, item: any, idx: number) => {
+      return sum + (item.price_data.unit_amount || 0) * (items[idx]?.quantity || 1)
+    }, 0)
+
+    await prisma.order.create({
+      data: {
+        stripe_session_id: session.id,
+        product_id: items[0]?.productId || null,
+        customer_email: customer?.email || null,
+        amount: totalAmount,
+        status: 'pending',
+      },
+    })
+
     return NextResponse.json({ url: session.url })
   } catch (error) {
     console.error('Cart checkout error:', error)
