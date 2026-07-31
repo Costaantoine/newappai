@@ -60,6 +60,18 @@ export default function SolutionsPage() {
     return () => document.removeEventListener('visibilitychange', handler)
   }, [lang])
 
+  // Scroll vers l'ancre (#zone) une fois les données chargées
+  useEffect(() => {
+    if (loading) return
+    const hash = window.location.hash
+    if (!hash) return
+    const timer = setTimeout(() => {
+      const el = document.getElementById(hash.slice(1))
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [loading])
+
   const fetchData = async () => {
     try {
       const [tr, zr, sr] = await Promise.all([
@@ -117,7 +129,7 @@ export default function SolutionsPage() {
             const cs = colorStyles[zone.color] || colorStyles.violet
             const siteUrl = zone.site_url || t(zone.key + '_site_url', '')
             return (
-              <AppleCard key={zone.id} id={zone.key} padding="lg" hover glowColor={zone.color} className={`animate-fade-in-up ${zone.order === 0 ? 'border-violet-500/30' : ''}`} style={{ animationDelay: `${0.1 + index * 0.15}s` }}>
+              <AppleCard key={zone.id} id={zone.key} padding="lg" hover glowColor={zone.color} className={`animate-fade-in-up scroll-mt-28 ${zone.order === 0 ? 'border-violet-500/30' : ''}`} style={{ animationDelay: `${0.1 + index * 0.15}s` }}>
                 
                 {/* Zone image banner */}
                 {zoneImages[zone.key] && (

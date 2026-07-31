@@ -180,7 +180,7 @@ export default function HomePageContent() {
       subtitle_key: 'commerce_subtitle',
       badge: 'DS',
       color: 'violet',
-      url: '/solutions',
+      url: '/solutions#commerce',
       cta_key: 'commerce_cta',
       active: true,
       order: 0
