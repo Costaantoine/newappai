@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { uploadToSupabase } from '@/lib/supabase'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
@@ -22,13 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Type de fichier non autorisé' }, { status: 400 })
     }
 
-    // Try Supabase first
-    const supabaseUrl = await uploadToSupabase(file)
-    if (supabaseUrl) {
-      return NextResponse.json({ url: supabaseUrl, provider: 'supabase' })
-    }
-
-    // Fallback to local storage
+    // Stockage local uniquement (plus de tentative Supabase PJP)
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
     await mkdir(uploadsDir, { recursive: true })
 
