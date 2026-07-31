@@ -60,16 +60,28 @@ export default function SolutionsPage() {
     return () => document.removeEventListener('visibilitychange', handler)
   }, [lang])
 
-  // Scroll vers l'ancre (#zone) une fois les données chargées
+  // Scroll vers l'ancre (#zone) une fois les données chargées, et à chaque changement de hash
   useEffect(() => {
-    if (loading) return
-    const hash = window.location.hash
-    if (!hash) return
-    const timer = setTimeout(() => {
-      const el = document.getElementById(hash.slice(1))
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 300)
-    return () => clearTimeout(timer)
+    const scrollToHash = () => {
+      const hash = window.location.hash
+      if (!hash) return
+      const timer = setTimeout(() => {
+        const el = document.getElementById(hash.slice(1))
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 300)
+      return timer
+    }
+
+    let timer: ReturnType<typeof setTimeout> | undefined
+    if (!loading) timer = scrollToHash()
+
+    const handleHashChange = () => { timer = scrollToHash() }
+    window.addEventListener('hashchange', handleHashChange)
+
+    return () => {
+      if (timer) clearTimeout(timer)
+      window.removeEventListener('hashchange', handleHashChange)
+    }
   }, [loading])
 
   const fetchData = async () => {
