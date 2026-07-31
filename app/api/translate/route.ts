@@ -11,16 +11,21 @@ export async function POST(request: NextRequest) {
       console.error('DEEPSEEK_API_KEY not configured')
     }
 
-    // Utiliser FreeLLM API (newPC) qui aggregate 65+ modèles et 22 providers
-    const url = process.env.FREELLM_API_URL || 'http://100.101.125.48:3001/v1/chat/completions'
-    const freeLlmKey = process.env.FREELLM_API_KEY || ''
-    const response = await fetch(url, {
+    // Appeler DeepSeek directement
+    const deepseekKey = process.env.DEEPSEEK_API_KEY
+
+    if (!deepseekKey) {
+      console.error('DEEPSEEK_API_KEY not configured')
+      return NextResponse.json({ error: 'DEEPSEEK_API_KEY not configured' }, { status: 500 })
+    }
+
+    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(freeLlmKey ? { 'Authorization': `Bearer ${freeLlmKey}` } : {})
+        'Authorization': `Bearer ${deepseekKey}`
       },
-      body: JSON.stringify({ model: 'deepseek-v4-flash',
+      body: JSON.stringify({ model: 'deepseek-chat',
         messages: [
           {
             role: 'system',
