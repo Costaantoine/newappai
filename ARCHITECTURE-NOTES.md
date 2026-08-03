@@ -66,3 +66,13 @@ Décision : à migrer vers Prisma/iron-session (même mécanisme que l'admin) si
 | DEV : /root/newappai-full-backup-20260730/orders_backup_before_cleanup_20260731.csv | table Order avant nettoyage tests | 555 o |
 
 ⚠️ **Le .env.production (secrets) existe à DEUX endroits** : `/root/newappai-full-backup-20260730/.env.production` sur DEV et `~/newappai-full-backup-20260730/.env.production` sur newPC. C'est le seul backup contenant les clés (Stripe, Supabase, SMTP, DeepSeek, AES). Il est aussi présent en usage actif : `/root/newappai-build/.env` sur DEV.
+
+---
+
+## Déploiement (procédure officielle — depuis le 03/08/2026)
+
+- Le déploiement passe UNIQUEMENT par `bash /root/newappai/scripts/deploy.sh` (build source → rsync standalone → restart systemd).
+- Le script de déploiement exclut désormais `.env` et `.env.*` du rsync pour éviter tout écrasement accidentel des variables de prod. Le `.env` de production vit dans `/root/newappai-build/.env` et n'est JAMAIS écrasé par un déploiement.
+- Un backup du build précédent est conservé automatiquement dans `/root/newappai-build-backup-pre-deploy` (rollback : `cp -a` de ce dossier vers `/root/newappai-build` puis `systemctl restart newappai`).
+- Ne JAMAIS déployer avec un rsync manuel sans l'exclusion `.env` (incident du 03/08 : HOSTNAME, PORT et SMTP_FROM avaient été perdus).
+- Les images uploadées via l'admin (`/api/local/upload`) sont servies par `/api/uploads/<fichier>` qui lit depuis `public/uploads` du build — servies immédiatement, sans restart (corrigé le 03/08 ; l'ancien fallback `/root/newappai-uploads` n'existait pas → 404).
