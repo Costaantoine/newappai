@@ -127,19 +127,32 @@ async function getProducts() {
   }
 }
 
-function ProductsGrid({ products, lang }: { products: any[]; lang: string }) {
+async function ProductsGrid({ products, lang }: { products: any[]; lang: string }) {
+  // Récupérer les textes DB pour les libellés de catégories (fallback = traductions en dur)
+  let texts: any[] = []
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/texts`, { cache: 'no-store' })
+    const data = await res.json()
+    texts = data.texts || []
+  } catch {
+    texts = []
+  }
+  const getText = (key: string, fallback: string): string => {
+    const item = texts.find((x: any) => x.key === key)
+    return item?.[lang] || item?.fr || fallback
+  }
   // Grouper par catégorie
   const categories: Record<string, any[]> = {}
   const categoryLabels: Record<string, string> = {
-    'industrie': t('cat_industrie', lang),
-    'comptabilite': t('cat_comptabilite', lang),
-    'outils-services': t('cat_outils_services', lang),
-    'commerce': t('cat_commerce', lang),
-    'droit': t('cat_droit', lang),
-    'webdesign': t('cat_webdesign', lang),
-    'a-tester': t('cat_a_tester', lang),
+    'industrie': getText('cat_industrie', t('cat_industrie', lang)),
+    'comptabilite': getText('cat_comptabilite', t('cat_comptabilite', lang)),
+    'outils-services': getText('cat_outils_services', t('cat_outils_services', lang)),
+    'commerce': getText('cat_commerce', t('cat_commerce', lang)),
+    'droit': getText('cat_droit', t('cat_droit', lang)),
+    'webdesign': getText('cat_webdesign', t('cat_webdesign', lang)),
+    'a-tester': getText('cat_a_tester', t('cat_a_tester', lang)),
   }
-  
+
   for (const p of products) {
     const cat = p.category || 'other'
     if (!categories[cat]) categories[cat] = []
@@ -168,6 +181,18 @@ function ProductsGrid({ products, lang }: { products: any[]; lang: string }) {
 export default async function ProduitsPage() {
   const lang = getLang()
   const products = await getProducts()
+  // Textes DB pour le sous-titre (fallback = traductions en dur)
+  let texts: any[] = []
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/texts`, { cache: 'no-store' })
+    texts = (await res.json()).texts || []
+  } catch {
+    texts = []
+  }
+  const getText = (key: string, fallback: string): string => {
+    const item = texts.find((x: any) => x.key === key)
+    return item?.[lang] || item?.fr || fallback
+  }
   const activeProducts = products.filter((p: any) => p.status === 'visible' || p.status === 'development')
 
   return (
@@ -176,7 +201,7 @@ export default async function ProduitsPage() {
       
       <AppleHero
         title={<>{t('hero_title', lang).split(' ').slice(0, -1).join(' ')} <span className="neon-text">{t('hero_title', lang).split(' ').pop()}</span></>}
-        subtitle={t('hero_subtitle', lang)}
+        subtitle={getText('products_subtitle', t('hero_subtitle', lang))}
         particlesCount={20}
         titleDataSection="products-title"
         subtitleDataSection="products-subtitle"

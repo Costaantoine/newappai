@@ -31,10 +31,10 @@ export default function Footer() {
               {settings?.site?.logo_image_url ? (
                 <img src={settings.site.logo_image_url} alt="Logo" className="h-8 w-auto object-contain" />
               ) : (
-                <h3 className="text-white font-bold text-lg tracking-tight" data-section="footer-logo-text">{settings?.site?.logo_text || 'NewAppAI'}</h3>
+                <h3 className="text-white font-bold text-lg tracking-tight">{settings?.site?.logo_text || 'NewAppAI'}</h3>
               )}
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-xs" data-section="footer-tagline">
+            <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
               {t.footer?.tagline || 'Solutions intelligentes pour simplifier votre quotidien.'}
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 md:gap-6">
           {settings?.footer?.show_copyright && (
-            <p className="text-slate-400 text-xs" data-section="footer-copyright">
+            <p className="text-slate-400 text-xs">
               {settings.footer.copyright_text || t.footer?.copyright || '© 2025 NewAppAI.com'}
             </p>
           )}

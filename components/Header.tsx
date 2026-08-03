@@ -79,8 +79,8 @@ export default function Header() {
     >
       <Link href="/">
         <div className="flex flex-col leading-tight">
-          <span data-section="header-logo-text" className="text-white text-3xl font-bold tracking-tighter">NewAppAi</span>
-          <span data-section="header-tagline" className="text-xs text-slate-400 font-normal -mt-0.5">{t.nav?.tagline || 'by premiumajusteprix'}</span>
+          <span className="text-white text-3xl font-bold tracking-tighter">NewAppAi</span>
+          <span className="text-xs text-slate-400 font-normal -mt-0.5">{t.nav?.tagline || 'by premiumajusteprix'}</span>
         </div>
       </Link>
       <nav className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">

@@ -499,10 +499,10 @@ export default function HomePageContent() {
           <div className="max-w-6xl mx-auto">
             {displayZones.filter(z => z.key === 'a-tester').length > 0 && (
               <div className="mb-16 text-center">
-                <h3 className="text-4xl md:text-6xl font-bold mb-4 text-[#f5f5f7] tracking-wide" data-section="home-test-title">
+                <h3 className="text-4xl md:text-6xl font-bold mb-4 text-[#f5f5f7] tracking-wide" data-section={displayZones.find(z => z.key === 'a-tester')!.title_key}>
                   {getText(texts, displayZones.find(z => z.key === 'a-tester')!.title_key, lang, 'Tester les nouveautés')}
                 </h3>
-                <p className="text-[#86868b] text-lg max-w-xl mx-auto" data-section="home-test-subtitle">
+                <p className="text-[#86868b] text-lg max-w-xl mx-auto" data-section={displayZones.find(z => z.key === 'a-tester')!.subtitle_key}>
                   {getText(texts, displayZones.find(z => z.key === 'a-tester')!.subtitle_key, lang, 'Nouveautés en phase de test')}
                 </p>
               </div>

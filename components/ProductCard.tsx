@@ -175,7 +175,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             </Link>
           )}
           <button
-            data-section="products-buy"
             onClick={handleAddToCart}
           className={`px-6 py-2 rounded-full text-sm font-bold transition ${inCart
             ? 'bg-green-500 text-white'
