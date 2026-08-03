@@ -13,9 +13,10 @@ interface Testimonial {
 interface TestimonialCarouselProps {
   testimonials: Testimonial[]
   autoPlayDelay?: number
+  title?: string
 }
 
-export default function TestimonialCarousel({ testimonials, autoPlayDelay = 5000 }: TestimonialCarouselProps) {
+export default function TestimonialCarousel({ testimonials, autoPlayDelay = 5000, title }: TestimonialCarouselProps) {
   const { t: langTranslations } = useLanguage()
   const [currentIndex, setCurrentIndex] = useState(0)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -44,7 +45,7 @@ export default function TestimonialCarousel({ testimonials, autoPlayDelay = 5000
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-20">
-      <h2 className="text-3xl md:text-5xl font-bold text-center text-white mb-16">{langTranslations?.testimonial?.title || "Ils nous font confiance"}</h2>
+      <h2 data-section="testimonial_title" className="text-3xl md:text-5xl font-bold text-center text-white mb-16">{title || langTranslations?.testimonial?.title || "Ils nous font confiance"}</h2>
       
       <div className="relative">
         <div className="bg-white/[0.04] p-8 md:p-12 rounded-[2rem] border border-white/[0.08]">

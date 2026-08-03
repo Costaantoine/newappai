@@ -191,7 +191,7 @@ export default function SolutionsPage() {
                   </div>
                 </div>
 
-                <p data-section={`solutions-${zone.key}-desc-long`} className="text-[#86868b] text-base leading-relaxed mb-8 max-w-4xl">{t('solutions_' + zone.key + '_desc_long', '')}</p>
+                <p data-section={`solutions_${zone.key}_desc_long`} className="text-[#86868b] text-base leading-relaxed mb-8 max-w-4xl">{t('solutions_' + zone.key + '_desc_long', '')}</p>
 
                 <div className="flex flex-wrap gap-4">
                   <Link href="/produits" data-section="solutions-see-products" className={`px-8 py-4 rounded-full ${cs.bg} text-white font-bold hover:brightness-110 transition shadow-lg flex items-center`}>
@@ -211,6 +211,7 @@ export default function SolutionsPage() {
         </AppleSection>
 
         <TestimonialCarousel
+          title={t('testimonial_title', 'Ils nous font confiance')}
           testimonials={settings?.testimonials?.length > 0 ? settings.testimonials : [
             { id: '1', title: t('testimonial_1_title', 'Miguel Bras'), description: t('testimonial_1_desc', ''), image_url: '' },
             { id: '2', title: t('testimonial_2_title', 'Pizzeria Portugal'), description: t('testimonial_2_desc', ''), image_url: '' },
