@@ -1,12 +1,25 @@
 'use client'
 
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 import { useSettings } from '@/lib/SettingsContext'
 
 export default function Footer() {
   const { t } = useLanguage()
   const { settings } = useSettings()
+  const { lang } = useLanguage()
+  const [texts, setTexts] = useState<any[]>([])
+  useEffect(() => {
+    fetch('/api/supabase/texts')
+      .then((r) => r.json())
+      .then((d) => setTexts(d.texts || []))
+      .catch(() => {})
+  }, [])
+  const getText = (key: string, fallback: string): string => {
+    const item = texts.find((x: any) => x.key === key)
+    return item?.[lang] || item?.fr || fallback
+  }
 
   if (settings?.footer?.enabled === false) {
     return null
@@ -31,11 +44,11 @@ export default function Footer() {
               {settings?.site?.logo_image_url ? (
                 <img src={settings.site.logo_image_url} alt="Logo" className="h-8 w-auto object-contain" />
               ) : (
-                <h3 className="text-white font-bold text-lg tracking-tight">{settings?.site?.logo_text || 'NewAppAI'}</h3>
+                <h3 className="text-white font-bold text-lg tracking-tight" data-section="footer-logo-text">{getText('footer_logo_text', settings?.site?.logo_text || 'NewAppAI')}</h3>
               )}
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
-              {t.footer?.tagline || 'Solutions intelligentes pour simplifier votre quotidien.'}
+            <p className="text-slate-400 text-sm leading-relaxed max-w-xs" data-section="footer-tagline">
+              {getText('footer_tagline', t.footer?.tagline || 'Solutions intelligentes pour simplifier votre quotidien.')}
             </p>
           </div>
 
@@ -87,8 +100,8 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 md:gap-6">
           {settings?.footer?.show_copyright && (
-            <p className="text-slate-400 text-xs">
-              {settings.footer.copyright_text || t.footer?.copyright || '© 2025 NewAppAI.com'}
+            <p className="text-slate-400 text-xs" data-section="footer-copyright">
+              {getText('footer_copyright', settings.footer.copyright_text || t.footer?.copyright || '© 2025 NewAppAI.com')}
             </p>
           )}
           <div className="flex items-center gap-x-6 text-xs text-slate-400">
