@@ -92,7 +92,10 @@ export async function middleware(request: NextRequest) {
   // === RATE LIMITING (existant) ===
   if (pathname.startsWith('/api/supabase')) {
     const ip = getClientIp(request)
-    const { allowed } = checkRateLimit(ip, { limit: 30, windowMs: 60_000, prefix: 'supabase' })
+    // Quota 60 req/min/IP : une navigation normale multi-pages consomme ~18-20 requêtes
+    // /api/supabase (texts + zones + settings + products par page) ; 30 était trop serré
+    // et déclenchait des 429 pour un usage réel (F5 répétés, navigation complète).
+    const { allowed } = checkRateLimit(ip, { limit: 60, windowMs: 60_000, prefix: 'supabase' })
 
     if (!allowed) {
       return NextResponse.json({ error: 'Trop de requêtes. Veuillez réessayer plus tard.' }, { status: 429 })
