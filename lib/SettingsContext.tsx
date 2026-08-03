@@ -49,6 +49,7 @@ interface SiteSettings {
   contact: {
     email: string
     phone: string
+    phone_pt?: string
     address: string
     facebook_url: string
     instagram_url: string

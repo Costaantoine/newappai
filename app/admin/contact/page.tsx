@@ -175,7 +175,8 @@ export default function AdminContactPage() {
               </div>
               <button onClick={(e) => { e.preventDefault(); openEdit({ contact: settings?.contact || {} }, 'Email & Téléphone', [
                 { name: 'contact.email', label: 'Email', type: 'text' },
-                { name: 'contact.phone', label: 'Téléphone', type: 'text' }
+                { name: 'contact.phone', label: 'Téléphone (France)', type: 'text' },
+                { name: 'contact.phone_pt', label: 'Téléphone (Portugal)', type: 'text' }
               ], 'settings')}} className="px-3 py-1 bg-violet-500 text-white rounded text-sm hover:bg-violet-400">Modifier</button>
             </div>
           </div>
