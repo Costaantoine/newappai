@@ -342,7 +342,7 @@ export default function ContactPage() {
                     disabled={submitting}
                     className="bg-violet-500 text-white px-12 py-4 rounded-full text-lg font-bold hover:bg-violet-400 transition-all shadow-lg shadow-violet-500/25 disabled:opacity-60 disabled:cursor-not-allowed uppercase tracking-widest"
                   >
-                    {submitting ? 'Envoi...' : <span data-section="contact-send">{getText('contact_send', 'Recevoir une réponse')}</span>}
+                    {submitting ? 'Envoi...' : <span data-section="contact-send">{getText('contact_send', 'Envoyer le message')}</span>}
                   </button>
                 </div>
               </form>
