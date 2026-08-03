@@ -89,6 +89,11 @@ export default function SolutionsPage() {
       try {
         const res = await fetch(url)
         if (res.ok) return res
+        // 4xx (429 inclus) = échec définitif : ne JAMAIS retenter, sinon le rate-limit s'auto-entretient
+        if (res.status >= 400 && res.status < 500) {
+          console.warn(`Fetch aborted (${res.status}) for ${url} — 4xx treated as definitive failure`)
+          return null
+        }
         console.warn(`Fetch failed (${res.status}) for ${url}, attempt ${attempt + 1}/${retries}`)
       } catch (e) {
         console.warn(`Fetch error for ${url}, attempt ${attempt + 1}/${retries}:`, e)
