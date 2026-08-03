@@ -3,7 +3,7 @@ import { readFile } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 
-const UPLOADS_DIR = process.env.UPLOADS_DIR || '/root/newappai-uploads'
+const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(process.cwd(), 'public', 'uploads')
 
 export async function GET(
   request: NextRequest,
