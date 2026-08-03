@@ -178,7 +178,11 @@ export default function AdminAccueilPage() {
     finally { setDeleting(false) }
   }
 
-  const heroImage = settings?.hero?.image_url || ''
+  const parseImage = (v?: string): string => {
+    if (!v) return ''
+    try { const p = JSON.parse(v); return p.original || p.thumbnail || v } catch { return v }
+  }
+  const heroImage = parseImage(settings?.hero?.image_url)
   const heroOpacity = settings?.hero?.opacity ?? 100
 
   const siteFields = [
