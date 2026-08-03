@@ -48,16 +48,7 @@ export default function TestimonialCarousel({ testimonials, autoPlayDelay = 5000
       
       <div className="relative">
         <div className="bg-white/[0.04] p-8 md:p-12 rounded-[2rem] border border-white/[0.08]">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden border border-white/10">
-              {t.image_url ? (
-                <img src={t.image_url} alt={t.title} className="w-full h-full object-cover" />
-              ) : (
-                <svg className="w-16 h-16 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              )}
-            </div>
+          <div className="flex flex-col md:flex-row">
             <div className="flex-1 text-center md:text-left">
               <h3 className="text-2xl font-bold text-white mb-4">{t.title}</h3>
               <p className="text-slate-300 leading-relaxed text-lg">{t.description}</p>

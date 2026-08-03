@@ -535,49 +535,6 @@ export default function HomePageContent() {
         </section>
         )}
 
-        {/* TESTIMONIALS — Apple style épuré */}
-        {(() => {
-          // Build testimonials from DB texts (fallback to settings)
-          const dbTestimonials: { id: string; title: string; description: string }[] = []
-          // Try to find up to 30 testimonials from DB texts
-          for (let i = 1; i <= 30; i++) {
-            const title = getText(texts, 'testimonial_' + i + '_title', lang, '')
-            const desc = getText(texts, 'testimonial_' + i + '_desc', lang, '')
-            if (title || desc) {
-              dbTestimonials.push({ id: 'db-' + i, title, description: desc })
-            }
-          }
-          const displayTestimonials = dbTestimonials.length > 0
-            ? dbTestimonials
-            : ((globalSettings as any)?.testimonials || [])
-
-          return displayTestimonials.length > 0 ? (
-            <section className="bg-apple-black px-6 py-32">
-              <div className="max-w-6xl mx-auto">
-                <AnimatedTitle data-section="home-testimonials-title" text={getText(texts, 'home_testimonials_title', lang, "Ce qu'ils disent de nous")} className="text-4xl md:text-6xl font-bold mb-20 text-center text-[#f5f5f7] tracking-wide" as="h2" />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {displayTestimonials.map((t: any) => (
-                    <div key={t.id} className="backdrop-blur-2xl bg-white/[0.03] p-8 rounded-[1.5rem] border border-white/[0.08] shadow-lg shadow-black/30 hover:bg-white/[0.06] transition-all duration-300 flex flex-col">
-                      <p className="text-[#f5f5f7] leading-relaxed mb-6 text-sm flex-grow">
-                        {t.description}
-                      </p>
-                      <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                        <h3 className="text-[#86868b] font-medium text-sm pr-4">{t.title}</h3>
-                        {t.rating && (
-                          <div className="flex gap-0.5 shrink-0">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <span key={star} className={star <= t.rating ? 'text-amber-400' : 'text-white/10'}>★</span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          ) : null
-        })()}
       </main>
       <Footer />
       <AudioButton />
