@@ -89,6 +89,23 @@ model ZoneCard {
   @@schema("public")
 }
 
+model TryItem {
+  id              String   @id @default(uuid())
+  title_key       String
+  description_key String   @default("")
+  badge           String   @default("")
+  color           String   @default("violet")
+  url             String   @default("")
+  icon_key        String   @default("")
+  icon_url        String   @default("")
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  @@schema("public")
+}
+
 model Solution {
   id         String   @id @default(uuid())
   key        String
