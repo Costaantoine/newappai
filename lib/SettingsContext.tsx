@@ -275,9 +275,16 @@ export function SettingsProvider({ children, initialSettings }: { children: Reac
       const res = await fetch('/api/supabase/settings', { cache: 'no-store' })
         .catch(() => fetch('/api/local/settings', { cache: 'no-store' }))
       const data = await res.json()
-      const merged = { ...defaultSettings, ...(data.settings || {}) }
-      setSettings(merged as SiteSettings)
-      applyStyles(merged)
+      const incoming = data?.settings
+      if (incoming && typeof incoming === 'object' && !Array.isArray(incoming) && Object.keys(incoming).length > 0) {
+        const merged = { ...defaultSettings, ...incoming }
+        setSettings(merged as SiteSettings)
+        applyStyles(merged)
+      } else {
+        // Payload vide/invalide : conserver l'état SSR existant, ne pas écraser par les défauts
+        console.warn('Settings fetch returned empty payload, keeping existing SSR state')
+        applyStyles(settings)
+      }
     } catch (error) {
       console.error('Failed to fetch settings:', error)
       applyStyles(settings)

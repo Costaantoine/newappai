@@ -299,6 +299,7 @@ export default function HomePageContent() {
             <img
               src={heroImage}
               alt=""
+              fetchPriority="high"
               className="w-full h-full object-cover"
               style={{
                 opacity: heroOpacity,
