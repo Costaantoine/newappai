@@ -189,17 +189,6 @@ export default function ContactPage() {
               <>
                 <h2 className="sr-only">Informations de contact</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 p-6 backdrop-blur-2xl bg-white/[0.03] rounded-2xl border border-white/[0.08] shadow-lg shadow-black/30">
-                {globalSettings.contact.email && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center shrink-0">
-                      <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                    </div>
-                    <div>
-                      <p className="text-xs text-[#86868b] font-normal">Email</p>
-                      <a href={`mailto:${globalSettings.contact.email}`} className="text-white font-semibold hover:text-violet-400 transition text-sm">{globalSettings.contact.email}</a>
-                    </div>
-                  </div>
-                )}
                 {globalSettings.contact.phone && (
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-[#25D366]/10 rounded-xl flex items-center justify-center shrink-0">
@@ -210,6 +199,17 @@ export default function ContactPage() {
                     <div>
                       <p className="text-xs text-[#86868b] font-normal">Téléphone (France)</p>
                       <a href={`tel:${globalSettings.contact.phone}`} className="text-white font-semibold hover:text-violet-400 transition text-sm">{formatPhone(globalSettings.contact.phone)}</a>
+                    </div>
+                  </div>
+                )}
+                {globalSettings.contact.email && (
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center shrink-0">
+                      <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#86868b] font-normal">Email</p>
+                      <a href={`mailto:${globalSettings.contact.email}`} className="text-white font-semibold hover:text-violet-400 transition text-sm">{globalSettings.contact.email}</a>
                     </div>
                   </div>
                 )}
