@@ -381,6 +381,7 @@ export default function AdminSolutionsPage() {
         { value: 'violet', label: 'Violet' }, { value: 'purple', label: 'Pourpre' }, { value: 'emerald', label: 'Emeraud' }
       ]
     },
+    { name: 'icon_url', label: 'Icône de la Zone', type: 'image-upload', description: 'Optionnel : logo/icône carrée du pôle. Vide = icône par défaut' },
     { name: 'url', label: 'Lien page de destination (interne)', type: 'text', placeholder: '/produits' },
     { name: 'site_url', label: 'Lien du site internet associé (externe)', type: 'url', placeholder: 'https://...' },
     { name: 'order', label: 'Ordre d\'affichage', type: 'number' },
