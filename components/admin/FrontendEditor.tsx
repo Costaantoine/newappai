@@ -374,7 +374,7 @@ export default function FrontendEditor() {
     if (!activeEdit) return
 
     const section = activeEdit.section
-    const config = SECTION_CONFIG[section]
+    const config = SECTION_CONFIG[section] || { source: 'texts' as const, textKey: section, label: section }
     if (!config) return
 
     setSaving(true)
@@ -405,7 +405,8 @@ export default function FrontendEditor() {
         setSettings(updatedSettings)
       } else if (config.source === 'texts') {
         // Sauvegarder dans les textes Supabase
-        const existingText = texts.find(t => t.key === config.textKey)
+        const textKey = resolveTextKey(config.textKey || section)
+        const existingText = texts.find(t => t.key === textKey)
 
         if (existingText) {
           // Mettre à jour le texte existant
@@ -414,7 +415,7 @@ export default function FrontendEditor() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               id: existingText.id,
-              key: config.textKey,
+              key: textKey,
               ...langValue,
             }),
           })
@@ -429,7 +430,7 @@ export default function FrontendEditor() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              key: config.textKey,
+              key: textKey,
               ...langValue,
             }),
           })
@@ -467,9 +468,18 @@ export default function FrontendEditor() {
     ]
   }
 
+  // Résoudre la clé de texte réelle pour le fallback : la section peut être en tirets
+  // (ex: 'about-approach-title') alors que la clé DB est en underscores (ex: 'about_approach_title')
+  const resolveTextKey = (section: string): string => {
+    const underscore = section.replace(/-/g, '_')
+    if (texts.some(t => t.key === section)) return section
+    if (texts.some(t => t.key === underscore)) return underscore
+    return underscore
+  }
+
   const getInitialData = () => {
     if (!activeEdit) return {}
-    const config = SECTION_CONFIG[activeEdit.section]
+    const config = SECTION_CONFIG[activeEdit.section] || { source: 'texts' as const, textKey: activeEdit.section, label: activeEdit.section }
     if (!config) return {}
 
     if (config.source === 'settings') {
@@ -481,7 +491,8 @@ export default function FrontendEditor() {
         es: currentValue.es || '',
       }
     } else {
-      const textItem = texts.find(t => t.key === config.textKey)
+      const textKey = resolveTextKey(config.textKey || activeEdit.section)
+      const textItem = texts.find(t => t.key === textKey)
       if (!textItem) return { fr: '', en: '', pt: '', es: '' }
       return {
         fr: textItem.fr || '',
