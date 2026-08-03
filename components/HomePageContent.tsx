@@ -88,6 +88,67 @@ const zoneImages: Record<string, string> = {
   'a-tester': '/images/zones/a_tester.webp',
 }
 
+const tryColors: Record<string, { icon: string; hover: string }> = {
+  violet:  { icon: 'bg-violet-500/10 text-violet-400', hover: 'hover:border-violet-500/30' },
+  purple:  { icon: 'bg-purple-500/10 text-purple-400', hover: 'hover:border-purple-500/30' },
+  emerald: { icon: 'bg-emerald-500/10 text-emerald-400', hover: 'hover:border-emerald-500/30' },
+  rose:    { icon: 'bg-rose-500/10 text-rose-400', hover: 'hover:border-rose-500/30' },
+  blue:    { icon: 'bg-blue-500/10 text-blue-400', hover: 'hover:border-blue-500/30' },
+  amber:   { icon: 'bg-amber-500/10 text-amber-400', hover: 'hover:border-amber-500/30' },
+  slate:   { icon: 'bg-slate-500/10 text-slate-400', hover: 'hover:border-slate-500/30' },
+  cyan:    { icon: 'bg-cyan-500/10 text-cyan-400', hover: 'hover:border-cyan-500/30' },
+  yellow:  { icon: 'bg-yellow-500/10 text-yellow-400', hover: 'hover:border-yellow-500/30' },
+  teal:    { icon: 'bg-teal-500/10 text-teal-400', hover: 'hover:border-teal-500/30' },
+}
+
+const tryIcons: Record<string, any> = {
+  erv: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+    </svg>
+  ),
+  qrcall: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+    </svg>
+  ),
+  chatbot: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+    </svg>
+  ),
+  click: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+    </svg>
+  ),
+  prod: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+    </svg>
+  ),
+  paperasse: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+    </svg>
+  ),
+  site: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+    </svg>
+  ),
+  talkie: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" />
+    </svg>
+  ),
+  serenite: (
+    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+    </svg>
+  ),
+}
+
 export default function HomePageContent() {
   const { lang } = useLanguage()
   const { settings: globalSettings } = useSettings()
@@ -96,6 +157,7 @@ export default function HomePageContent() {
   const [zones, setZones] = useState<Zone[]>([])
   const [cards, setCards] = useState<ZoneCard[]>([])
   const [products, setProducts] = useState<Product[]>([])
+  const [tryItems, setTryItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
 
@@ -105,11 +167,12 @@ export default function HomePageContent() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [textsRes, zonesRes, cardsRes, productsRes] = await Promise.all([
+        const [textsRes, zonesRes, cardsRes, productsRes, tryRes] = await Promise.all([
           fetch('/api/supabase/texts'),
           fetch('/api/supabase/zones'),
           fetch('/api/supabase/cards'),
-          fetch('/api/supabase/products')
+          fetch('/api/supabase/products'),
+          fetch('/api/supabase/try')
         ])
 
         const textsRaw = await textsRes.json()
@@ -126,6 +189,10 @@ export default function HomePageContent() {
         setZones(zonesArray.filter((z: Zone) => z.active).sort((a: Zone, b: Zone) => a.order - b.order))
         setCards(cardsArray.filter((c: ZoneCard) => c.active).sort((a: ZoneCard, b: ZoneCard) => a.order - b.order))
         setProducts(productsArray.filter((p: Product) => p.active).sort((a: Product, b: Product) => a.order - b.order))
+
+        const tryRaw = await tryRes.json()
+        const tryArray = Array.isArray(tryRaw.tryItems) ? tryRaw.tryItems : Array.isArray(tryRaw) ? tryRaw : []
+        setTryItems(tryArray.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order))
       } catch (err) {
         console.error('Failed to fetch data:', err)
       } finally {
@@ -426,7 +493,8 @@ export default function HomePageContent() {
           </section>
         )}
 
-        {/* TESTER LES NOUVEAUTÉS — Apple style minimal */}
+        {/* TESTER LES NOUVEAUTÉS — Apple style minimal (dynamique) */}
+        {tryItems.length > 0 && (
         <section className="bg-apple-dark px-6 py-32">
           <div className="max-w-6xl mx-auto">
             {displayZones.filter(z => z.key === 'a-tester').length > 0 && (
@@ -442,134 +510,30 @@ export default function HomePageContent() {
 
             {/* Pictos des apps en test */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {/* EasyReadVoice → page test dédiée */}
-              <Link
-                href="/test/easyreadvoice"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-rose-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">EasyReadVoice</h4>
-                <p data-section="home-app-erv-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_erv_desc', lang, 'Synthèse vocale')}</p>
-              </Link>
-
-              {/* QRcall → page test dédiée */}
-              <Link
-                href="/test/qrcall"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-emerald-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">QRcall</h4>
-                <p data-section="home-app-qrcall-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_qrcall_desc', lang, 'QR code appel')}</p>
-              </Link>
-
-              {/* Chatbot → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-violet-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Chatbot</h4>
-                <p data-section="home-app-chatbot-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_chatbot_desc', lang, 'Assistant IA')}</p>
-              </Link>
-
-              {/* Click & Delivery → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-blue-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Click & Delivery</h4>
-                <p data-section="home-app-click-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_click_desc', lang, 'Commandes')}</p>
-              </Link>
-
-              {/* Gestion Production → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-amber-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Production</h4>
-                <p data-section="home-app-prod-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_prod_desc', lang, 'Pilotage atelier')}</p>
-              </Link>
-
-              {/* Paperasse → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-slate-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-slate-500/10 text-slate-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Paperasse</h4>
-                <p data-section="home-app-paperasse-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_paperasse_desc', lang, 'Documents')}</p>
-              </Link>
-
-              {/* Site Vitrine → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-cyan-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Site Vitrine</h4>
-                <p data-section="home-app-site-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_site_desc', lang, 'Sites IA')}</p>
-              </Link>
-
-              {/* Talkie Walkie → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-yellow-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Talkie Walkie</h4>
-                <p data-section="home-app-talkie-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_talkie_desc', lang, 'Communication')}</p>
-              </Link>
-
-              {/* Sérénité → page test générique */}
-              <Link
-                href="/test"
-                className="group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.07] hover:border-teal-500/30 transition-all duration-300 flex flex-col items-center text-center"
-              >
-                <div className="w-14 h-14 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">Sérénité</h4>
-                <p data-section="home-app-serenite-desc" className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, 'home_app_serenite_desc', lang, 'Bien-être')}</p>
-              </Link>
+              {tryItems.map(item => {
+                const color = tryColors[item.color] || tryColors.violet
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.url || '/test'}
+                    className={`group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] ${color.hover} transition-all duration-300 flex flex-col items-center text-center`}
+                  >
+                    <div className={`w-14 h-14 rounded-xl ${color.icon} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      {item.icon_url ? (
+                        <img src={getImageUrl(item.icon_url)} alt="" className="w-7 h-7 object-contain" />
+                      ) : (
+                        tryIcons[item.icon_key] || <span className="font-bold">{item.badge || '?'}</span>
+                      )}
+                    </div>
+                    <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">{getText(texts, item.title_key, lang, '')}</h4>
+                    <p data-section={`home-app-${item.icon_key || item.id}-desc`} className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, item.description_key, lang, '')}</p>
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </section>
+        )}
 
         {/* TESTIMONIALS — Apple style épuré */}
         {(() => {

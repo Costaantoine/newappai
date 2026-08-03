@@ -61,6 +61,7 @@ export default function AdminAccueilPage() {
   const [texts, setTexts] = useState<TextItem[]>([])
   const [zones, setZones] = useState<Zone[]>([])
   const [cards, setCards] = useState<ZoneCard[]>([])
+  const [tryItems, setTryItems] = useState<any[]>([])
   const [settings, setSettings] = useState<Settings | null>(null)
   const [loading, setLoading] = useState(true)
   const [lang, setLang] = useState('fr')
@@ -82,11 +83,12 @@ export default function AdminAccueilPage() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const [textsRes, zonesRes, cardsRes, settingsRes] = await Promise.all([
+      const [textsRes, zonesRes, cardsRes, settingsRes, tryRes] = await Promise.all([
         fetch('/api/supabase/texts', { cache: 'no-store' }),
         fetch('/api/supabase/zones', { cache: 'no-store' }),
         fetch('/api/supabase/cards', { cache: 'no-store' }),
-        fetch('/api/supabase/settings', { cache: 'no-store' })
+        fetch('/api/supabase/settings', { cache: 'no-store' }),
+        fetch('/api/supabase/try', { cache: 'no-store' })
       ])
       const textsData = await textsRes.json()
       const zonesData = await zonesRes.json()
@@ -96,6 +98,8 @@ export default function AdminAccueilPage() {
       setTexts(textsData.texts || [])
       setZones(zonesData.zones || [])
       setCards(cardsData.cards || [])
+      const tryData = await tryRes.json()
+      setTryItems(tryData.tryItems || [])
       if (settingsData.settings) setSettings(settingsData.settings)
     } catch (error) { console.error('Error:', error) }
     finally { setLoading(false) }
@@ -110,7 +114,13 @@ export default function AdminAccueilPage() {
     setModalType(type)
     setModalTitle(title)
     setModalFields(fields)
-    setModalData({ ...item })
+
+    let data = { ...item }
+    if (type === 'try') {
+      data.title_text = texts.find(t => t.key === item.title_key) || { key: item.title_key, fr: '' }
+      data.description_text = item.description_key ? (texts.find(t => t.key === item.description_key) || { key: item.description_key, fr: '' }) : { key: '', fr: '' }
+    }
+    setModalData(data)
     setModalOpen(true)
   }
 
@@ -135,6 +145,13 @@ export default function AdminAccueilPage() {
       }
       else if (modalType === 'zone') { endpoint = '/api/supabase/zones'; method = modalData.id ? 'PUT' : 'POST' }
       else if (modalType === 'card') { endpoint = '/api/supabase/cards'; method = modalData.id ? 'PUT' : 'POST' }
+      else if (modalType === 'try') {
+        // Cascade save texts multilingues
+        if (modalData.title_text) await fetch('/api/supabase/texts', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(modalData.title_text) })
+        if (modalData.description_text && modalData.description_text.key) await fetch('/api/supabase/texts', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(modalData.description_text) })
+        endpoint = '/api/supabase/try'
+        method = modalData.id ? 'PUT' : 'POST'
+      }
 
       const res = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       console.log('API response status:', res.status, res.statusText)
@@ -170,6 +187,7 @@ export default function AdminAccueilPage() {
       let endpoint = ''
       if (deleteItem.type === 'zone') endpoint = `/api/supabase/zones?id=${deleteItem.id}`
       else if (deleteItem.type === 'card') endpoint = `/api/supabase/cards?id=${deleteItem.id}`
+      else if (deleteItem.type === 'try') endpoint = `/api/supabase/try?id=${deleteItem.id}`
       await fetch(endpoint, { method: 'DELETE' })
       fetchData()
       setDeleteOpen(false)
@@ -317,6 +335,23 @@ export default function AdminAccueilPage() {
     { name: 'badge_key', label: 'Badge', type: 'text' },
     { name: 'image_url', label: 'Image', type: 'image-upload' },
     { name: 'order', label: 'Ordre', type: 'number' }
+  ]
+
+  const tryItemFields = [
+    { name: 'title_text', label: 'Titre', type: 'languages' },
+    { name: 'description_text', label: 'Description', type: 'languages' },
+    { name: 'badge', label: 'Badge (ex: NEW)', type: 'text' },
+    {
+      name: 'color', label: 'Couleur', type: 'select', options: [
+        { value: 'violet', label: 'Violet' }, { value: 'purple', label: 'Pourpre' }, { value: 'emerald', label: 'Émeraude' },
+        { value: 'rose', label: 'Rose' }, { value: 'blue', label: 'Bleu' }, { value: 'amber', label: 'Ambre' },
+        { value: 'slate', label: 'Gris' }, { value: 'cyan', label: 'Cyan' }, { value: 'yellow', label: 'Jaune' }, { value: 'teal', label: 'Sarcelle' }
+      ]
+    },
+    { name: 'url', label: 'Lien (page de destination)', type: 'text', placeholder: '/test' },
+    { name: 'icon_url', label: 'Icône (image)', type: 'image-upload', description: 'Optionnel : image carrée. Vide = pictogramme par couleur' },
+    { name: 'order', label: "Ordre d'affichage", type: 'number' },
+    { name: 'active', label: 'Afficher sur le site', type: 'boolean' }
   ]
 
   if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Chargement...</div>
@@ -728,6 +763,43 @@ export default function AdminAccueilPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Tester les nouveautés */}
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+            Tester les nouveautés
+          </h2>
+          <div className="flex justify-end mb-4">
+            <AdminButton showAdd addLabel="Nouveau" onAdd={() => {
+              const key = `try_${Date.now()}`
+              openAdd('try', 'Ajouter un élément', tryItemFields, { title_key: key + '_title', description_key: key + '_desc', title_text: { key: key + '_title', fr: '', en: '', pt: '', es: '' }, description_text: { key: key + '_desc', fr: '', en: '', pt: '', es: '' }, color: 'violet', order: tryItems.length + 1, active: true })
+            }} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {tryItems.map(item => (
+              <div key={item.id} className="glass p-5 rounded-2xl relative">
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <AdminButton showEdit onEdit={() => openEdit('try', item, 'Modifier l\'élément', tryItemFields)} showDelete onDelete={() => setDeleteItem({ type: 'try', id: item.id, name: item.title_key })} />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold bg-violet-500 text-white">{item.badge || '?'}</div>
+                  <div>
+                    <h3 className="font-bold text-white">{getText(item.title_key)}</h3>
+                    <p className="text-slate-400 text-sm">{getText(item.description_key)}</p>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                  <span>Lien : {item.url || '—'} · Ordre : {item.order}</span>
+                  <span className={item.active ? 'text-green-400' : 'text-red-400'}>{item.active ? 'Visible' : 'Masqué'}</span>
+                </div>
+              </div>
+            ))}
+            {tryItems.length === 0 && (
+              <p className="text-slate-500 text-sm col-span-full">Aucun élément. Cliquez sur "+ Nouveau" pour ajouter le premier.</p>
+            )}
           </div>
         </section>
       </div>
