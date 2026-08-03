@@ -84,20 +84,43 @@ export default function SolutionsPage() {
     }
   }, [loading])
 
+  const fetchWithRetry = async (url: string, retries = 3, delay = 500): Promise<Response | null> => {
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        const res = await fetch(url)
+        if (res.ok) return res
+        console.warn(`Fetch failed (${res.status}) for ${url}, attempt ${attempt + 1}/${retries}`)
+      } catch (e) {
+        console.warn(`Fetch error for ${url}, attempt ${attempt + 1}/${retries}:`, e)
+      }
+      if (attempt < retries - 1) await new Promise(r => setTimeout(r, delay * Math.pow(2, attempt)))
+    }
+    return null
+  }
+
   const fetchData = async () => {
     try {
-      const [tr, zr, sr] = await Promise.all([
-        fetch(`/api/supabase/texts?t=${Date.now()}`),
-        fetch(`/api/supabase/zones?t=${Date.now()}`),
-        fetch(`/api/supabase/settings?t=${Date.now()}`)
+      const [tr, zr, sr] = await Promise.allSettled([
+        fetchWithRetry(`/api/supabase/texts?t=${Date.now()}`),
+        fetchWithRetry(`/api/supabase/zones?t=${Date.now()}`),
+        fetchWithRetry(`/api/supabase/settings?t=${Date.now()}`)
       ])
-      const textsData = await tr.json()
-      const zonesData = await zr.json()
-      const settingsData = await sr.json()
-      setTexts(Array.isArray(textsData.texts) ? textsData.texts : [])
-      setZones(Array.isArray(zonesData.zones) ? zonesData.zones : [])
-      if (settingsData.settings) setSettings(settingsData.settings)
-    } catch (e) { console.error(e) } finally { setLoading(false) }
+      const textsData = tr.status === 'fulfilled' && tr.value ? await tr.value.json() : null
+      const zonesData = zr.status === 'fulfilled' && zr.value ? await zr.value.json() : null
+      const settingsData = sr.status === 'fulfilled' && sr.value ? await sr.value.json() : null
+      if (textsData && Array.isArray(textsData.texts) && textsData.texts.length > 0) {
+        setTexts(textsData.texts)
+      }
+      if (zonesData && Array.isArray(zonesData.zones)) setZones(zonesData.zones)
+      if (settingsData && settingsData.settings) setSettings(settingsData.settings)
+      // RÈGLE STRICTE : si texts est vide après tous les retries, on NE passe PAS loading à false.
+      // La page reste sur l'écran "Chargement..." — on ne rend JAMAIS le contenu avec des clés brutes.
+      if (textsData && Array.isArray(textsData.texts) && textsData.texts.length > 0) {
+        setLoading(false)
+      } else {
+        console.warn('/solutions: texts empty after all retries — staying on loader, no raw keys rendered')
+      }
+    } catch (e) { console.error(e) } finally { /* loading ne passe à false QUE si texts est rempli */ }
   }
 
   const t = (key: string, fb = ''): string => {
