@@ -59,6 +59,8 @@ const SECTION_CONFIG: Record<string, SectionConfig> = {
   'contact-subject-4': { source: 'texts', textKey: 'contact_subject_4', label: 'Sujet Autre' },
   'about-vision-desc': { source: 'texts', textKey: 'about_vision_desc', label: 'Description Vision' },
   'about-approach-desc': { source: 'texts', textKey: 'about_approach_desc', label: 'Description Approche' },
+  'about-history-title': { source: 'texts', textKey: 'about_hero_title', label: 'Titre Histoire' },
+  'about-history-desc': { source: 'texts', textKey: 'about_hero_subtitle', label: 'Description Histoire' },
   'about-innovation-title': { source: 'texts', textKey: 'about_innovation_title', label: 'Titre Innovation' },
   'about-proximity-title': { source: 'texts', textKey: 'about_proximity_title', label: 'Titre Proximité' },
   'about-excellence-title': { source: 'texts', textKey: 'about_excellence_title', label: 'Titre Excellence' },

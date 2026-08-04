@@ -57,6 +57,20 @@ export default function AboutPage() {
 
         <AppleSection>
           <AppleCard padding="lg" className="animate-fade-in-up max-w-5xl mx-auto">
+            <div className="group" data-section="about-history">
+              <h2 data-section="about-history-title" className="text-3xl md:text-4xl font-bold mb-6 text-[#f5f5f7] flex items-center">
+                <span className="w-2 h-8 bg-violet-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
+                {getText('about_hero_title', "D'où on vient")}
+              </h2>
+              <p className="text-[#86868b] text-base leading-relaxed whitespace-pre-line">
+                <span data-section="about-history-desc">{getText('about_hero_subtitle', '')}</span>
+              </p>
+            </div>
+          </AppleCard>
+        </AppleSection>
+
+        <AppleSection>
+          <AppleCard padding="lg" className="animate-fade-in-up max-w-5xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20">
               <div className="space-y-10">
                 <div className="group" data-section="about-vision">
