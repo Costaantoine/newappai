@@ -381,10 +381,10 @@ export default function FrontendEditor() {
     try {
       // Construire l'objet multilingue
       const langValue = {
-        fr: data.fr || '',
-        en: data.en || '',
-        pt: data.pt || '',
-        es: data.es || '',
+        fr: data.texts?.fr ?? data.fr ?? '',
+        en: data.texts?.en ?? data.en ?? '',
+        pt: data.texts?.pt ?? data.pt ?? '',
+        es: data.texts?.es ?? data.es ?? '',
       }
 
       if (config.source === 'settings') {
@@ -461,10 +461,7 @@ export default function FrontendEditor() {
   const buildModalFields = () => {
     if (!activeEdit) return []
     return [
-      { name: 'fr', label: 'Français', type: 'textarea' as const },
-      { name: 'en', label: 'Anglais', type: 'textarea' as const },
-      { name: 'pt', label: 'Portugais', type: 'textarea' as const },
-      { name: 'es', label: 'Espagnol', type: 'textarea' as const },
+      { name: 'texts', label: 'Texte', type: 'languages' as const },
     ]
   }
 
@@ -485,20 +482,24 @@ export default function FrontendEditor() {
     if (config.source === 'settings') {
       const currentValue = getNested(settings, config.settingsPath!) || {}
       return {
-        fr: currentValue.fr || '',
-        en: currentValue.en || '',
-        pt: currentValue.pt || '',
-        es: currentValue.es || '',
+        texts: {
+          fr: currentValue.fr || '',
+          en: currentValue.en || '',
+          pt: currentValue.pt || '',
+          es: currentValue.es || '',
+        },
       }
     } else {
       const textKey = resolveTextKey(config.textKey || activeEdit.section)
       const textItem = texts.find(t => t.key === textKey)
-      if (!textItem) return { fr: '', en: '', pt: '', es: '' }
+      if (!textItem) return { texts: { fr: '', en: '', pt: '', es: '' } }
       return {
-        fr: textItem.fr || '',
-        en: textItem.en || '',
-        pt: textItem.pt || '',
-        es: textItem.es || '',
+        texts: {
+          fr: textItem.fr || '',
+          en: textItem.en || '',
+          pt: textItem.pt || '',
+          es: textItem.es || '',
+        },
       }
     }
   }
