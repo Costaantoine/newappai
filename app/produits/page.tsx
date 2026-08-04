@@ -9,6 +9,7 @@ import ParticlesBackground from '@/components/ParticlesBackground'
 import AppleHero from '@/components/AppleHero'
 import AppleCard from '@/components/AppleCard'
 import AppleSection from '@/components/AppleSection'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
@@ -195,6 +196,27 @@ export default async function ProduitsPage() {
   }
   const activeProducts = products.filter((p: any) => p.status === 'visible' || p.status === 'development')
 
+  // Image de fond du hero : depuis les settings (même source que l'accueil),
+  // fallback Unsplash si absente (remplace l'ancien path en dur qui 404)
+  let heroImage = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=75&fm=webp'
+  try {
+    const setting = await prisma.settings.findUnique({ where: { id: 'main' } })
+    if (setting) {
+      const data = JSON.parse(setting.data)
+      const raw = data?.hero?.image_url
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw)
+          heroImage = parsed.original || parsed.thumbnail || raw
+        } catch {
+          heroImage = raw
+        }
+      }
+    }
+  } catch {
+    // fallback conservé
+  }
+
   return (
     <>
       <Header />
@@ -205,7 +227,7 @@ export default async function ProduitsPage() {
         particlesCount={20}
         titleDataSection="products-title"
         subtitleDataSection="products-subtitle"
-        backgroundImage="https://newappai.com/uploads/hero-ai-v2-wide.jpg"
+        backgroundImage={heroImage}
       />
 
       <AppleSection>
