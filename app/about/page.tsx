@@ -83,49 +83,48 @@ export default function AboutPage() {
 
         <AppleSection>
           <AppleCard padding="lg" className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20">
-              <div className="space-y-10">
-                <div className="group" data-section="about-vision">
-                  <h2 data-section="about-vision-title" className="text-3xl md:text-4xl font-bold mb-6 text-[#f5f5f7] flex items-center">
-                    <span className="w-2 h-8 bg-violet-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
-                    {getText('about_vision_title', 'Notre Vision')}
-                  </h2>
-                  <p className="text-[#86868b] text-base leading-relaxed">
-                    <span data-section="about-vision-desc">{getText('about_vision_desc', 'Chez NewAppAI, nous croyons que la technologie doit servir l\'humain, pas l\'inverse. Notre mission est de rendre l\'innovation accessible à toutes les entreprises, quelle que soit leur taille.')}</span>
-                  </p>
-                </div>
-
-                <div className="group" data-section="about-approach">
-                  <h2 data-section="about-approach-title" className="text-3xl md:text-4xl font-bold mb-6 text-[#f5f5f7] flex items-center">
-                    <span className="w-2 h-8 bg-violet-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
-                    {getText('about_approach_title', 'Notre Approche')}
-                  </h2>
-                  <p className="text-[#86868b] text-base leading-relaxed">
-                    <span data-section="about-approach-desc">{getText('about_approach_desc', 'Nous développons des solutions sur-mesure qui s\'adaptent à vos besoins spécifiques. Chaque projet est unique, et nous nous engageons à vous accompagner à chaque étape de votre transformation digitale.')}</span>
-                  </p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 mb-16">
+              <div className="group" data-section="about-vision">
+                <h2 data-section="about-vision-title" className="text-3xl md:text-4xl font-bold mb-6 text-[#f5f5f7] flex items-center">
+                  <span className="w-2 h-8 bg-violet-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
+                  {getText('about_vision_title', 'Notre Vision')}
+                </h2>
+                <p className="text-[#86868b] text-base leading-relaxed">
+                  <span data-section="about-vision-desc">{getText('about_vision_desc', 'Chez NewAppAI, nous croyons que la technologie doit servir l\'humain, pas l\'inverse. Notre mission est de rendre l\'innovation accessible à toutes les entreprises, quelle que soit leur taille.')}</span>
+                </p>
               </div>
 
-              <div className="space-y-8">
-                <h2 data-section="about-values" className="text-3xl md:text-4xl font-bold mb-8 text-[#f5f5f7]">{getText('about_values_title', 'Nos Valeurs')}</h2>
-                <div className="grid grid-cols-1 gap-6">
-                  {[
-                    { key: 'simplicite', title: 'Simplicité', desc: 'Des solutions simples et efficaces, sans complexité inutile. Si c\'est compliqué à expliquer, c\'est qu\'on n\'a pas encore trouvé la bonne solution.' },
-                    { key: 'rapidite', title: 'Rapidité d\'exécution', desc: 'De l\'idée au logiciel qui tourne, en semaines, pas en mois. On avance étape par étape, avec vérification à chaque jalon.' },
-                    { key: 'innovation', title: 'Innovation', desc: 'Toujours à la pointe des technologies' },
-                    { key: 'proximity', title: 'Proximité', desc: 'Un accompagnement personnalisé' },
-                    { key: 'excellence', title: 'Excellence', desc: 'Des solutions de qualité supérieure' }
-                  ].map((value) => (
-                    <AppleCard key={value.key} padding="md" hover glowColor="violet">
-                      <h3 className="text-xl font-bold mb-3 text-[#f5f5f7] group-hover:text-violet-400 transition-colors">
-                        <span data-section={`about-${value.key}-title`}>{getText(`about_${value.key}_title`, value.title)}</span>
-                      </h3>
-                      <p className="text-[#86868b] leading-relaxed font-normal">
-                        <span data-section={`about-${value.key}-desc`}>{getText(`about_${value.key}_desc`, value.desc)}</span>
-                      </p>
-                    </AppleCard>
-                  ))}
-                </div>
+              <div className="group" data-section="about-approach">
+                <h2 data-section="about-approach-title" className="text-3xl md:text-4xl font-bold mb-6 text-[#f5f5f7] flex items-center">
+                  <span className="w-2 h-8 bg-violet-500 rounded-full mr-4 group-hover:h-10 transition-all"></span>
+                  {getText('about_approach_title', 'Notre Approche')}
+                </h2>
+                <p className="text-[#86868b] text-base leading-relaxed">
+                  <span data-section="about-approach-desc">{getText('about_approach_desc', 'Nous développons des solutions sur-mesure qui s\'adaptent à vos besoins spécifiques. Chaque projet est unique, et nous nous engageons à vous accompagner à chaque étape de votre transformation digitale.')}</span>
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h2 data-section="about-values" className="text-3xl md:text-4xl font-bold mb-8 text-[#f5f5f7]">{getText('about_values_title', 'Nos Valeurs')}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { key: 'simplicite', title: 'Simplicité', desc: 'Des solutions simples et efficaces, sans complexité inutile. Si c\'est compliqué à expliquer, c\'est qu\'on n\'a pas encore trouvé la bonne solution.' },
+                  { key: 'rapidite', title: 'Rapidité d\'exécution', desc: 'De l\'idée au logiciel qui tourne, en semaines, pas en mois. On avance étape par étape, avec vérification à chaque jalon.' },
+                  { key: 'innovation', title: 'Innovation', desc: 'Toujours à la pointe des technologies' },
+                  { key: 'proximity', title: 'Proximité', desc: 'Un accompagnement personnalisé' },
+                  { key: 'excellence', title: 'Excellence', desc: 'Des solutions de qualité supérieure' },
+                  { key: 'transparence', title: 'Transparence', desc: 'Un discours clair, sans jargon technique ni coûts cachés. Vous savez toujours où en est votre projet.' }
+                ].map((value) => (
+                  <AppleCard key={value.key} padding="md" hover glowColor="violet">
+                    <h3 className="text-xl font-bold mb-3 text-[#f5f5f7] group-hover:text-violet-400 transition-colors">
+                      <span data-section={`about-${value.key}-title`}>{getText(`about_${value.key}_title`, value.title)}</span>
+                    </h3>
+                    <p className="text-[#86868b] leading-relaxed font-normal">
+                      <span data-section={`about-${value.key}-desc`}>{getText(`about_${value.key}_desc`, value.desc)}</span>
+                    </p>
+                  </AppleCard>
+                ))}
               </div>
             </div>
           </AppleCard>
