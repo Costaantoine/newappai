@@ -110,7 +110,7 @@ export default function SolutionsPage() {
 
   if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center text-white">Chargement...</div>
 
-  const activeZones = zones.filter(z => z.active).sort((a, b) => a.order - b.order)
+  const activeZones = zones.filter(z => z.active && z.key !== 'a-tester').sort((a, b) => a.order - b.order)
 
   return (
     <>
