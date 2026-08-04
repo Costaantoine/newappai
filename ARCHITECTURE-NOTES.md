@@ -76,3 +76,49 @@ Décision : à migrer vers Prisma/iron-session (même mécanisme que l'admin) si
 - Un backup du build précédent est conservé automatiquement dans `/root/newappai-build-backup-pre-deploy` (rollback : `cp -a` de ce dossier vers `/root/newappai-build` puis `systemctl restart newappai`).
 - Ne JAMAIS déployer avec un rsync manuel sans l'exclusion `.env` (incident du 03/08 : HOSTNAME, PORT et SMTP_FROM avaient été perdus).
 - Les images uploadées via l'admin (`/api/local/upload`) sont servies par `/api/uploads/<fichier>` qui lit depuis `public/uploads` du build — servies immédiatement, sans restart (corrigé le 03/08 ; l'ancien fallback `/root/newappai-uploads` n'existait pas → 404).
+
+---
+
+## Audit des traductions multi-langues (04/08/2026 — point 2 du chantier i18n)
+
+Contexte : audit + correction des désynchronisations EN/PT/ES vs FR (328 clés en table Text).
+Point 1 du chantier : bouton "Traduire auto" dans le mode édition front (commit 67990a1).
+Point 2 : correction mécanique des clés trouées, validée par Anthony avant écriture.
+
+### Clés corrigées (14, via PUT /api/supabase/texts — valeurs validées en amont)
+
+Légales (9) — traductions générées via /api/translate (DeepSeek) puis relues :
+- legal_cgv_section_4_content : EN/PT/ES ajoutés (paiement Stripe)
+- legal_mentions_section_1_address : EN/PT/ES ajoutés
+- legal_mentions_section_1_content : PT/ES ajoutés (EN existant conservé)
+- legal_mentions_section_1_email : EN/PT/ES ajoutés
+- legal_mentions_section_2_content : PT/ES ajoutés (EN existant conservé)
+- legal_mentions_section_3_content : PT/ES ajoutés (EN existant conservé)
+- legal_mentions_section_4_content : EN/PT/ES ajoutés
+- legal_mentions_section_5_content : EN/PT/ES ajoutés
+- legal_privacy_section_1_content : EN/PT/ES ajoutés
+Normalisations appliquées : "Premium à juste prix" et "France" INCHANGÉS dans les 3 langues
+(nom légal + pays d'adresse non traduits, cohérents avec l'EN existant).
+
+Suspectes (5) — uniformisation décidée par Anthony :
+- about_hero_title : PT/ES → "NewAppAI" (l'ancien "NovoAppAI"/"Nueva aplicación AI" = traduction d'un ancien FR)
+- solutions_clickCollect_title : "Click & Collect" dans les 4 langues (le FR développé remplacé)
+- commerce_subtitle : "DigiSmart Solutions" dans les 4 langues
+- solutions_digismart_title : "DigiSmart Solutions" dans les 4 langues
+- commerce_title : "Commerce Hub" dans les 4 langues (remplace "Pôle Commerce" FR, "Hub Comercial" PT/ES)
+
+Non touchées (décisions) : home_test_title (clé morte, seule référence = SECTION_CONFIG statique),
+commerce_site_url + industrie_site_url (URLs, fallbacks jamais atteints — les zones ont leur propre
+site_url en DB, ex. digismartai.netlify.app / pro-up.newappai.com).
+
+### Vérification (04/08)
+- DB : 14/14 clés confirmées (4 langues, accents OK, zéro résidu "França/Francia/at the right price/a preço justo/a precio justo")
+- Visuel navigateur : /mentions-legales EN+PT (8/8 sections), /cgv EN+PT (section Paiement), /privacy EN+PT (17 items, 0 vide), /about PT ("NewAppAI"), /solutions ("Commerce Hub", "DigiSmart Solutions"), accueil ("Commerce Hub" + "DigiSmart Solutions")
+- Tests : 107/108 (échec unique préexistant validators.test.ts CreateProductSchema)
+- Aucun code modifié (contenu DB uniquement). Pas de commit nécessaire (working tree propre).
+
+### Découvertes pour le point 3 (audit sémantique)
+- legal_privacy_last_update : placeholders traduits → PT "{data}", ES "{fecha}" au lieu de "{date}" → s'affichent littéralement sur les pages PT/ES. Corriger en remettant {date}.
+- solutions_clickCollect_title : clé ORPHELINE (aucune référence dans app/ components/ lib/) — le produit Click and Delivery (table Product, status development) a son propre titre JSON sans rapport.
+- Traductions existantes avec accents perdus (ex. CGV 4bis PT : "a juste prix", "esta", "numero" sans accents ; mentions 4bis EN : "Premium a juste prix" sans accents) — candidats audit sémantique.
+- /about : la langue du cookie est réécrite par le sélecteur du header lors de navigations (à vérifier si comportement voulu).
