@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 import { translations, Language, Translation } from './translations'
 
 interface LanguageContextType {
@@ -13,6 +14,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>('fr')
+  const router = useRouter()
 
   useEffect(() => {
     // 1. localStorage (préférence explicite de l'utilisateur)
@@ -54,7 +56,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLang(newLang)
     localStorage.setItem('lang', newLang)
     // Synchroniser avec le cookie pour le middleware
-    document.cookie = `lang=${newLang};max-age=${60*60*24*365};path=/;samesite=lax`
+    const isSecure = window.location.protocol === 'https:'
+    document.cookie = `lang=${newLang};max-age=${60*60*24*365};path=/;samesite=lax${isSecure ? ';secure' : ''}`
+    // Re-rendre le contenu SSR immédiatement (les Server Components lisent le cookie)
+    router.refresh()
   }
 
   // Créer une fonction de traduction avec fallback français
