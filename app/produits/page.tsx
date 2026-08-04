@@ -118,7 +118,8 @@ export async function generateMetadata(): Promise<Metadata> {
 async function getProducts() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/products`, {
-      cache: 'no-store'
+      cache: 'no-store',
+      headers: { 'x-internal-secret': process.env.INTERNAL_FETCH_SECRET || '' }
     })
     const data = await res.json()
     return data.products || []
@@ -132,7 +133,7 @@ async function ProductsGrid({ products, lang }: { products: any[]; lang: string 
   // Récupérer les textes DB pour les libellés de catégories (fallback = traductions en dur)
   let texts: any[] = []
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/texts`, { cache: 'no-store' })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/texts`, { cache: 'no-store', headers: { 'x-internal-secret': process.env.INTERNAL_FETCH_SECRET || '' } })
     const data = await res.json()
     texts = data.texts || []
   } catch {
@@ -185,7 +186,7 @@ export default async function ProduitsPage() {
   // Textes DB pour le sous-titre (fallback = traductions en dur)
   let texts: any[] = []
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/texts`, { cache: 'no-store' })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/supabase/texts`, { cache: 'no-store', headers: { 'x-internal-secret': process.env.INTERNAL_FETCH_SECRET || '' } })
     texts = (await res.json()).texts || []
   } catch {
     texts = []
