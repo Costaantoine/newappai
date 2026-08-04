@@ -197,7 +197,7 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-xs text-[#86868b] font-normal">Téléphone (France)</p>
+                      <p data-section="contact_phone_fr" className="text-xs text-[#86868b] font-normal">{getText('contact_phone_fr', 'Téléphone (France)')}</p>
                       <a href={`tel:${globalSettings.contact.phone}`} className="text-white font-semibold hover:text-violet-400 transition text-sm">{formatPhone(globalSettings.contact.phone)}</a>
                     </div>
                   </div>
@@ -208,7 +208,7 @@ export default function ContactPage() {
                       <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                     </div>
                     <div>
-                      <p className="text-xs text-[#86868b] font-normal">Email</p>
+                      <p data-section="contact_info_email" className="text-xs text-[#86868b] font-normal">{getText('contact_info_email', 'Email')}</p>
                       <a href={`mailto:${globalSettings.contact.email}`} className="text-white font-semibold hover:text-violet-400 transition text-sm">{globalSettings.contact.email}</a>
                     </div>
                   </div>
@@ -221,7 +221,7 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-xs text-[#86868b] font-normal">Téléphone (Portugal)</p>
+                      <p data-section="contact_phone_pt" className="text-xs text-[#86868b] font-normal">{getText('contact_phone_pt', 'Téléphone (Portugal)')}</p>
                       <a href={`tel:${globalSettings.contact.phone_pt}`} className="text-white font-semibold hover:text-violet-400 transition text-sm">{formatPhone(globalSettings.contact.phone_pt)}</a>
                     </div>
                   </div>
@@ -232,7 +232,7 @@ export default function ContactPage() {
                       <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     </div>
                     <div>
-                      <p className="text-xs text-[#86868b] font-normal">Adresse</p>
+                      <p data-section="contact_address" className="text-xs text-[#86868b] font-normal">{getText('contact_address', 'Adresse')}</p>
                       <p className="text-white font-semibold text-sm">{globalSettings.contact.address}</p>
                     </div>
                   </div>
