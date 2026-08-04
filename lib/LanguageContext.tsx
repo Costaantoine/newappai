@@ -12,8 +12,8 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>('fr')
+export function LanguageProvider({ children, initialLang }: { children: ReactNode; initialLang?: Language }) {
+  const [lang, setLang] = useState<Language>(initialLang || 'fr')
   const router = useRouter()
 
   useEffect(() => {

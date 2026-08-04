@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
+import { headers, cookies } from 'next/headers'
 import './globals.css'
 import { Providers } from '@/components/Providers'
 import ClientLayout from '@/components/ClientLayout'
@@ -109,6 +109,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = cookies()
+  const cookieLang = cookieStore.get('lang')?.value
+  const initialLang = (['fr', 'en', 'pt', 'es'].includes(cookieLang || '') ? cookieLang : 'fr') as 'fr' | 'en' | 'pt' | 'es'
+
   // Server-side fetch: get actual settings so SSR renders the real data (no flash)
   let serverSettings: any = null
   try {
@@ -138,7 +142,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
         <HtmlLangUpdater />
-        <Providers>
+        <Providers initialLang={initialLang}>
           <SettingsProvider initialSettings={serverSettings}>
             <ClientLayout>
               {children}
