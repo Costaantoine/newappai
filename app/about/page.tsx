@@ -11,11 +11,23 @@ import AppleCard from '@/components/AppleCard'
 import AppleSection from '@/components/AppleSection'
 import SEOHead from '@/components/SEOHead'
 import { useTexts, TextItem } from '@/lib/useTexts'
+import { useSettings } from '@/lib/SettingsContext'
+
+function getImageUrl(imagePath: string | undefined): string {
+  if (!imagePath) return ''
+  try {
+    const parsed = JSON.parse(imagePath)
+    return parsed.original || parsed.thumbnail || imagePath
+  } catch {
+    return imagePath
+  }
+}
 
 export default function AboutPage() {
   const { lang } = useLanguage()
   const pathname = usePathname()
   const { texts, loading } = useTexts()
+  const { settings: globalSettings } = useSettings()
 
   const getText = (key: string, fallback: string = ''): string => {
     const text = texts.find(t => t.key === key)
@@ -52,7 +64,7 @@ export default function AboutPage() {
           subtitle={getText('about_subtitle', 'Une passion pour l\'innovation, une mission pour votre réussite.')}
           titleDataSection="about-title"
           subtitleDataSection="about-subtitle"
-          backgroundImage="https://newappai.com/uploads/hero-ai-v2-wide.jpg"
+          backgroundImage={getImageUrl(globalSettings?.hero?.image_url) || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=75&fm=webp'}
         />
 
         <AppleSection>
