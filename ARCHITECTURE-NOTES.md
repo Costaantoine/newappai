@@ -151,3 +151,11 @@ LanguageProvider initialise lang='fr' côté serveur (useState('fr')) et ne reç
 du cookie ; l'hydratation corrige ensuite (humain OK, flash FR→EN), mais les crawlers/SEO voient
 FR sur /en. Fix prévu : passer la langue détectée (cookie) en prop initiale au LanguageProvider
 depuis le layout (RootLayout lit déjà le cookie).
+
+## INTERNAL_FETCH_SECRET — rotation du secret d'exemption SSR (documenté le 04/08/2026)
+
+INTERNAL_FETCH_SECRET (rate limit SSR) est inliné par le middleware au moment du BUILD (Edge
+runtime). Toute rotation de ce secret nécessite : régénérer la valeur, mettre à jour les 3 .env
+(source build /root/newappai/.env.production, prod runtime /root/newappai-build/.env, backup
+/root/newappai-full-backup-20260730/.env.production), puis REBUILD complet + redéploiement —
+un simple changement du .env sans rebuild ne suffit pas.
