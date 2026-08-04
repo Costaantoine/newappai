@@ -122,3 +122,32 @@ site_url en DB, ex. digismartai.netlify.app / pro-up.newappai.com).
 - solutions_clickCollect_title : clé ORPHELINE (aucune référence dans app/ components/ lib/) — le produit Click and Delivery (table Product, status development) a son propre titre JSON sans rapport.
 - Traductions existantes avec accents perdus (ex. CGV 4bis PT : "a juste prix", "esta", "numero" sans accents ; mentions 4bis EN : "Premium a juste prix" sans accents) — candidats audit sémantique.
 - /about : la langue du cookie est réécrite par le sélecteur du header lors de navigations (à vérifier si comportement voulu).
+
+---
+
+## Fix changement de langue (04/08/2026 — commits b81bc19 + 3b28443)
+
+Bug : le middleware réécrivait le cookie lang en le déduisant du PATH sur les pages racine
+(/, /en, /pt, /es) → choix utilisateur détruit à chaque passage par l'accueil (vérifié par curl :
+GET / avec Cookie lang=es → Set-Cookie lang=fr). Résultat : pages SSR (mentions-legales, cgv,
+privacy, produits) rendues en FR malgré un choix ES/PT, et contenu figé au clic (Server Components).
+
+Correctifs :
+1. middleware.ts : cookie lang présent → jamais réécrit (la géolocalisation IP ne s'applique
+   qu'aux visiteurs SANS cookie). 
+2. lib/LanguageContext.tsx : router.refresh() dans handleSetLang → le contenu SSR se met à jour
+   IMMÉDIATEMENT au clic sur FR/EN/PT/ES (plus de rechargement manuel).
+3. lib/LanguageContext.tsx : cookie client avec `secure` si HTTPS (aligné middleware, évite le
+   double cookie).
+
+Tests réels passés (navigateur) : mentions-legales/cgv/privacy clic langue → contenu traduit
+immédiat ; /produits → h1 + sous-titre + catégories + cartes cohérents ; accueil puis retour
+page légale → cookie préservé ; nouveau visiteur sans cookie → géoloc intacte (US → /en + cookie
+en ; FR → cookie fr).
+
+⚠️ RESTE OUVERT (bug initial de la session, NON résolu par ce fix) : le HTML SSR initial de
+l'accueil (/en) contient le contenu FR (h1 FR) alors que la metadata est EN — le
+LanguageProvider initialise lang='fr' côté serveur (useState('fr')) et ne reçoit pas la langue
+du cookie ; l'hydratation corrige ensuite (humain OK, flash FR→EN), mais les crawlers/SEO voient
+FR sur /en. Fix prévu : passer la langue détectée (cookie) en prop initiale au LanguageProvider
+depuis le layout (RootLayout lit déjà le cookie).
