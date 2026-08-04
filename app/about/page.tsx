@@ -110,6 +110,8 @@ export default function AboutPage() {
                 <h2 data-section="about-values" className="text-3xl md:text-4xl font-bold mb-8 text-[#f5f5f7]">{getText('about_values_title', 'Nos Valeurs')}</h2>
                 <div className="grid grid-cols-1 gap-6">
                   {[
+                    { key: 'simplicite', title: 'Simplicité', desc: 'Des solutions simples et efficaces, sans complexité inutile. Si c\'est compliqué à expliquer, c\'est qu\'on n\'a pas encore trouvé la bonne solution.' },
+                    { key: 'rapidite', title: 'Rapidité d\'exécution', desc: 'De l\'idée au logiciel qui tourne, en semaines, pas en mois. On avance étape par étape, avec vérification à chaque jalon.' },
                     { key: 'innovation', title: 'Innovation', desc: 'Toujours à la pointe des technologies' },
                     { key: 'proximity', title: 'Proximité', desc: 'Un accompagnement personnalisé' },
                     { key: 'excellence', title: 'Excellence', desc: 'Des solutions de qualité supérieure' }
