@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useLanguage } from '@/lib/LanguageContext'
@@ -11,34 +10,12 @@ import AppleHero from '@/components/AppleHero'
 import AppleCard from '@/components/AppleCard'
 import AppleSection from '@/components/AppleSection'
 import SEOHead from '@/components/SEOHead'
-
-interface TextItem {
-  id: string
-  key: string
-  fr: string
-  en: string
-  pt: string
-  es: string
-}
+import { useTexts, TextItem } from '@/lib/useTexts'
 
 export default function AboutPage() {
   const { lang } = useLanguage()
   const pathname = usePathname()
-  const [texts, setTexts] = useState<TextItem[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/api/supabase/texts')
-      .then(res => res.json())
-      .then(data => {
-        setTexts(Array.isArray(data.texts) ? data.texts : [])
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error('Failed to fetch texts:', err)
-        setLoading(false)
-      })
-  }, [pathname])
+  const { texts, loading } = useTexts()
 
   const getText = (key: string, fallback: string = ''): string => {
     const text = texts.find(t => t.key === key)
@@ -51,6 +28,8 @@ export default function AboutPage() {
   }
 
   const aboutTitle = getText('about_title', 'Notre Histoire')
+
+  if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center text-white">Chargement...</div>
 
   return (
     <>

@@ -1,33 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useLanguage } from '@/lib/LanguageContext'
-
-interface TextItem {
-  id: string
-  key: string
-  fr: string
-  en: string
-  pt: string
-  es: string
-}
+import { useTexts, TextItem } from '@/lib/useTexts'
 
 export default function NotreHistoirePage() {
   const { lang } = useLanguage()
-  const [texts, setTexts] = useState<TextItem[]>([])
-
-  useEffect(() => {
-    fetch('/api/supabase/texts')
-      .then(r => r.json())
-      .then(d => setTexts(d.texts || []))
-      .catch(() => {})
-  }, [])
+  const { texts, loading } = useTexts()
 
   const getText = (key: string, fallback: string = ''): string => {
     return texts.find(t => t.key === key)?.[lang as keyof TextItem] || fallback
   }
+
+  if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center text-white">Chargement...</div>
 
   const values = [
     { key: 'innovation', title: getText('hist_value_innovation_title', 'Innovation'), desc: getText('hist_value_innovation_desc', 'Toujours à la pointe des technologies') },
