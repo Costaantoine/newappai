@@ -10,6 +10,7 @@ import { useLanguage } from '@/lib/LanguageContext'
 import { useSettings } from '@/lib/SettingsContext'
 import AnimatedTitle from '@/components/AnimatedTitle'
 import ProductCarousel from '@/components/ProductCarousel'
+import { zoneIcons, zoneImages } from '@/lib/zoneIcons'
 
 interface TextItem {
   key: string
@@ -76,16 +77,6 @@ function getImageUrl(imagePath: string | undefined): string {
     }
   }
   return imagePath
-}
-
-const zoneImages: Record<string, string> = {
-  'commerce': '/images/zones/commerces.webp',
-  'industrie': '/images/zones/industrie.webp',
-  'comptabilite': '/images/zones/comptabilite.webp',
-  'droit': '/images/zones/droit.webp',
-  'webdesign': '/images/zones/web_design.webp',
-  'outils-services': '/images/zones/service.webp',
-  'a-tester': '/images/zones/a_tester.webp',
 }
 
 const tryColors: Record<string, { icon: string; hover: string }> = {
@@ -434,7 +425,7 @@ export default function HomePageContent() {
                     {zone.icon_url ? (
                       <img src={zone.icon_url} alt="" className="w-full h-full object-cover rounded-2xl" />
                     ) : (
-                      <span className="font-bold">{zone.badge}</span>
+                      zoneIcons[zone.key] || <span className="font-bold">{zone.badge}</span>
                     )}
                   </div>
                   <h3 data-section={zone.title_key} className={`text-3xl font-bold mb-3 tracking-wide transition ${
