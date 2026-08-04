@@ -12,8 +12,9 @@ import AppleHero from '@/components/AppleHero'
 import AppleCard from '@/components/AppleCard'
 import AppleSection from '@/components/AppleSection'
 import SEOHead from '@/components/SEOHead'
+import { fetchWithRetry } from '@/lib/fetchWithRetry'
+import { useTexts } from '@/lib/useTexts'
 
-interface TextItem { id: string; key: string; fr: string; en: string; pt: string; es: string }
 interface Zone { id: string; key: string; title_key: string; subtitle_key: string; badge: string; color: string; url: string; site_url: string; cta_key: string; newtab_key: string; icon_url?: string; order: number; active: boolean }
 
 const icons: Record<string, any> = {
@@ -48,10 +49,9 @@ const colorStyles: Record<string, { blur: string; text: string; bg: string; bord
 
 export default function SolutionsPage() {
   const { lang } = useLanguage()
-  const [texts, setTexts] = useState<TextItem[]>([])
+  const { texts, loading } = useTexts()
   const [zones, setZones] = useState<Zone[]>([])
   const [settings, setSettings] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchData()
@@ -84,48 +84,17 @@ export default function SolutionsPage() {
     }
   }, [loading])
 
-  const fetchWithRetry = async (url: string, retries = 3, delay = 500): Promise<Response | null> => {
-    for (let attempt = 0; attempt < retries; attempt++) {
-      try {
-        const res = await fetch(url)
-        if (res.ok) return res
-        // 4xx (429 inclus) = échec définitif : ne JAMAIS retenter, sinon le rate-limit s'auto-entretient
-        if (res.status >= 400 && res.status < 500) {
-          console.warn(`Fetch aborted (${res.status}) for ${url} — 4xx treated as definitive failure`)
-          return null
-        }
-        console.warn(`Fetch failed (${res.status}) for ${url}, attempt ${attempt + 1}/${retries}`)
-      } catch (e) {
-        console.warn(`Fetch error for ${url}, attempt ${attempt + 1}/${retries}:`, e)
-      }
-      if (attempt < retries - 1) await new Promise(r => setTimeout(r, delay * Math.pow(2, attempt)))
-    }
-    return null
-  }
-
   const fetchData = async () => {
     try {
-      const [tr, zr, sr] = await Promise.allSettled([
-        fetchWithRetry(`/api/supabase/texts?t=${Date.now()}`),
+      const [zr, sr] = await Promise.allSettled([
         fetchWithRetry(`/api/supabase/zones?t=${Date.now()}`),
         fetchWithRetry(`/api/supabase/settings?t=${Date.now()}`)
       ])
-      const textsData = tr.status === 'fulfilled' && tr.value ? await tr.value.json() : null
       const zonesData = zr.status === 'fulfilled' && zr.value ? await zr.value.json() : null
       const settingsData = sr.status === 'fulfilled' && sr.value ? await sr.value.json() : null
-      if (textsData && Array.isArray(textsData.texts) && textsData.texts.length > 0) {
-        setTexts(textsData.texts)
-      }
       if (zonesData && Array.isArray(zonesData.zones)) setZones(zonesData.zones)
       if (settingsData && settingsData.settings) setSettings(settingsData.settings)
-      // RÈGLE STRICTE : si texts est vide après tous les retries, on NE passe PAS loading à false.
-      // La page reste sur l'écran "Chargement..." — on ne rend JAMAIS le contenu avec des clés brutes.
-      if (textsData && Array.isArray(textsData.texts) && textsData.texts.length > 0) {
-        setLoading(false)
-      } else {
-        console.warn('/solutions: texts empty after all retries — staying on loader, no raw keys rendered')
-      }
-    } catch (e) { console.error(e) } finally { /* loading ne passe à false QUE si texts est rempli */ }
+    } catch (e) { console.error(e) }
   }
 
   const t = (key: string, fb = ''): string => {
