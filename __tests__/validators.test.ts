@@ -28,7 +28,7 @@ describe('CreateProductSchema', () => {
     if (result.success) {
       expect(result.data.description).toBe('')
       expect(result.data.images).toEqual([])
-      expect(result.data.active).toBe(true)
+      expect(result.data.status).toBe('visible')
     }
   })
 
