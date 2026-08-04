@@ -74,6 +74,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/confidentialite',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.newappai.com' }],
         destination: 'https://newappai.com/:path*',

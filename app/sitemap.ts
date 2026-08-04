@@ -12,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: '/easyreadvoice', priority: 0.8, changeFreq: 'weekly' as const },
     { url: '/qrcall', priority: 0.8, changeFreq: 'weekly' as const },
     { url: '/cgv', priority: 0.3, changeFreq: 'monthly' as const },
-    { url: '/confidentialite', priority: 0.3, changeFreq: 'monthly' as const },
     { url: '/en', priority: 0.5, changeFreq: 'monthly' as const },
     { url: '/pt', priority: 0.5, changeFreq: 'monthly' as const },
     { url: '/es', priority: 0.5, changeFreq: 'monthly' as const },
