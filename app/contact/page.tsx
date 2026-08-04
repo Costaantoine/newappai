@@ -10,22 +10,13 @@ import AppleHero from '@/components/AppleHero'
 import AppleCard from '@/components/AppleCard'
 import AppleSection from '@/components/AppleSection'
 import SEOHead from '@/components/SEOHead'
-
-interface TextItem {
-  id: string
-  key: string
-  fr: string
-  en: string
-  pt: string
-  es: string
-}
+import { useTexts, TextItem } from '@/lib/useTexts'
 
 export default function ContactPage() {
   const { lang } = useLanguage()
   const pathname = usePathname()
   const { settings: globalSettings } = useSettings()
-  const [texts, setTexts] = useState<TextItem[]>([])
-  const [loading, setLoading] = useState(true)
+  const { texts, loading } = useTexts()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -40,31 +31,18 @@ export default function ContactPage() {
   const [csrfToken, setCsrfToken] = useState('')
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCsrf = async () => {
       try {
-        const [textsRes, settingsRes] = await Promise.all([
-          fetch('/api/supabase/texts'),
-          fetch('/api/supabase/settings')
-        ])
-        const textsData = await textsRes.json()
-        setTexts(Array.isArray(textsData.texts) ? textsData.texts : [])
-        // Récupération du token CSRF au montage
-        try {
-          const csrfRes = await fetch('/api/csrf')
-          if (csrfRes.ok) {
-            const csrfData = await csrfRes.json()
-            setCsrfToken(csrfData.token || '')
-          }
-        } catch (err) {
-          console.error('Failed to fetch CSRF token:', err)
+        const csrfRes = await fetch('/api/csrf')
+        if (csrfRes.ok) {
+          const csrfData = await csrfRes.json()
+          setCsrfToken(csrfData.token || '')
         }
       } catch (err) {
-        console.error('Failed to fetch data:', err)
-      } finally {
-        setLoading(false)
+        console.error('Failed to fetch CSRF token:', err)
       }
     }
-    fetchData()
+    fetchCsrf()
   }, [pathname])
 
   const getText = (key: string, fallback: string = ''): string => {
@@ -139,8 +117,10 @@ export default function ContactPage() {
 
   // Titre depuis settings avec fallback
   const contactTitle = globalSettings?.contact_page?.title?.[lang as keyof typeof globalSettings.contact_page.title] 
-    || globalSettings?.contact_page?.title?.fr 
+    || globalSettings?.contact_page?.title?.fr
     || 'Contactez l\'avenir'
+
+  if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center text-white">Chargement...</div>
 
   return (
     <>

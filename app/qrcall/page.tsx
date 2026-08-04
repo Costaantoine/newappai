@@ -1,18 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useLanguage } from '@/lib/LanguageContext'
 import Link from 'next/link'
-
-interface TextItem {
-  key: string
-  fr: string
-  en: string
-  pt: string
-  es: string
-}
+import { useTexts, TextItem } from '@/lib/useTexts'
 
 function getText(texts: TextItem[], key: string, lang: string, fallback: string = ''): string {
   const found = texts.find(t => t.key === key)
@@ -95,17 +87,12 @@ const BUILDING_PLAN = {
 
 export default function QRcallPage() {
   const { lang } = useLanguage()
-  const [texts, setTexts] = useState<TextItem[]>([])
-  
-  useEffect(() => {
-    fetch('/api/supabase/texts')
-      .then(r => r.json())
-      .then(d => setTexts(Array.isArray(d.texts) ? d.texts : []))
-      .catch(() => {})
-  }, [])
+  const { texts, loading } = useTexts()
 
   const t = (key: string, fallback: string) => getText(texts, key, lang, fallback)
-  
+
+  if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center text-white">Chargement...</div>
+
   return (
     <>
       <Header />
