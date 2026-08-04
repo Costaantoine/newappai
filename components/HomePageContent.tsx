@@ -236,7 +236,7 @@ export default function HomePageContent() {
   const heroCta2 = globalSettings?.hero_texts?.cta2?.[lang as keyof typeof globalSettings.hero_texts.cta2]
     || globalSettings?.hero_texts?.cta2?.fr
     || 'Parler à un expert'
-  const expertiseTitle = getText(texts, 'expertise_title', lang, 'Nos pôles d\'Expertise')
+  const expertiseTitle = getText(texts, 'expertise_title', lang, 'Notre savoir faire')
   const productsTitle = getText(texts, 'products_title', lang, 'Nos Produits')
 
   const defaultZones: Zone[] = [
@@ -414,7 +414,7 @@ export default function HomePageContent() {
         {/* EXPERTISE SECTION — Apple style: fond uni, cartes sobres */}
         <section id="solutions" ref={zonesRef} className="bg-apple-dark px-6 py-32">
           <div className="max-w-6xl mx-auto">
-            <AnimatedTitle data-section="expertise-title" text={typeof expertiseTitle === 'string' ? expertiseTitle : "Nos pôles d'Expertise"} className="text-4xl md:text-6xl font-bold text-center text-[#f5f5f7] tracking-wide mb-20" as="h2" />
+            <AnimatedTitle data-section="expertise-title" text={typeof expertiseTitle === 'string' ? expertiseTitle : "Notre savoir faire"} className="text-4xl md:text-6xl font-bold text-center text-[#f5f5f7] tracking-wide mb-20" as="h2" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {displayZones.filter(z => z.key !== 'a-tester').map((zone, index) => (
                 <Link

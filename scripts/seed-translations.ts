@@ -14,7 +14,7 @@ interface TextEntry {
 
 const translations: TextEntry[] = [
   // Expertise / Home
-  { key: 'expertise_title', fr: "Nos pôles d'Expertise", en: 'Our Areas of Expertise', pt: 'Nossos Pólos de Especialização', es: 'Nuestros Polos de Especialización', section: 'home' },
+  { key: 'expertise_title', fr: 'Notre savoir faire', en: 'Our Areas of Expertise', pt: 'Nossos Pólos de Especialização', es: 'Nuestros Polos de Especialización', section: 'home' },
   { key: 'products_title', fr: 'Nos Produits', en: 'Our Products', pt: 'Nossos Produtos', es: 'Nuestros Productos', section: 'home' },
 
   // Zones
