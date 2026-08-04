@@ -59,33 +59,11 @@ export async function middleware(request: NextRequest) {
       return response
     }
 
-    // Cookie présent : vérifier la cohérence
-    // Si le cookie dit 'fr' mais qu'on est sur /en, ne pas interférer
-    // (l'utilisateur a changé manuellement via le sélecteur de langue)
-    if (
-      (pathname === '/' && cookieLang !== 'fr') ||
-      (pathname.startsWith('/en') && cookieLang !== 'en') ||
-      (pathname.startsWith('/es') && cookieLang !== 'es') ||
-      (pathname.startsWith('/pt') && cookieLang !== 'pt')
-    ) {
-      // L'utilisateur est sur une page qui ne correspond pas à son cookie
-      // → mettre à jour le cookie pour refléter son choix
-      const detectedLang = pathname === '/' ? 'fr'
-        : pathname === '/en' ? 'en'
-        : pathname === '/es' ? 'es'
-        : 'pt'
-
-      const response = NextResponse.next()
-      response.cookies.set('lang', detectedLang, {
-        maxAge: 60 * 60 * 24 * 365,
-        path: '/',
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-      })
-      return response
-    }
-
-    // Cookie présent et cohérent → continuer sans action
+    // Cookie présent → le choix utilisateur prime TOUJOURS.
+    // Ne jamais réécrire le cookie en fonction du path : le sélecteur de langue
+    // (client) écrit cookie + localStorage, et les pages SSR lisent le cookie.
+    // L'ancienne logique forçait le cookie selon le path (ex: / avec cookie lang=es
+    // → lang forcé à fr) et détruisait le choix utilisateur à chaque navigation.
     return NextResponse.next()
   }
 
