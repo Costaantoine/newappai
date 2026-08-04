@@ -68,17 +68,35 @@ export async function middleware(request: NextRequest) {
   }
 
   // === RATE LIMITING + ANTI-CACHE (API contenu) ===
-  // /api/supabase/* et /api/texts : rate limit 60 req/min/IP + Cache-Control no-store.
-  // Sans Cache-Control, le navigateur applique un cache HEURISTIQUE (RFC 7234) sur ces
-  // réponses JSON → contenu figé dans l'ancienne langue lors d'un simple F5 (Ctrl+F5
-  // purge et masque le problème). no-store force chaque fetch à repartir au réseau.
-  // /api/uploads/* est volontairement EXCLU (matcher) : il garde son cache immutable.
+  // /api/supabase/* et /api/texts : rate limit 120 req/min/IP + Cache-Control no-store.
+  // Exemption SSR SÉCURISÉE : les fetch internes (Server Components) envoient le header
+  // x-internal-secret dont la valeur (INTERNAL_FETCH_SECRET, .env, jamais NEXT_PUBLIC)
+  // est comparée STRICTEMENT. Sans le secret exact, la requête est rate-limitée
+  // normalement — un attaquant qui devine le nom du header mais pas la valeur ne
+  // contourne rien. (Comparaison simple : le middleware tourne en Edge runtime où
+  // node:crypto.timingSafeEqual n'est pas disponible ; le risque de timing attack est
+  // négligeable face à un secret de 64 hex.)
+  // La réponse 429 porte AUSSI no-store : sans Cache-Control, le navigateur stockerait
+  // les 429 par cache heuristique et réutiliserait l'erreur au F5 suivant (bug
+  // « F5 casse / Ctrl+F5 marche »).
   if (pathname.startsWith('/api/supabase') || pathname === '/api/texts') {
-    const ip = getClientIp(request)
-    const { allowed } = checkRateLimit(ip, { limit: 60, windowMs: 60_000, prefix: 'supabase' })
+    const internalSecret = process.env.INTERNAL_FETCH_SECRET
+    const headerSecret = request.headers.get('x-internal-secret')
+    const isInternal = !!internalSecret && !!headerSecret && headerSecret === internalSecret
 
-    if (!allowed) {
-      return NextResponse.json({ error: 'Trop de requêtes. Veuillez réessayer plus tard.' }, { status: 429 })
+    if (!isInternal) {
+      const ip = getClientIp(request)
+      const { allowed } = checkRateLimit(ip, { limit: 120, windowMs: 60_000, prefix: 'supabase' })
+
+      if (!allowed) {
+        return NextResponse.json(
+          { error: 'Trop de requêtes. Veuillez réessayer plus tard.' },
+          {
+            status: 429,
+            headers: { 'Cache-Control': 'private, no-cache, no-store, max-age=0, must-revalidate' },
+          }
+        )
+      }
     }
 
     const response = NextResponse.next()
