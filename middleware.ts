@@ -67,17 +67,23 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // === RATE LIMITING (existant) ===
-  if (pathname.startsWith('/api/supabase')) {
+  // === RATE LIMITING + ANTI-CACHE (API contenu) ===
+  // /api/supabase/* et /api/texts : rate limit 60 req/min/IP + Cache-Control no-store.
+  // Sans Cache-Control, le navigateur applique un cache HEURISTIQUE (RFC 7234) sur ces
+  // réponses JSON → contenu figé dans l'ancienne langue lors d'un simple F5 (Ctrl+F5
+  // purge et masque le problème). no-store force chaque fetch à repartir au réseau.
+  // /api/uploads/* est volontairement EXCLU (matcher) : il garde son cache immutable.
+  if (pathname.startsWith('/api/supabase') || pathname === '/api/texts') {
     const ip = getClientIp(request)
-    // Quota 60 req/min/IP : une navigation normale multi-pages consomme ~18-20 requêtes
-    // /api/supabase (texts + zones + settings + products par page) ; 30 était trop serré
-    // et déclenchait des 429 pour un usage réel (F5 répétés, navigation complète).
     const { allowed } = checkRateLimit(ip, { limit: 60, windowMs: 60_000, prefix: 'supabase' })
 
     if (!allowed) {
       return NextResponse.json({ error: 'Trop de requêtes. Veuillez réessayer plus tard.' }, { status: 429 })
     }
+
+    const response = NextResponse.next()
+    response.headers.set('Cache-Control', 'private, no-cache, no-store, max-age=0, must-revalidate')
+    return response
   }
 
   return NextResponse.next()
@@ -91,5 +97,6 @@ export const config = {
     '/pt',
     '/admin/:path*',
     '/api/supabase/:path*',
+    '/api/texts',
   ],
 }
