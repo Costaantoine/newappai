@@ -57,6 +57,18 @@ export default function ContactStep({ contact, onContact }: ContactStepProps) {
         </div>
 
         <Field
+          label="Importer mes photos & textes depuis mes réseaux"
+          optional
+          hint="Collez le lien de votre profil ou d'un post (Instagram, TikTok, Facebook, Pinterest) : on récupère automatiquement vos vraies photos, votre bio et vos posts pour construire le site — aucun contenu inventé."
+        >
+          <TextInput
+            value={contact.socialImport ?? ''}
+            onChange={(e) => onContact({ socialImport: e.target.value })}
+            placeholder="https://www.instagram.com/moncompte/ ou https://www.tiktok.com/@moncompte"
+          />
+        </Field>
+
+        <Field
           label="Adresse / localisation"
           optional
           hint="Si une adresse est fournie, une carte Google Maps est intégrée automatiquement."

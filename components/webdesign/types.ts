@@ -47,6 +47,7 @@ export interface SiteConfig {
     facebook: string
     address: string
     hours: string
+    socialImport?: string // URL complète Instagram/TikTok/Facebook/Pinterest → import photos+textes réels (skill social-content-import)
   }
   design: DesignConfig
   language?: string // langue du site généré (fr / pt / en / es) — défaut 'fr'

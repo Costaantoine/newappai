@@ -6,6 +6,7 @@
  */
 
 import type { SiteConfig } from '@/components/webdesign/types'
+import type { ImportSummary } from './importSocial'
 
 const REFERENCE_DIR = '/root/vitrine-ref/webolharosol/webolharosol.newappai.com/'
 
@@ -91,13 +92,26 @@ function formatDesign(config: SiteConfig): string {
   return `Aucun code couleur libre fourni par le client — garde une couleur d'accent proche de la référence webolharosol (ou choisis un accent cohérent avec le secteur "${config.business.sector}"), adaptée au style "${config.design.styleId}".`
 }
 
-export function buildMission(config: SiteConfig): string {
+export function buildMission(config: SiteConfig, importSummary?: ImportSummary | null): string {
   const language = config.language || 'fr'
   const languageLabel = LANGUAGE_LABELS[language] || language
 
+  const importSection = importSummary
+    ? `## CONTENU RÉEL IMPORTÉ DES RÉSEAUX SOCIAUX DU CLIENT (source de vérité)
+
+Le dossier ./import/photos/ de ce job contient ${importSummary.photos} photo(s) réelle(s) du client (récupérées depuis ${importSummary.platform}), et ./import/textes.md contient sa bio et ses posts réels.
+
+- Utilise CES photos comme visuels du site (galerie, sections, fonds) — prioritaires sur tout visuel générique.
+- Utilise les TEXTES RÉELS (bio, captions) comme source du contenu marketing ; ne JAMAIS inventer d'information factuelle (règle 3) : horaires, prix, adresses, numéros viennent uniquement du client.
+- Si ./import/photos/ est vide ou illisible, ignore-le et continue avec le contenu du formulaire.
+- Règle 1bis toujours applicable : aucune marque étrangère (dont les logos/watermarks des plateformes sociales) ne doit apparaître sur le site.
+
+`
+    : ''
+
   return `Tu es un développeur web chargé de générer un site vitrine one-page STATIQUE pour un client, dans le cadre de l'outil "Vitrine" de newappai.
 
-## RÈGLE 1 — DESIGN DE RÉFÉRENCE OBLIGATOIRE
+${importSection}## RÈGLE 1 — DESIGN DE RÉFÉRENCE OBLIGATOIRE
 
 Le design du site à produire DOIT reproduire la structure, les sections, le header, le hero, le footer et les styles de la référence suivante, disponible en local sur ce VPS :
 

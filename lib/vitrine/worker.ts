@@ -27,6 +27,8 @@ import {
   setJobStatus,
 } from '@/lib/vitrine/queue'
 import { buildMission } from '@/lib/vitrine/buildMission'
+import { importSocialContent, importLogLine } from './importSocial'
+import type { ImportSummary } from './importSocial'
 import { parseProgress } from '@/lib/vitrine/progress'
 
 const execFileAsync = promisify(execFile)
@@ -114,7 +116,18 @@ async function processJob(job: VitrineJob): Promise<void> {
 
   try {
     mkdirSync(path.join(localJobDir, 'assets'), { recursive: true })
-    writeFileSync(path.join(localJobDir, 'mission.md'), buildMission(job.config), 'utf-8')
+
+    // Import social optionnel : photos + textes réels du client depuis ses
+    // réseaux (Instagram/TikTok/Facebook/Pinterest) -> dossier ./import du job.
+    let importSummary: ImportSummary | null = null
+    const socialUrl = job.config.contact?.socialImport?.trim()
+    if (socialUrl) {
+      pushLog(jobId, 'Récupération des photos et textes depuis les réseaux sociaux du client...')
+      importSummary = await importSocialContent(localJobDir, socialUrl)
+      pushLog(jobId, importLogLine(importSummary))
+    }
+
+    writeFileSync(path.join(localJobDir, 'mission.md'), buildMission(job.config, importSummary), 'utf-8')
     writeAssets(job.config, localJobDir)
     writeFileSync(path.join(localJobDir, 'run.sh'), buildRunScript(jobId, 'claude -p'), { mode: 0o755 })
 
