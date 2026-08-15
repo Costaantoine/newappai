@@ -1,14 +1,18 @@
 /**
- * Design system figé de la démo "site vitrine" — identité webolharosol
- * (or #D4AF37 / neutrals Tailwind / Playfair Display + Inter).
- * Décision Antoine : `config.design` (palettes du wizard) est IGNORÉ ici —
- * la démo montre une identité unique et non négociable, pas le thème choisi
- * par le client. Toutes les valeurs sont extraites de la référence
- * (mirror webolharosol) et codées UNE SEULE FOIS ici ; les sections ne font
- * que consommer `var(--demo-*)`.
+ * Design system de la démo "site vitrine" — structure et typographie
+ * épinglées sur l'identité webolharosol (Playfair Display + Inter,
+ * espacements, rayons, ombres, timings — INCHANGÉS quel que soit le choix
+ * du client). Les COULEURS, elles, reflètent la palette choisie par le
+ * client à l'étape Design du wizard (`resolveDemoTokens`) — c'est une
+ * promesse vendue (149€, « personnalisez couleurs et polices »). Tant que
+ * le client n'a pas encore personnalisé (config par défaut du wizard),
+ * l'identité or/neutral de la référence reste affichée telle quelle. Les
+ * sections ne font que consommer `var(--demo-*)` — aucune couleur en dur.
  */
 
 import type { CSSProperties } from 'react'
+import { defaultSiteConfig, type DesignConfig } from '../webdesign/types'
+import { buildTheme } from '../webdesign/palette'
 
 /** Variables CSS posées une fois sur la racine `.demo-root` (voir DemoSite.tsx). */
 export const DEMO_TOKENS: CSSProperties = {
@@ -89,3 +93,63 @@ export const DEMO_TIMINGS = {
   galleryTransitionMs: 500,
   hoverMs: 300,
 } as const
+
+const DEFAULT_DESIGN = defaultSiteConfig().design
+
+/** Le client n'a pas (encore) personnalisé le design — garde l'identité de référence. */
+function isDefaultDesign(design: DesignConfig): boolean {
+  return (
+    design.backgroundId === DEFAULT_DESIGN.backgroundId &&
+    design.fontPairId === DEFAULT_DESIGN.fontPairId &&
+    design.accentId === DEFAULT_DESIGN.accentId &&
+    design.styleId === DEFAULT_DESIGN.styleId &&
+    !design.customColor?.trim()
+  )
+}
+
+/** #rgb / #rrggbb → rgba(r,g,b,alpha). Retombe sur l'or de référence si le hex est invalide. */
+function hexToRgba(hex: string, alpha: number): string {
+  const clean = hex.trim().replace(/^#/, '')
+  const full = clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean
+  const r = parseInt(full.slice(0, 2), 16)
+  const g = parseInt(full.slice(2, 4), 16)
+  const b = parseInt(full.slice(4, 6), 16)
+  if ([r, g, b].some(Number.isNaN)) return `rgba(212,175,55,${alpha})`
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
+/**
+ * Surcharge DEMO_TOKENS avec la palette choisie par le client (backgroundId /
+ * accentId / customColor de l'étape Design) — résolue via `buildTheme`, le
+ * même moteur que l'aperçu live et le site final. Structure, typo, rayons,
+ * espacements et timings restent épinglés (non surchargés). `--demo-overlay-
+ * black-*` reste un noir pur : ce sont des voiles de contraste posés sur des
+ * photos (Hero/Parallax), pas une couleur de thème.
+ */
+export function resolveDemoTokens(design: DesignConfig): CSSProperties {
+  if (isDefaultDesign(design)) return DEMO_TOKENS
+
+  const theme = buildTheme(design)
+
+  return {
+    ...DEMO_TOKENS,
+    '--demo-color-gold': theme.accent,
+    '--demo-color-white': theme.bg,
+    '--demo-color-neutral-50': theme.alt,
+    '--demo-color-neutral-200': theme.alt,
+    '--demo-color-neutral-400': theme.muted,
+    '--demo-color-neutral-500': theme.muted,
+    '--demo-color-neutral-600': theme.muted,
+    '--demo-color-neutral-800': theme.sectionDark,
+    '--demo-color-neutral-900': theme.text,
+    '--demo-color-gray-900': theme.sectionDark,
+    '--demo-color-gray-800': theme.footer,
+    '--demo-color-gray-600': theme.muted,
+    '--demo-color-gray-500': theme.muted,
+    '--demo-color-gray-400': theme.muted,
+    '--demo-color-gray-300': theme.alt,
+    '--demo-gold-05': hexToRgba(theme.accent, 0.05),
+    '--demo-gold-10': hexToRgba(theme.accent, 0.1),
+    '--demo-gold-20': hexToRgba(theme.accent, 0.2),
+  } as CSSProperties
+}

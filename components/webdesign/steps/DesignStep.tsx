@@ -20,7 +20,7 @@ export default function DesignStep({ design, onDesign }: DesignStepProps) {
       <StepHeading
         number={4}
         title="Personnalisez le design"
-        subtitle="Choisissez le fond, les polices, la couleur d'accent et le style. L'aperçu se met à jour en temps réel à droite."
+        subtitle="Choisissez le fond, les polices, la couleur d'accent et le style. Ces choix s'appliqueront à votre aperçu (à la dernière étape) et à votre site final."
       />
 
       {/* Charge les polices pour les aperçus des cartes */}

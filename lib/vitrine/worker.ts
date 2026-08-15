@@ -264,9 +264,9 @@ cd ${VPS_JOBS_DIR}/${jobId} || { echo "ERREUR: dossier de job introuvable sur le
 mkdir -p site
 GUIDELINES=${WEB_DESIGN_GUIDELINES}
 if [ -f "$GUIDELINES" ]; then
-  ${binaryCmd} "$(cat mission.md)" --append-system-prompt-file "$GUIDELINES" --max-turns 30 2>&1
+  ${binaryCmd} "$(cat mission.md)" --append-system-prompt-file "$GUIDELINES" --permission-mode acceptEdits --max-turns 30 2>&1
 else
-  ${binaryCmd} "$(cat mission.md)" --max-turns 30 2>&1
+  ${binaryCmd} "$(cat mission.md)" --permission-mode acceptEdits --max-turns 30 2>&1
 fi
 `
 }

@@ -5,9 +5,10 @@
  * le design réel livré aux clients (référence webolharosol). Contrat fixé
  * (identique à PreviewSite) : { config, anchorPrefix? }.
  *
- * Décision Antoine (non négociable) : `config.design` (palettes du wizard)
- * est IGNORÉ — l'identité or/neutral de la référence est épinglée en dur
- * via demo-tokens.ts, quel que soit le thème choisi dans le wizard.
+ * Décision Antoine (non négociable) : structure/typo épinglées sur la
+ * référence webolharosol. Les COULEURS, elles, reflètent `config.design`
+ * (palette choisie à l'étape Design du wizard) via `resolveDemoTokens` —
+ * identité or/neutral par défaut tant que le client n'a pas personnalisé.
  *
  * Perf temps réel : les sliders (Hero/Gallery) dérivent leur dépendance
  * d'effet d'une chaîne stable (`photos.join('|')`) plutôt que de la
@@ -18,7 +19,7 @@
 
 import { useMemo } from 'react'
 import { SECTORS, type SiteConfig } from '../webdesign/types'
-import { DEMO_TOKENS } from './demo-tokens'
+import { resolveDemoTokens } from './demo-tokens'
 import { getDemoContent, getDemoLabels } from './demo-content'
 import DemoHeader from './sections/DemoHeader'
 import DemoHero from './sections/DemoHero'
@@ -86,7 +87,7 @@ export default function DemoSite({
   const { phone, email, address, hours, instagram, facebook } = config.contact
 
   return (
-    <div className="demo-root" style={DEMO_TOKENS}>
+    <div className="demo-root" style={resolveDemoTokens(config.design)}>
       <style dangerouslySetInnerHTML={{ __html: ROOT_CSS }} />
 
       <DemoHeader name={name} sectorLabel={sectorLabel} anchorPrefix={anchorPrefix} labels={labels} />

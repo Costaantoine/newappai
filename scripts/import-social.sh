@@ -4,12 +4,16 @@
 # TikTok / Facebook / Pinterest) vers <jobDir>/import/ pour alimenter la
 # mission de generation.
 #
-# Instagram (verifie 2026-08-15) :
-#  - PROFIL  : endpoint graphql web_profile_info (SANS login, header
-#    x-ig-app-id) -> 12 posts recents (photos display_url + captions) + bio.
+# Instagram (verifie 2026-08-15, durci 2026-08-15) :
+#  - PROFIL et POST utilisent le MEME chemin : endpoint graphql
+#    web_profile_info (SANS login, header x-ig-app-id) -> 12 posts recents
+#    du compte (photos display_url + captions) + bio. Pour un lien de post,
+#    on resout d'abord le username (depuis l'URL, sinon depuis la page du
+#    post) puis on importe les 12 posts recents de ce compte : plus robuste
+#    que og:image (intermittent, absent 8/8 lors des tests) et plus utile
+#    pour un site (galerie complete plutot qu'une seule photo).
 #    yt-dlp instagram:user est CASSÉ ; posts /p/ aussi (CSRF) -> NE PAS
 #    utiliser yt-dlp pour Instagram.
-#  - POST    : og:image + og:description de la page publique.
 # TikTok : yt-dlp metadonnees OK (bio + captions) ; VIDEO bloquee (impersonation
 #          absente) -> frame jpg via ffmpeg si video telechargee.
 set -u
@@ -33,22 +37,25 @@ esac
 
 if [ "$PLATFORM" = "instagram" ]; then
   if printf '%s' "$URL" | grep -qE 'instagram\.com/(p|reel|tv)/'; then
-    # ── Post individuel : meta tags de la page publique ──
-    PAGE=$(curl -sL -m 25 -A "$UA" "$URL")
-    IMG=$(printf '%s' "$PAGE" | grep -oE '<meta property="og:image" content="[^"]*"' | head -1 | sed 's/.*content="//;s/"$//')
-    if [ -n "$IMG" ]; then
-      curl -sL -m 40 -A "$UA" "$IMG" -o "$OUT/photos/post-1.jpg"
-      [ -s "$OUT/photos/post-1.jpg" ] || rm -f "$OUT/photos/post-1.jpg"
+    # ── Post individuel : username dans l'URL (instagram.com/<user>/p/<code>/) ──
+    USERNAME=$(printf '%s' "$URL" | grep -oE 'instagram\.com/[^/]+/(p|reel|tv)/' | sed -E 's#instagram\.com/##; s#/(p|reel|tv)/##')
+    if [ -z "$USERNAME" ]; then
+      # URL courte sans username (instagram.com/p/<code>/) : le lire depuis la page publique
+      PAGE=$(curl -sL -m 25 -A "$UA" "$URL")
+      USERNAME=$(printf '%s' "$PAGE" | grep -oE '"owner":\{"username":"[^"]*"' | head -1 | sed -E 's/.*"username":"//; s/"$//')
+      [ -z "$USERNAME" ] && USERNAME=$(printf '%s' "$PAGE" | grep -oE '<meta property="og:title" content="[^"]*\(@[^)]*\)' | head -1 | sed -E 's/.*\(@//; s/\)$//')
     fi
-    CAP=$(printf '%s' "$PAGE" | grep -oE '<meta property="og:description" content="[^"]*"' | head -1 | sed 's/.*content="//;s/"$//')
-    [ -n "$CAP" ] && echo "- post recent : $CAP" >> "$TXT"
   else
-    # ── Profil : graphql web_profile_info (12 posts recents) ──
+    # ── Profil : instagram.com/<user>/ ──
     USERNAME=$(printf '%s' "$URL" | sed -E 's#.*instagram\.com/##; s#/.*##; s/\?.*//' | tr -d '@')
-    GQL=$(mktemp /tmp/ig-gql-XXXXXX.json)
-    curl -s -m 25 -A "$UA" -H "x-ig-app-id: 936619743392459" \
-      "https://www.instagram.com/api/v1/users/web_profile_info/?username=$USERNAME" -o "$GQL"
-    IG_GQL="$GQL" IG_OUT="$OUT" python3 - "$TXT" <<'PYEOF'
+  fi
+  [ -z "$USERNAME" ] && { echo "ERREUR: username instagram introuvable dans $URL"; exit 3; }
+
+  # ── graphql web_profile_info (12 posts recents du compte) ──
+  GQL=$(mktemp /tmp/ig-gql-XXXXXX.json)
+  curl -s -m 25 -A "$UA" -H "x-ig-app-id: 936619743392459" \
+    "https://www.instagram.com/api/v1/users/web_profile_info/?username=$USERNAME" -o "$GQL"
+  IG_GQL="$GQL" IG_OUT="$OUT" python3 - "$TXT" <<'PYEOF'
 import json, sys, urllib.request, time, os
 gql = os.environ['IG_GQL']
 out = os.environ['IG_OUT']
@@ -93,7 +100,6 @@ for e in media:
 open(txt, 'w').write('\n'.join(lines) + '\n')
 print('graphql OK photos=%d textes=%d' % (n, len([l for l in lines if l.startswith('- ')])))
 PYEOF
-  fi
 else
   # ── TikTok / Facebook / Pinterest : yt-dlp (metadonnees + medias) ──
   case "$PLATFORM" in

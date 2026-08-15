@@ -6,6 +6,7 @@
  */
 
 import type { SiteConfig } from '@/components/webdesign/types'
+import { ACCENTS, BACKGROUNDS } from '@/components/webdesign/palette'
 import type { ImportSummary } from './importSocial'
 
 const REFERENCE_DIR = '/root/vitrine-ref/webolharosol/webolharosol.newappai.com/'
@@ -86,8 +87,17 @@ function formatLogo(config: SiteConfig): string {
 
 function formatDesign(config: SiteConfig): string {
   const custom = config.design.customColor?.trim()
+  const bg = BACKGROUNDS.find((b) => b.id === config.design.backgroundId)
+  const accent = ACCENTS.find((a) => a.id === config.design.accentId)
+
   if (custom) {
-    return `Code couleur du client (PRIORITAIRE, à utiliser comme couleur d'accent principale du site, remplaçant l'accent violet/or de la référence) : ${custom}`
+    return `Code couleur du client (PRIORITAIRE, à utiliser comme couleur d'accent principale du site, remplaçant l'accent violet/or de la référence) : ${custom}${bg ? ` ; fond du site : ${bg.bg} (${bg.label})` : ''} → applique ces couleurs en gardant la structure et la typographie de la référence (Règle 1).`
+  }
+  if (bg || accent) {
+    const parts: string[] = []
+    if (accent) parts.push(`couleur d'accent : ${accent.hex} (${accent.label})`)
+    if (bg) parts.push(`fond du site : ${bg.bg} (${bg.label})`)
+    return `Palette choisie par le client — ${parts.join(' ; ')} → applique ces couleurs en gardant la structure et la typographie de la référence (Règle 1), adaptée au style "${config.design.styleId}".`
   }
   return `Aucun code couleur libre fourni par le client — garde une couleur d'accent proche de la référence webolharosol (ou choisis un accent cohérent avec le secteur "${config.business.sector}"), adaptée au style "${config.design.styleId}".`
 }
@@ -96,7 +106,9 @@ export function buildMission(config: SiteConfig, importSummary?: ImportSummary |
   const language = config.language || 'fr'
   const languageLabel = LANGUAGE_LABELS[language] || language
 
-  const importSection = importSummary
+  const hasImportedContent = !!importSummary && (importSummary.photos > 0 || importSummary.textes > 0)
+
+  const importSection = hasImportedContent && importSummary
     ? `## CONTENU RÉEL IMPORTÉ DES RÉSEAUX SOCIAUX DU CLIENT (source de vérité)
 
 Le dossier ./import/photos/ de ce job contient ${importSummary.photos} photo(s) réelle(s) du client (récupérées depuis ${importSummary.platform}), et ./import/textes.md contient sa bio et ses posts réels.
