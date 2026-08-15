@@ -47,3 +47,6 @@ audit_map.json
 plan.json
 .env.build
 \n# Backup files\n.next-old/\n.bak-*\n.claude/
+
+# Secrets (clés Stripe live, etc.) — non couverts par les patterns .env* ci-dessus
+.env.production
