@@ -37,6 +37,22 @@ const ROOT_CSS = `
 .demo-root { background: var(--demo-color-white); color: var(--demo-color-neutral-900); font-family: var(--demo-font-sans); scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 .demo-root *, .demo-root *::before, .demo-root *::after { box-sizing: border-box; }
 .demo-root img { max-width: 100%; }
+/* Apparition progressive : le site se "construit" section par section
+   (retour Antoine — la construction pas a pas, pas l'affichage instantane) */
+.demo-root > * { opacity: 0; animation: demoReveal .55s cubic-bezier(.22,.61,.36,1) forwards; }
+.demo-root > *:nth-child(1) { animation-delay: .05s; }
+.demo-root > *:nth-child(2) { animation-delay: .25s; }
+.demo-root > *:nth-child(3) { animation-delay: .45s; }
+.demo-root > *:nth-child(4) { animation-delay: .65s; }
+.demo-root > *:nth-child(5) { animation-delay: .85s; }
+.demo-root > *:nth-child(6) { animation-delay: 1.05s; }
+.demo-root > *:nth-child(7) { animation-delay: 1.25s; }
+.demo-root > *:nth-child(8) { animation-delay: 1.45s; }
+.demo-root > *:nth-child(9) { animation-delay: 1.65s; }
+.demo-root > *:nth-child(10) { animation-delay: 1.85s; }
+.demo-root > *:nth-child(11) { animation-delay: 2.05s; }
+.demo-root > *:nth-child(12) { animation-delay: 2.25s; }
+@keyframes demoReveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 `
 
 export default function DemoSite({

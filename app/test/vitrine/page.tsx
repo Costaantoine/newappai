@@ -154,13 +154,14 @@ export default function TestVitrinePage() {
   // Étape 2 : nom du commerce.
   const [name, setName] = useState('')
   const [stage, setStage] = useState(0)
+  const [generated, setGenerated] = useState(false) // le site ne se monte qu'à la demande (retour Antoine)
   const timed = useRef(false)
 
   const sector = SECTORS_DEMO.find((s) => s.id === sectorId) ?? null
   const hasName = !!sector && name.trim().length >= 2
 
   useEffect(() => {
-    if (!hasName) {
+    if (!generated) {
       setStage(0)
       timed.current = false
       return
@@ -209,6 +210,7 @@ export default function TestVitrinePage() {
   const pickSector = (id: string) => {
     setSectorId(id)
     setStage(0)
+    setGenerated(false)
     timed.current = false
   }
 
@@ -233,9 +235,10 @@ export default function TestVitrinePage() {
             Votre site vitrine, <span className="text-violet-400">en quelques minutes</span>
           </h1>
           <p className="text-[#86868b] text-lg max-w-2xl mb-10">
-            Choisissez votre type de commerce, tapez votre nom : le squelette de votre site
-            se construit en direct, avec le même moteur que le vrai formulaire. Vos photos
-            et vos textes s&apos;ajoutent à la génération complète.
+            Choisissez votre type de commerce, tapez votre nom, puis générez :
+            votre site se construit sous vos yeux, section par section, avec le
+            même moteur que le vrai formulaire. Vos photos et vos textes
+            s&apos;ajoutent à la génération complète.
           </p>
 
           {!sector ? (
@@ -276,7 +279,7 @@ export default function TestVitrinePage() {
                 <h2 className="text-xl font-semibold text-[#f5f5f7]">
                   <span className="text-zinc-500">{sector.emoji}</span> {sector.label}
                   <button
-                    onClick={() => { setSectorId(null); setName('') }}
+                    onClick={() => { setSectorId(null); setName(''); setGenerated(false) }}
                     className="ml-4 text-sm text-violet-400 hover:text-violet-300 underline underline-offset-4"
                   >
                     Changer de type de commerce
@@ -290,17 +293,26 @@ export default function TestVitrinePage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && hasName) setGenerated(true) }}
                   placeholder={`Ex : Boulangerie Martin`}
                   autoFocus
                   className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 />
               </div>
 
-              {/* Étapes réelles du squelette instantané */}
+              {/* Préchargement des photos du secteur : l'apparition ne « mouline » pas */}
+              <div className="hidden" aria-hidden="true">
+                {sector.photos.map((p) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={p} src={p} alt="" loading="eager" />
+                ))}
+              </div>
+
+              {/* Étapes réelles de la construction */}
               <div className="flex items-center gap-3 mb-6 text-sm flex-wrap">
                 {STAGES.map((label, i) => {
-                  const done = hasName && stage > i
-                  const active = hasName && stage === i + 1
+                  const done = generated && stage > i
+                  const active = generated && stage === i + 1
                   return (
                     <div key={label} className="flex items-center gap-3">
                       <span
@@ -321,17 +333,49 @@ export default function TestVitrinePage() {
                 })}
               </div>
 
-              {/* Le MÊME aperçu que le wizard */}
-              <div className="demo-frame relative">
+              {/* Lancer la construction */}
+              <div className="mb-8">
+                <button
+                  onClick={() => setGenerated(true)}
+                  disabled={!hasName}
+                  className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-semibold px-8 py-4 rounded-full transition-colors"
+                >
+                  Générer mon aperçu ✨
+                </button>
                 {!hasName && (
+                  <p className="text-xs text-zinc-500 mt-2">Tapez au moins 2 lettres pour activer.</p>
+                )}
+              </div>
+
+              {/* Le site se construit : les sections apparaissent une à une */}
+              <div className="demo-frame relative">
+                {!generated && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/70 backdrop-blur-sm">
                     <p className="text-zinc-300 text-lg px-6 text-center">
-                      Tapez le nom de votre commerce pour voir votre site se construire ✨
+                      Tapez le nom de votre commerce puis cliquez sur
+                      <br />
+                      « Générer mon aperçu » pour voir votre site se construire ✨
                     </p>
                   </div>
                 )}
                 <div className="max-h-[560px] overflow-y-auto">
-                  <DemoSite config={config} anchorPrefix="demo" />
+                  {generated ? (
+                    <>
+                      <button
+                        onClick={() => setGenerated(false)}
+                        className="absolute top-3 right-3 z-20 bg-zinc-900/90 text-zinc-300 text-xs px-3 py-1.5 rounded-full border border-zinc-700 hover:text-white"
+                      >
+                        ← Modifier
+                      </button>
+                      <DemoSite
+                        key={`${sector.id}-${name.trim()}-${generated ? 1 : 0}`}
+                        config={config}
+                        anchorPrefix="demo"
+                      />
+                    </>
+                  ) : (
+                    <div className="min-h-[360px] bg-[#0a0a0a]" />
+                  )}
                 </div>
               </div>
               <p className="text-[#6b7280] text-xs mt-2 text-center">
