@@ -50,7 +50,8 @@ export default function Chantier({ config, jobId }: { config: SiteConfig; jobId?
         setLogTail(data.logTail || [])
         setUrlPreview(data.urlPreview)
         if (data.status === 'error') {
-          setErrorMessage(data.etape || 'Une erreur est survenue pendant la génération.')
+          const lastLogLine = data.logTail.length > 0 ? data.logTail[data.logTail.length - 1] : ''
+          setErrorMessage(data.etape || lastLogLine || 'Une erreur est survenue pendant la génération.')
         }
         if (data.status === 'done' && pollRef.current) {
           clearInterval(pollRef.current)
@@ -136,20 +137,45 @@ export default function Chantier({ config, jobId }: { config: SiteConfig; jobId?
         </pre>
 
         {status === 'error' && (
-          <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-            {errorMessage}
+          <div className="mt-6 space-y-3">
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+              <p className="text-sm font-bold text-red-300 mb-1">La génération a échoué</p>
+              <p className="text-xs text-red-200/80 leading-relaxed break-words">{errorMessage}</p>
+            </div>
+            <a
+              href="/webdesign"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-neutral-700 px-6 py-3 text-sm font-bold text-slate-300 transition hover:border-violet-500/60 hover:text-violet-200"
+            >
+              Modifier mes réponses
+            </a>
           </div>
         )}
 
         {status === 'done' && urlPreview && (
-          <a
-            href={urlPreview}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-bold py-3 rounded-2xl transition"
-          >
-            Voir mon site
-          </a>
+          <div className="mt-6 space-y-3">
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+              <p className="text-sm font-bold text-emerald-300 mb-1">Votre site est prêt !</p>
+              <p className="text-xs text-emerald-200/80 leading-relaxed">
+                La génération est terminée. Consultez votre aperçu ou téléchargez le site.
+              </p>
+            </div>
+            <a
+              href={urlPreview}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-violet-400"
+            >
+              Voir mon site
+            </a>
+            {jobId && (
+              <a
+                href={`/api/vitrine/download/${jobId}`}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-neutral-700 px-6 py-3 text-sm font-bold text-slate-300 transition hover:border-violet-500/60 hover:text-violet-200"
+              >
+                Télécharger le zip
+              </a>
+            )}
+          </div>
         )}
 
         {!jobId && (
