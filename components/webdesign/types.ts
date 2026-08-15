@@ -26,6 +26,7 @@ export interface DesignConfig {
   fontPairId: string
   accentId: string
   styleId: string
+  customColor?: string // code hex libre (prioritaire sur l'accent de la palette si rempli)
 }
 
 /** Configuration complète du site vitrine rempli dans le wizard. */
@@ -35,6 +36,7 @@ export interface SiteConfig {
     sector: string
     description: string
     logo: MediaFile | null
+    website?: string // site existant du client (informatif — lu pour contexte, ne remplace pas les réponses du formulaire)
   }
   services: Service[]
   gallery: MediaFile[]
@@ -47,6 +49,7 @@ export interface SiteConfig {
     hours: string
   }
   design: DesignConfig
+  language?: string // langue du site généré (fr / pt / en / es) — défaut 'fr'
 }
 
 export const STEPS = [
@@ -71,6 +74,14 @@ export const SECTORS: { id: string; label: string }[] = [
   { id: 'autre', label: 'Autre' },
 ]
 
+/** Langues disponibles pour le site généré (référence webolharosol = pt). */
+export const LANGUAGES: { id: string; label: string }[] = [
+  { id: 'fr', label: 'Français' },
+  { id: 'pt', label: 'Português' },
+  { id: 'en', label: 'English' },
+  { id: 'es', label: 'Español' },
+]
+
 /** Identifiant unique court (id stable dans la session). */
 export function uid(): string {
   return Math.random().toString(36).slice(2, 10)
@@ -84,6 +95,7 @@ export function defaultSiteConfig(): SiteConfig {
       sector: 'restaurant',
       description: '',
       logo: null,
+      website: '',
     },
     services: [{ id: uid(), name: '', description: '', price: '' }],
     gallery: [],
@@ -100,7 +112,9 @@ export function defaultSiteConfig(): SiteConfig {
       fontPairId: 'playfair-inter',
       accentId: 'violet',
       styleId: 'sobre',
+      customColor: '',
     },
+    language: 'fr',
   }
 }
 

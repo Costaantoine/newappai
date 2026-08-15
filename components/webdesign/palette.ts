@@ -276,12 +276,14 @@ export interface SiteTheme {
 
 /** Résout la config design en un thème CSS complet. */
 export function buildTheme(
-  design: { backgroundId: string; fontPairId: string; accentId: string; styleId: string },
+  design: { backgroundId: string; fontPairId: string; accentId: string; styleId: string; customColor?: string },
 ): SiteTheme {
   const bg = BACKGROUNDS.find((b) => b.id === design.backgroundId) || BACKGROUNDS[0]
   const font = FONT_PAIRS.find((f) => f.id === design.fontPairId) || FONT_PAIRS[0]
   const accent = ACCENTS.find((a) => a.id === design.accentId) || ACCENTS[0]
   const style = STYLES.find((s) => s.id === design.styleId) || STYLES[0]
+  const customColor = design.customColor?.trim() || null
+  const accentHex = customColor || accent.hex
 
   return {
     bg: bg.bg,
@@ -294,8 +296,8 @@ export function buildTheme(
     sectionDarkText: bg.sectionDarkText,
     footer: bg.footer,
     dark: bg.dark,
-    accent: accent.hex,
-    accentText: bg.dark ? accent.hex : accent.onLight,
+    accent: accentHex,
+    accentText: bg.dark ? accentHex : (customColor || accent.onLight),
     headingFont: font.heading,
     bodyFont: font.body,
     radius: style.radius,

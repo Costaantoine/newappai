@@ -94,6 +94,9 @@ export default function Wizard() {
   const patchDesign = useCallback((patch: Partial<SiteConfig['design']>) => {
     setConfig((p) => ({ ...p, design: { ...p.design, ...patch } }))
   }, [])
+  const setLanguage = useCallback((language: string) => {
+    setConfig((p) => ({ ...p, language }))
+  }, [])
 
   return (
     <div>
@@ -141,6 +144,7 @@ export default function Wizard() {
                 config={config}
                 onBusiness={patchBusiness}
                 onLogo={(logo) => setConfig((p) => ({ ...p, business: { ...p.business, logo } }))}
+                onLanguage={setLanguage}
               />
             )}
             {step === 1 && (

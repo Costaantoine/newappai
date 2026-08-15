@@ -110,6 +110,38 @@ export default function DesignStep({ design, onDesign }: DesignStepProps) {
           </p>
         </div>
 
+        {/* Code couleur personnalisé */}
+        <div>
+          <h3 className="text-sm font-semibold text-white mb-1">Code couleur personnalisé</h3>
+          <p className="text-xs text-slate-500 mb-3">Optionnel — si rempli, remplace la couleur d'accent ci-dessus.</p>
+          <div className="flex items-center gap-3">
+            <input
+              type="color"
+              value={design.customColor || '#8b5cf6'}
+              onChange={(e) => onDesign({ customColor: e.target.value })}
+              className="h-11 w-14 rounded-lg border border-neutral-800 bg-neutral-900/50 cursor-pointer"
+              aria-label="Sélecteur de couleur personnalisée"
+            />
+            <input
+              type="text"
+              value={design.customColor || ''}
+              onChange={(e) => onDesign({ customColor: e.target.value })}
+              placeholder="#8b5cf6"
+              maxLength={7}
+              className="w-32 rounded-xl bg-neutral-900/60 border border-neutral-800 focus:border-violet-400/60 focus:ring-2 focus:ring-violet-500/20 px-3 py-2.5 text-white placeholder:text-slate-500 text-sm outline-none transition"
+            />
+            {design.customColor && (
+              <button
+                type="button"
+                onClick={() => onDesign({ customColor: '' })}
+                className="text-xs text-slate-500 hover:text-slate-300 transition"
+              >
+                Réinitialiser
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Style */}
         <div>
           <h3 className="text-sm font-semibold text-white mb-3">Style</h3>
