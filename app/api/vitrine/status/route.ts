@@ -1,21 +1,17 @@
 // ============================================================
 // GET /api/vitrine/status?jobId=xxx
-// État minimal honnête du chantier live — MISSION 3 : le vrai worker
-// (queue, SSH, claude --print, log streamé) arrive en mission 4.
+// État réel du chantier live, lu depuis le store lib/vitrine/queue.ts.
 // AUCUNE fausse progression n'est simulée ici.
 // ============================================================
 
 import { NextRequest, NextResponse } from 'next/server'
+import { getJob, toStatusResponse } from '@/lib/vitrine/queue'
 
 export async function GET(request: NextRequest) {
   const jobId = request.nextUrl.searchParams.get('jobId')
+  if (!jobId) {
+    return NextResponse.json({ error: 'jobId requis' }, { status: 400 })
+  }
 
-  return NextResponse.json({
-    jobId,
-    status: 'queued',
-    position: null,
-    etape: 'En attente de la file de génération...',
-    logTail: [],
-    urlPreview: null,
-  })
+  return NextResponse.json(toStatusResponse(jobId, getJob(jobId)))
 }
