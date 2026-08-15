@@ -218,7 +218,7 @@ async function processJob(job: VitrineJob): Promise<void> {
     }
 
     pushLog(jobId, 'Aperçu prêt !')
-    markDone(jobId, `/api/vitrine/preview/${jobId}`)
+    markDone(jobId, `/api/vitrine/preview/${jobId}/`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Erreur inconnue pendant la génération.'
     pushLog(jobId, `[erreur] ${message}`)

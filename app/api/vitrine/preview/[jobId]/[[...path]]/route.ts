@@ -55,7 +55,21 @@ export async function GET(_request: NextRequest, { params }: { params: { jobId: 
 
   const ext = path.extname(resolved).toLowerCase()
   const contentType = CONTENT_TYPES[ext] || 'application/octet-stream'
-  const body = readFileSync(resolved)
+  let body = readFileSync(resolved)
+
+  // Injection d'une balise <base> dans l'index.html servi : les assets sont
+  // référencés en relatif (assets/x.jpg) et le navigateur les résoudrait contre
+  // /api/vitrine/preview/ (sans jobId) si la page est ouverte SANS slash final
+  // → 404 sur toutes les images. Le <base> ancre la résolution sur le job.
+  if (relPath === 'index.html') {
+    const html = body.toString('utf-8')
+    if (!html.includes('<base') && /<head[^>]*>/.test(html)) {
+      body = Buffer.from(
+        html.replace(/<head[^>]*>/, (m) => `${m}<base href="/api/vitrine/preview/${jobId}/">`),
+        'utf-8',
+      )
+    }
+  }
 
   return new NextResponse(body, { headers: { 'Content-Type': contentType } })
 }
