@@ -3,9 +3,9 @@ import { stripe } from '@/lib/stripe'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
 
 /**
- * Checkout dédié au produit "Web Design 199€" (prix fixe 199€ TTC).
- * Route isolée de /api/stripe/* pour ne pas dépendre d'un produit en base :
- * le site est généré à partir des données du client, pas d'un catalogue.
+ * Checkout du parcours "Site Vitrine" (prix fixe 199€ TTC, même offre que
+ * Web Design). Route isolée de /api/stripe/* : ce n'est pas un produit de
+ * catalogue, le site est généré à la volée à partir du wizard.
  */
 
 const PRICE_CENTS = 19900
@@ -16,7 +16,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request)
-  const rl = checkRateLimit(ip, { limit: 5, windowMs: 60_000, prefix: 'checkout:webdesign' })
+  const rl = checkRateLimit(ip, { limit: 5, windowMs: 60_000, prefix: 'checkout:vitrine' })
   if (!rl.allowed) {
     return NextResponse.json(
       { error: 'Trop de requêtes. Veuillez réessayer dans une minute.' },
@@ -25,7 +25,14 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { siteName, sector, serviceCount, photoCount, email } = await request.json()
+    const { email, siteName, jobId } = await request.json()
+
+    const metadata: Record<string, string> = {
+      product: 'vitrine',
+      email: String(email || ''),
+      site_name: String(siteName || '').slice(0, 120),
+    }
+    if (jobId) metadata.job_id = String(jobId).slice(0, 120)
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -34,7 +41,7 @@ export async function POST(request: NextRequest) {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: 'Web Design — Site vitrine one-page',
+              name: 'Site Vitrine — Site one-page',
               description: 'Site vitrine one-page complet, hébergement et mise en ligne inclus.',
             },
             unit_amount: PRICE_CENTS,
@@ -45,19 +52,13 @@ export async function POST(request: NextRequest) {
       mode: 'payment',
       customer_email: email || undefined,
       success_url: `${SITE_URL}/webdesign/succes?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${SITE_URL}/webdesign`,
-      metadata: {
-        product: 'webdesign',
-        site_name: String(siteName || '').slice(0, 120),
-        sector: String(sector || ''),
-        service_count: String(serviceCount || 0),
-        photo_count: String(photoCount || 0),
-      },
+      cancel_url: `${SITE_URL}/vitrine`,
+      metadata,
     })
 
     return NextResponse.json({ url: session.url, sessionId: session.id })
   } catch (error) {
-    console.error('Erreur création session Web Design:', error)
+    console.error('Erreur création session Vitrine:', error)
     return NextResponse.json(
       { error: 'Erreur lors de la création de la session de paiement' },
       { status: 500 },
