@@ -52,7 +52,7 @@ interface Product {
   price: number
   images: string[]
   category: string
-  active: boolean
+  status: string // 'visible' | 'hidden' | 'development' (schéma actuel — ex-colonne active supprimée)
   order: number
 }
 
@@ -179,7 +179,7 @@ export default function HomePageContent() {
         setTexts(textsArray)
         setZones(zonesArray.filter((z: Zone) => z.active).sort((a: Zone, b: Zone) => a.order - b.order))
         setCards(cardsArray.filter((c: ZoneCard) => c.active).sort((a: ZoneCard, b: ZoneCard) => a.order - b.order))
-        setProducts(productsArray.filter((p: Product) => p.active).sort((a: Product, b: Product) => a.order - b.order))
+        setProducts(productsArray.filter((p: Product) => p.status === 'visible' || p.status === 'development').sort((a: Product, b: Product) => a.order - b.order))
 
         const tryRaw = await tryRes.json()
         const tryArray = Array.isArray(tryRaw.tryItems) ? tryRaw.tryItems : Array.isArray(tryRaw) ? tryRaw : []

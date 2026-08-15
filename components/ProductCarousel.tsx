@@ -12,7 +12,7 @@ interface Product {
   price: number
   images: string[]
   category: string
-  active: boolean
+  status: string
   order: number
 }
 
