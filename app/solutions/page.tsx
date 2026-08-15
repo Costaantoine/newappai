@@ -143,6 +143,12 @@ export default function SolutionsPage() {
                 <p data-section={`solutions_${zone.key}_desc_long`} className="text-[#86868b] text-base leading-relaxed mb-8 max-w-4xl">{t('solutions_' + zone.key + '_desc_long', '')}</p>
 
                 <div className="flex flex-wrap gap-4">
+                  {zone.key === 'webdesign' && (
+                    <Link href="/webdesign" className={`px-8 py-4 rounded-full ${cs.bg} text-white font-bold hover:brightness-110 transition shadow-lg flex items-center`}>
+                      Créer mon site — 149€
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </Link>
+                  )}
                   <Link href="/produits" data-section="solutions-see-products" className={`px-8 py-4 rounded-full ${cs.bg} text-white font-bold hover:brightness-110 transition shadow-lg flex items-center`}>
                     {t('solutions_see_products', 'Voir nos produits')}
                     <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>

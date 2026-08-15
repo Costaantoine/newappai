@@ -1,5 +1,5 @@
 /**
- * Types partagés de l'outil "Web Design 199€" — générateur de site vitrine.
+ * Types partagés de l'outil "Web Design 149€" — générateur de site vitrine.
  * La config remplie par le client pilote à la fois l'aperçu live, le paiement
  * et la génération du site one-page final.
  */

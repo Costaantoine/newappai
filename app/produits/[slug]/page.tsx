@@ -40,6 +40,26 @@ const slugMap: Record<string, ProductInfo> = {
     priceNote: 'Le prix de base inclut le redesign complet. Les options (chatbot, réservations) sont facturées en supplément : 299€ l\'option, 499€ les deux.',
     forWho: 'Idéal pour les TPE, PME, artisans, commerçants, restaurateurs et professions libérales qui ont déjà un site mais souhaitent le moderniser sans repartir de zéro.',
   },
+  'webdesign-149': {
+    titleFr: 'Web Design 149€',
+    subtitle: 'Votre site vitrine one-page, généré en 5 minutes',
+    longDesc: "Vous n'avez pas de site internet et vous voulez un résultat professionnel sans payer une fortune ni attendre des semaines ? L'outil Web Design 149€ génère votre site vitrine one-page instantanément, à partir de vos réponses.\n\nRemplissez un questionnaire guidé : le nom de votre entreprise, vos services et tarifs, vos photos, vos coordonnées et le design (couleurs, polices, style). Un aperçu en direct, desktop et mobile, se met à jour en temps réel pendant que vous répondez — vous voyez votre site prendre forme avant même de payer.\n\nUne fois la configuration validée, payez 149€ en une fois par carte. Votre site one-page est alors généré immédiatement, avec votre galerie, le bouton WhatsApp, la carte Google Maps et le formulaire de réservation. L'hébergement et la mise en ligne sont inclus dans l'offre.",
+    features: [
+      'Questionnaire guidé en 6 étapes : entreprise, services, galerie, contact, design, récapitulatif',
+      'Aperçu en direct desktop & mobile pendant la saisie',
+      'Personnalisation complète : fond, paires de polices, couleur d\'accent, style (sobre/modern/audacieux)',
+      'Galeries photos et vidéos, logo et couleurs de votre marque',
+      'Bouton WhatsApp flottant + formulaire de réservation vers WhatsApp',
+      'Carte Google Maps automatique si adresse fournie',
+      'Site one-page 100% autonome (HTML) téléchargeable immédiatement après paiement',
+      'Hébergement et mise en ligne inclus dans l\'offre',
+    ],
+    options: [
+      'Modification de votre site après mise en ligne (forfait maintenance sur devis)',
+    ],
+    priceNote: 'Paiement unique de 149€ TTC (offre Découverte). Le site généré est téléchargeable immédiatement ; la mise en ligne sur votre nom de domaine est incluse.',
+    forWho: 'Artisans, commerçants, auto-entrepreneurs, restaurants, salons et professions libérales qui veulent un site professionnel aujourd\'hui, pas dans trois mois.',
+  },
   'creation-site-vitrine': {
     titleFr: 'Création de Site Vitrine clé en main',
     subtitle: 'Un site professionnel de A à Z, sans complication',
@@ -186,6 +206,7 @@ export default function ProductDetailPage() {
       'serenite': 199900,
       'paperasse': 0,
       'gestion-production': 99900,
+      'webdesign-149': 14900,
     }
     addItem({
       id: 'slug-' + slug,
@@ -283,10 +304,20 @@ export default function ProductDetailPage() {
           )}
 
           <div className="flex flex-wrap gap-4">
-            <button onClick={handleAddToCart}
-              className={'px-8 py-4 rounded-full font-bold transition ' + (inCart ? 'bg-green-500 text-white' : 'bg-violet-500 text-white hover:bg-violet-400')}>
-              {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
-            </button>
+            {slug === 'webdesign-149' ? (
+              <Link href="/webdesign"
+                className="px-8 py-4 rounded-full font-bold bg-violet-500 text-white hover:bg-violet-400 transition inline-flex items-center gap-2">
+                Créer mon site — 149€
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            ) : (
+              <button onClick={handleAddToCart}
+                className={'px-8 py-4 rounded-full font-bold transition ' + (inCart ? 'bg-green-500 text-white' : 'bg-violet-500 text-white hover:bg-violet-400')}>
+                {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
+              </button>
+            )}
             <Link href="/contact" className="px-8 py-4 border border-violet-500/30 text-violet-400 rounded-full font-bold hover:bg-violet-500/10 transition">
               Demander un devis
             </Link>

@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
+import { DECOUVERTE_PRICE_CENTS } from '@/lib/vitrine/pricing'
 
 /**
- * Checkout du parcours "Site Vitrine" (prix fixe 199€ TTC, même offre que
- * Web Design). Route isolée de /api/stripe/* : ce n'est pas un produit de
- * catalogue, le site est généré à la volée à partir du wizard.
+ * Checkout du parcours "Site Vitrine" (offre Découverte 149€ TTC one-shot,
+ * même offre que Web Design). Route isolée de /api/stripe/* : ce n'est pas un
+ * produit de catalogue, le site est généré à la volée à partir du wizard.
  */
-
-const PRICE_CENTS = 19900
 
 // Base d'URL fiable pour les redirections Stripe : jamais le header Origin
 // (contrôlable par l'appelant), toujours une valeur serveur avec fallback sûr.
@@ -44,7 +43,7 @@ export async function POST(request: NextRequest) {
               name: 'Site Vitrine — Site one-page',
               description: 'Site vitrine one-page complet, hébergement et mise en ligne inclus.',
             },
-            unit_amount: PRICE_CENTS,
+            unit_amount: DECOUVERTE_PRICE_CENTS,
           },
           quantity: 1,
         },

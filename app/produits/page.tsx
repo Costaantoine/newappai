@@ -231,6 +231,38 @@ export default async function ProduitsPage() {
         backgroundImage={heroImage}
       />
 
+      {/* Mise en avant Web Design 149€ — outil self-service */}
+      <section className="px-6 pt-16">
+        <AppleCard
+          padding="lg"
+          className="max-w-3xl mx-auto text-center border-violet-500/30"
+          glowColor="violet"
+        >
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-violet-400 mb-5">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Nouveau
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#f5f5f7] mb-3 tracking-tight">
+            Web Design <span className="text-violet-400">149€</span>
+          </h2>
+          <p className="text-[#86868b] text-lg mb-7 max-w-xl mx-auto leading-relaxed">
+            Votre site vitrine one-page généré en 5 minutes : questionnaire guidé, aperçu en
+            direct, paiement unique de 149€ (offre Découverte). Hébergement et mise en ligne inclus.
+          </p>
+          <Link
+            href="/webdesign"
+            className="inline-flex items-center gap-2 bg-violet-500 text-white px-8 py-4 rounded-full font-bold hover:bg-violet-400 transition shadow-lg shadow-violet-500/25"
+          >
+            Créer mon site maintenant
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </AppleCard>
+      </section>
+
       <AppleSection>
         {activeProducts.length === 0 ? (
           <AppleCard padding="lg" className="text-center max-w-lg mx-auto">

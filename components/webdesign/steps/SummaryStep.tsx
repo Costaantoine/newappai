@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation'
 import { ACCENTS, BACKGROUNDS, FONT_PAIRS, STYLES } from '../palette'
 import { SECTORS, type SiteConfig } from '../types'
 import { StepHeading } from './ui'
+import { DECOUVERTE_PRICE_CENTS } from '@/lib/vitrine/pricing'
+
+const PRICE_LABEL = `${DECOUVERTE_PRICE_CENTS / 100}€`
 
 interface SummaryStepProps {
   config: SiteConfig
@@ -58,7 +61,7 @@ export default function SummaryStep({ config, onPay, paying }: SummaryStepProps)
           <p className="text-sm text-slate-300">Site vitrine one-page complet</p>
           <p className="text-xs text-slate-400 mt-0.5">Généré instantanément après paiement</p>
         </div>
-        <div className="text-3xl font-bold text-white">199€</div>
+        <div className="text-3xl font-bold text-white">{PRICE_LABEL}</div>
       </div>
 
       <button
@@ -82,7 +85,7 @@ export default function SummaryStep({ config, onPay, paying }: SummaryStepProps)
           </>
         ) : (
           <>
-            Payer 199€
+            Payer {PRICE_LABEL}
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -90,7 +93,7 @@ export default function SummaryStep({ config, onPay, paying }: SummaryStepProps)
         )}
       </button>
       <p className="text-center text-xs text-slate-500 mt-3">
-        Paiement sécurisé par Stripe · 199€ TTC · Hébergement et mise en ligne inclus
+        Paiement sécurisé par Stripe · {PRICE_LABEL} TTC · Hébergement et mise en ligne inclus
       </p>
     </div>
   )
