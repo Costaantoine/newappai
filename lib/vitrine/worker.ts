@@ -41,7 +41,7 @@ const SSH_FLAGS = ['-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20', '-o', 'Stri
 const SCP_FLAGS = ['-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20', '-o', 'StrictHostKeyChecking=accept-new']
 
 const JOB_TIMEOUT_MS = 25 * 60 * 1000
-const BILLING_PATTERN = /billing|credit|rate.?limit|402|quota/i
+const BILLING_PATTERN = /billing|credit|rate.?limit|session.?limit|402|quota/i
 
 const MIME_EXT: Record<string, string> = {
   'image/png': 'png',
