@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import Preview from './Preview'
+import DemoSite from '@/components/test-vitrine/DemoSite'
 import CompanyStep from './steps/CompanyStep'
 import ServicesStep from './steps/ServicesStep'
 import GalleryStep from './steps/GalleryStep'
@@ -191,15 +191,34 @@ export default function Wizard() {
           </div>
         </div>
 
-        {/* Aperçu sticky */}
+        {/* Aperçu sticky — le site apparaît PAS À PAS à la dernière étape (retour Antoine :
+            questionnaire d'abord, puis le site se construit section par section, design réel) */}
         <div className="hidden lg:block sticky top-24 h-[calc(100vh-8rem)]">
-          <Preview config={config} />
+          {isLast ? (
+            <DemoSite key={`wizard-${config.business.name.trim()}`} config={config} anchorPrefix="apercu" />
+          ) : (
+            <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-neutral-700 bg-neutral-900/40 p-8 text-center">
+              <p className="text-slate-400 text-sm">
+                Votre aperçu s&apos;affichera à la dernière étape,
+                <br />
+                quand votre site se construira sous vos yeux ✨
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Aperçu sous le formulaire (mobile/tablette) */}
       <div className="mt-10 lg:hidden">
-        <Preview config={config} />
+        {isLast ? (
+          <DemoSite key={`wizard-mobile-${config.business.name.trim()}`} config={config} anchorPrefix="apercu" />
+        ) : (
+          <div className="flex items-center justify-center rounded-2xl border border-dashed border-neutral-700 bg-neutral-900/40 p-8 text-center">
+            <p className="text-slate-400 text-sm">
+              Votre aperçu s&apos;affichera à la dernière étape ✨
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

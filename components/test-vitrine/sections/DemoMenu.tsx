@@ -23,10 +23,12 @@ const CSS = `
 .demo-menu-card h3 { font-family: var(--demo-font-serif); font-weight: 400; font-size: 1.15rem; color: var(--demo-color-neutral-900); margin: 0 0 0.4rem; }
 .demo-menu-card p { font-family: var(--demo-font-sans); font-size: 0.92rem; color: var(--demo-color-gray-600); margin: 0; }
 .demo-menu-chevron { flex-shrink: 0; color: var(--demo-color-gold); font-size: 1.1rem; }
+.demo-menu-right { display: flex; align-items: center; gap: 0.9rem; flex-shrink: 0; }
+.demo-menu-price { font-family: var(--demo-font-serif); font-size: 1.05rem; color: var(--demo-color-neutral-900); white-space: nowrap; }
 `
 
 interface Props {
-  services: { id: string; name: string; description: string }[]
+  services: { id: string; name: string; description: string; price?: string }[]
   anchorPrefix: string
   labels: DemoLabels
 }
@@ -47,7 +49,10 @@ export default function DemoMenu({ services, anchorPrefix, labels }: Props) {
                 <h3>{s.name}</h3>
                 {s.description && <p>{s.description}</p>}
               </div>
-              <span className="demo-menu-chevron">›</span>
+              <div className="demo-menu-right">
+                {s.price && <span className="demo-menu-price">{s.price}</span>}
+                <span className="demo-menu-chevron">›</span>
+              </div>
             </div>
           ))}
         </div>
