@@ -110,11 +110,12 @@ export default function PreviewSite({
 }) {
   const theme = useMemo(() => buildTheme(config.design), [config.design])
   const photos = config.gallery.filter((g) => g.type === 'image')
+  const srcOf = (g: { dataUrl: string; url?: string }) => g.url || g.dataUrl
   const sector = SECTORS.find((s) => s.id === config.business.sector)?.label || ''
   const name = config.business.name.trim()
   const phone = config.contact.phone
   const waHref = waLink(phone, `Bonjour ${name}, je vous contacte depuis votre site internet.`)
-  const heroPhoto = photos[0]?.dataUrl
+  const heroPhoto = photos[0] ? srcOf(photos[0]) : undefined
 
   const anchors = [
     { href: `#${anchorPrefix}-about`, label: 'À propos' },
@@ -199,16 +200,16 @@ export default function PreviewSite({
         <div className="ws-mosaic">
           <div className="ws-container ws-mosaic-grid">
             <div className="ws-mosaic-large">
-              <img src={photos[1].dataUrl} alt="Travail 1" />
+              <img src={srcOf(photos[1])} alt="Travail 1" />
             </div>
             {photos.length >= 4 ? (
               <div className="ws-mosaic-stack">
-                <div><img src={photos[2].dataUrl} alt="Travail 2" /></div>
-                <div><img src={photos[3].dataUrl} alt="Travail 3" /></div>
+                <div><img src={srcOf(photos[2])} alt="Travail 2" /></div>
+                <div><img src={srcOf(photos[3])} alt="Travail 3" /></div>
               </div>
             ) : (
               <div className="ws-mosaic-stack">
-                <div><img src={photos[2].dataUrl} alt="Travail 2" /></div>
+                <div><img src={srcOf(photos[2])} alt="Travail 2" /></div>
               </div>
             )}
           </div>

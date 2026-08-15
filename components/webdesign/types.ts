@@ -10,6 +10,7 @@ export interface MediaFile {
   dataUrl: string // base64 (image, redimensionnée) ou data URL brute (vidéo)
   type: 'image' | 'video'
   name: string
+  url?: string // URL distante (démo uniquement — les uploads réels restent en base64)
 }
 
 /** Une prestation / un service vendu (liste répétable, comme les prestations Filipa). */
@@ -71,6 +72,7 @@ export const SECTORS: { id: string; label: string }[] = [
   { id: 'coiffure', label: 'Coiffure / Salon' },
   { id: 'artisan', label: 'Artisan' },
   { id: 'commerce', label: 'Commerce' },
+  { id: 'sante', label: 'Santé / Bien-être' },
   { id: 'service', label: 'Service / Profession libérale' },
   { id: 'autre', label: 'Autre' },
 ]
