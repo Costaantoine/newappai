@@ -127,7 +127,7 @@ export default function PreviewSite({
 
   return (
     <div className="wsite" style={cssVars(theme)}>
-      <style>{previewCss}</style>
+      <style dangerouslySetInnerHTML={{ __html: previewCss }} />
 
       {/* Header */}
       <header className="ws-header">
