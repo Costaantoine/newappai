@@ -30,6 +30,7 @@
     "nodemailer": "^8.0.2",
     "openai": "^6.45.0",
     "prisma": "5.22.0",
+    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sharp": "^0.33.5",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@types/node": "^25.2.3",
     "@types/nodemailer": "^7.0.11",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.14",
     "@types/three": "^0.185.1",
     "@vitejs/plugin-react": "^4.7.0",

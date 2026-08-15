@@ -156,6 +156,7 @@ export const translations = {
       next: 'Suivant',
       slide_label: 'Aller à la slide',
     },
+    testEasyreadVoiceLimit: 'Vous avez droit à seulement 1 000 caractères gratuits pour votre test.',
     testimonial: {
       title: 'Ils nous font confiance',
       previous: 'Précédent',
@@ -333,6 +334,7 @@ export const translations = {
       next: 'Next',
       slide_label: 'Go to slide',
     },
+    testEasyreadVoiceLimit: 'You get only 1,000 free characters for your test.',
     testimonial: {
       title: 'They trust us',
       previous: 'Previous',
@@ -510,6 +512,7 @@ export const translations = {
       next: 'Próximo',
       slide_label: 'Ir para o slide',
     },
+    testEasyreadVoiceLimit: 'Você tem direito a apenas 1 000 caracteres grátis para seu teste.',
     testimonial: {
       title: 'Eles confiam em nós',
       previous: 'Anterior',
@@ -687,6 +690,7 @@ export const translations = {
       next: 'Siguiente',
       slide_label: 'Ir al slide',
     },
+    testEasyreadVoiceLimit: 'Tiene derecho a solo 1 000 caracteres gratuitos para su prueba.',
     testimonial: {
       title: 'Confían en nosotros',
       previous: 'Anterior',
