@@ -214,15 +214,17 @@ export default function TestVitrinePage() {
 
   return (
     <div id="test-vitrine-page" className="min-h-screen bg-black text-white">
-      <style>{`
-        #test-vitrine-page header, #test-vitrine-page footer { background: #000 !important; --color-header-bg: #000 !important; }
-        #test-vitrine-page header { backdrop-filter: none !important; border-bottom-color: rgb(38 38 38) !important; }
-        #test-vitrine-page footer { border-top-color: rgb(38 38 38) !important; }
+      <style dangerouslySetInnerHTML={{ __html: `
+        #test-vitrine-page > header, #test-vitrine-page > footer { background: #000 !important; --color-header-bg: #000 !important; }
+        #test-vitrine-page > header { backdrop-filter: none !important; border-bottom-color: rgb(38 38 38) !important; }
+        #test-vitrine-page > footer { border-top-color: rgb(38 38 38) !important; }
+        /* NB : selecteurs > enfant direct uniquement — ne pas casser le header/footer
+           blanc du design de reference a l'interieur de .demo-root (regle Antoine) */
         #test-vitrine-page .demo-frame { border: 1px solid rgb(38 38 38); border-radius: 1.25rem; overflow: hidden; background: #0a0a0a; }
         #test-vitrine-page .sector-card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
         #test-vitrine-page .sector-card:hover { transform: translateY(-4px); border-color: rgb(139 92 246 / .6); }
         #test-vitrine-page .sector-card.selected { border-color: rgb(139 92 246); box-shadow: 0 0 0 2px rgb(139 92 246 / .5); }
-      `}</style>
+      ` }} />
       <Header />
       <main className="px-6 py-16 md:py-20">
         <div className="max-w-5xl mx-auto">
