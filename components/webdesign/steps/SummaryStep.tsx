@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { ACCENTS, BACKGROUNDS, FONT_PAIRS, STYLES } from '../palette'
 import { SECTORS, type SiteConfig } from '../types'
 import { StepHeading } from './ui'
@@ -20,6 +21,7 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export default function SummaryStep({ config, onPay, paying }: SummaryStepProps) {
+  const router = useRouter()
   const bg = BACKGROUNDS.find((b) => b.id === config.design.backgroundId)
   const font = FONT_PAIRS.find((f) => f.id === config.design.fontPairId)
   const accent = ACCENTS.find((a) => a.id === config.design.accentId)
@@ -61,9 +63,17 @@ export default function SummaryStep({ config, onPay, paying }: SummaryStepProps)
 
       <button
         type="button"
+        onClick={() => router.push('/vitrine/generation')}
+        className="mt-6 w-full border border-violet-500/40 text-violet-300 hover:bg-violet-500/10 font-medium py-3.5 rounded-2xl transition flex items-center justify-center gap-2"
+      >
+        Voir mon aperçu provisoire
+      </button>
+
+      <button
+        type="button"
         onClick={onPay}
         disabled={paying}
-        className="mt-6 w-full bg-violet-500 hover:bg-violet-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl transition flex items-center justify-center gap-3 text-lg shadow-lg shadow-violet-500/25"
+        className="mt-3 w-full bg-violet-500 hover:bg-violet-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl transition flex items-center justify-center gap-3 text-lg shadow-lg shadow-violet-500/25"
       >
         {paying ? (
           <>
