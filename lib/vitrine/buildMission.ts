@@ -95,7 +95,7 @@ export function buildMission(config: SiteConfig): string {
   const language = config.language || 'fr'
   const languageLabel = LANGUAGE_LABELS[language] || language
 
-  return `Tu es un développeur web chargé de générer un site vitrine one-page STATIQUE pour un client, dans le cadre de l'outil "Vitrine" de newappai/DigiSmart.
+  return `Tu es un développeur web chargé de générer un site vitrine one-page STATIQUE pour un client, dans le cadre de l'outil "Vitrine" de newappai.
 
 ## RÈGLE 1 — DESIGN DE RÉFÉRENCE OBLIGATOIRE
 
@@ -109,6 +109,10 @@ Lis OBLIGATOIREMENT en entier :
   - les images dans ${REFERENCE_DIR}images/ (pour comprendre le style visuel, pas pour les copier telles quelles dans le site du client)
 
 Adapte ensuite cette structure et ce style au secteur d'activité du client ("${config.business.sector}") : garde l'ossature (header sticky, hero plein écran, sections services/galerie/contact/footer, animations, typographie), mais adapte les textes, les couleurs et les images au client.
+
+## RÈGLE 1bis — MARQUE DU SITE (NE JAMAIS COPIER LA MARQUE DE LA RÉFÉRENCE)
+
+La référence webolharosol sert UNIQUEMENT d'exemple de structure et de style. Ne copie JAMAIS sa marque : pas le logo logo-ds.png, pas de badge "DigiSmart"/"Developed by DigiSmart", pas de textes de marque DigiSmart. Le site du client est un produit newappai : le seul badge autorisé est « DEVELOPED BY NEWAPPAI » en footer (avec un lien vers https://newappai.com si un lien est demandé).
 
 ## RÈGLE 2 — SITE STATIQUE, SANS FRAMEWORK
 
@@ -159,7 +163,7 @@ JAMAIS d'information factuelle inventée : horaires, prix, tarifs, menu, adresse
 ## EXIGENCES TECHNIQUES
 
 1. Bouton WhatsApp flottant (si un numéro de téléphone/WhatsApp est fourni — voir règles de substitution sinon).
-2. Badge « DEVELOPED BY DIGISMART » visible dans le footer.
+2. Badge « DEVELOPED BY NEWAPPAI » visible dans le footer.
 3. Site entièrement rédigé en ${languageLabel}.
 4. Meta SEO : balises <title> et <meta name="description"> pertinentes pour le secteur et le nom du client.
 5. Favicon (basé sur le logo ou le monogramme généré).
@@ -172,7 +176,7 @@ Le site final complet doit se trouver dans : ./site/index.html + ./site/assets/ 
 ## CHECKLIST FINALE OBLIGATOIRE
 
 Termine ta réponse par une checklist explicite confirmant chacun des points suivants (réponds par oui/non pour chaque ligne, et corrige avant de conclure si un point est "non") :
-- [ ] Badge "DEVELOPED BY DIGISMART" présent en footer
+- [ ] Badge "DEVELOPED BY NEWAPPAI" présent en footer
 - [ ] Code couleur du client appliqué (ou accent cohérent si non fourni)
 - [ ] Contacts réels du client utilisés (pas d'exemple générique)
 - [ ] Site rédigé dans la langue demandée (${languageLabel})
