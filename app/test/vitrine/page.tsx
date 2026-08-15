@@ -2,10 +2,10 @@
 
 /**
  * Démo instantanée « Site Vitrine » — accessible depuis la bulle du même nom.
- * COHÉRENCE TOTALE avec le produit : ce composant utilise EXACTEMENT le même
- * moteur d'aperçu que le wizard (/webdesign) — même PreviewSite, mêmes
- * palettes, même config par défaut. Ce que le client voit ici = l'aperçu
- * provisoire qu'il verra avant de payer. Aucun autre visuel.
+ * Rendu par `DemoSite`, qui reproduit fidèlement le DESIGN RÉEL livré aux
+ * clients (référence webolharosol — or/neutral, décision Antoine non
+ * négociable), adapté en direct au nom, secteur et photos d'exemple. Ce que
+ * le client voit ici = un aperçu du vrai design, pas un thème générique.
  *
  * Parcours : 1) CHOIX OBLIGATOIRE du type de commerce (cartes visuelles) →
  * 2) nom du commerce → aperçu en direct avec photos d'exemple par secteur.
@@ -18,7 +18,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import PreviewSite from '@/components/webdesign/preview/PreviewSite'
+import DemoSite from '@/components/test-vitrine/DemoSite'
 import { defaultSiteConfig } from '@/components/webdesign/types'
 import type { SiteConfig } from '@/components/webdesign/types'
 
@@ -329,7 +329,7 @@ export default function TestVitrinePage() {
                   </div>
                 )}
                 <div className="max-h-[560px] overflow-y-auto">
-                  <PreviewSite config={config} anchorPrefix="demo" />
+                  <DemoSite config={config} anchorPrefix="demo" />
                 </div>
               </div>
               <p className="text-[#6b7280] text-xs mt-2 text-center">
