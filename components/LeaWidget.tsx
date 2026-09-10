@@ -278,7 +278,7 @@ export default function LeaWidget() {
         <div className="backdrop-blur-2xl bg-white/[0.03] border border-white/[0.08] rounded-3xl p-8 md:p-12">
           <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
             <div className="w-24 h-24 rounded-2xl overflow-hidden bg-violet-500/20 flex-shrink-0">
-              <Image src="/images/lea/avatar.png" alt="Léa" width={96} height={96} className="w-full h-full object-cover" />
+              <Image src="/images/lea/avatar.png" alt="Léa" width={96} height={96} className="w-full h-full object-cover" unoptimized />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-[#f5f5f7] mb-2">{t.register_title}</h2>
@@ -326,7 +326,7 @@ export default function LeaWidget() {
           {/* En-tête */}
           <div className="flex items-center gap-3 p-4 border-b border-white/[0.08] bg-white/[0.02]">
             <div className="w-10 h-10 rounded-full overflow-hidden bg-violet-500/20 flex-shrink-0">
-              <Image src="/images/lea/avatar.png" alt="Léa" width={40} height={40} className={"w-full h-full object-cover lea-mouth" + (isSpeaking ? " active" : "")} />
+              <Image src="/images/lea/avatar.png" alt="Léa" width={40} height={40} className={"w-full h-full object-cover lea-mouth" + (isSpeaking ? " active" : "")} unoptimized />
             </div>
             <div className="flex-1">
               <div className="text-sm font-semibold text-[#f5f5f7]">Léa</div>
@@ -352,6 +352,7 @@ export default function LeaWidget() {
                 alt="Léa"
                 width={192}
                 height={192}
+                unoptimized
                 className="w-full h-full object-cover"
                 style={{
                   transform: isSpeaking ? 'scaleY(1.15)' : 'scaleY(1)',
@@ -373,7 +374,7 @@ export default function LeaWidget() {
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
                   <div className="w-8 h-8 rounded-full overflow-hidden bg-violet-500/20 flex-shrink-0 mr-2 mt-1">
-                    <Image src="/images/lea/avatar.png" alt="Léa" width={32} height={32} className={"w-full h-full object-cover lea-mouth" + (isSpeaking ? " active" : "")} />
+                    <Image src="/images/lea/avatar.png" alt="Léa" width={32} height={32} className={"w-full h-full object-cover lea-mouth" + (isSpeaking ? " active" : "")} unoptimized />
                   </div>
                 )}
                 <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
@@ -388,7 +389,7 @@ export default function LeaWidget() {
             {loading && (
               <div className="flex justify-start">
                 <div className="w-8 h-8 rounded-full overflow-hidden bg-violet-500/20 flex-shrink-0 mr-2 mt-1">
-                  <Image src="/images/lea/avatar.png" alt="Léa" width={32} height={32} className={"w-full h-full object-cover lea-mouth" + (isSpeaking ? " active" : "")} />
+                  <Image src="/images/lea/avatar.png" alt="Léa" width={32} height={32} className={"w-full h-full object-cover lea-mouth" + (isSpeaking ? " active" : "")} unoptimized />
                 </div>
                 <div className="bg-white/[0.06] rounded-2xl rounded-bl-md px-4 py-3">
                   <div className="flex gap-1">
@@ -436,7 +437,7 @@ export default function LeaWidget() {
       {step === 'closed' && (
         <div className="backdrop-blur-2xl bg-white/[0.03] border border-white/[0.08] rounded-3xl p-8 md:p-12 text-center">
           <div className="w-20 h-20 rounded-full overflow-hidden bg-violet-500/20 mx-auto mb-4">
-            <Image src="/images/lea/avatar.png" alt="Léa" width={80} height={80} className="w-full h-full object-cover" />
+            <Image src="/images/lea/avatar.png" alt="Léa" width={80} height={80} className="w-full h-full object-cover" unoptimized />
           </div>
           <p className="text-[#e8e8ed] text-lg leading-relaxed mb-6 max-w-lg mx-auto">
             {closingMsg}

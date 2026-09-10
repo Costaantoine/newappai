@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    let targetDir = 'uploads'
+    let targetDir = ''
     if (customName === 'header_bg') {
       targetDir = 'assets/header'
     }
@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
       return name.replace(/[^a-zA-Z0-9_-]/g, '')
     }
 
-    const uploadsDir = path.join(process.cwd(), 'public', ...targetDir.split('/'))
+    const baseUploadsDir = process.env.UPLOADS_DIR || '/root/newappai-uploads'
+    const uploadsDir = targetDir ? path.join(baseUploadsDir, targetDir) : baseUploadsDir
 
     if (!existsSync(uploadsDir)) {
       await mkdir(uploadsDir, { recursive: true })

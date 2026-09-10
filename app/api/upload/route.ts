@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Stockage local uniquement (plus de tentative Supabase PJP)
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
+    const uploadsDir = process.env.UPLOADS_DIR || '/root/newappai-uploads'
     await mkdir(uploadsDir, { recursive: true })
 
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`

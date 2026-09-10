@@ -350,7 +350,7 @@ export default function HomePageContent() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationsJsonLd) }}
       />
       <Header />
-      <main className="min-h-screen bg-transparent overflow-x-hidden">
+      <main className="min-h-screen bg-transparent overflow-x-hidden pt-[83px]">
         {/* HERO SECTION — Apple style: noir pur, typo large, image dominante */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden bg-[#000000]">
           <div className="absolute inset-0 z-0">

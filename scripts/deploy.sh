@@ -28,7 +28,11 @@ mkdir -p "$BUILD/.next/static"
 cp -r "$SRC/.next/static/"* "$BUILD/.next/static/"
 rsync -a "${EXCLUDES[@]}" "$SRC/public/" "$BUILD/public/"
 
-echo "==> [4bis/5] Scripts (import-social.sh et al. — appeles a cwd=$BUILD en prod)"
+echo "==> [4bis/5] Symlink uploads -> /root/newappai-uploads (persistent)"
+rm -rf "$BUILD/public/uploads"
+ln -sfn /root/newappai-uploads "$BUILD/public/uploads"
+
+echo "==> [4ter/5] Scripts (import-social.sh et al. — appeles a cwd=$BUILD en prod)"
 rsync -a "$SRC/scripts/" "$BUILD/scripts/"
 
 echo "==> [5/5] Restart service systemd"

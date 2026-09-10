@@ -187,3 +187,18 @@ systemd pointait vers `/root/newappai-build-v2`, mais tout déploiement via le s
 (nouvelle branche déployée en prod, changement de service systemd, nouveau répertoire de build),
 il faut le signaler explicitement au début de la PROCHAINE session Hermes, même si c'est un
 autre intervenant qui a fait le changement.
+
+
+## Uploads admin — stockage persistant
+
+Les images uploadées via l'admin (zone icons, hero, etc.) sont stockées dans
+`/root/newappai-uploads/`, un répertoire PERSISTANT et INDÉPENDANT du build.
+
+- **Jamais supprimer** `/root/newappai-uploads/` — c'est la source de vérité.
+- `/root/newappai-build-v2/public/uploads/` est un **symlink** vers ce dossier.
+- Le deploy script (`scripts/deploy.sh`) recrée automatiquement ce symlink après
+  chaque build (étape 4bis).
+- Les routes API (`/api/upload`, `/api/local/upload`, `/api/uploads/[...slug]`)
+  utilisent `process.env.UPLOADS_DIR` ou `/root/newappai-uploads/` en fallback.
+- Les fichiers dans `/root/newappai/public/uploads/` (source git) ne contiennent
+  que `hero-ai-v2-wide.jpg` — ne pas confondre avec le répertoire persistant.

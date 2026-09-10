@@ -179,7 +179,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                   />
                   {product.images && product.images[0] && (
                     <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
-                      <Image src={getImageUrl(product.images[0])} alt="EasyReadVoice" fill className="object-cover" />
+                      <Image src={getImageUrl(product.images[0])} alt="EasyReadVoice" fill unoptimized className="object-cover" />
                     </div>
                   )}
                   <h3 className="text-xl font-bold mb-2 text-[#f5f5f7]">EasyReadVoice</h3>
@@ -237,7 +237,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                 />
                 {product.images && product.images[0] && (
                   <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
-                    <Image src={getImageUrl(product.images[0])} alt={getLocalizedText(product.title, lang)} fill className="object-cover" />
+                    <Image src={getImageUrl(product.images[0])} alt={getLocalizedText(product.title, lang)} fill unoptimized className="object-cover" />
                   </div>
                 )}
                 <h3 className="text-xl font-bold mb-2 text-[#f5f5f7]">{getLocalizedText(product.title, lang)}</h3>
