@@ -1,0 +1,18 @@
+[Unit]
+Description=NewAppAI (Next.js on DEV)
+After=network.target
+
+[Service]
+Type=exec
+WorkingDirectory=/root/newappai-build-v2
+ExecStart=/usr/bin/node /root/newappai-build-v2/server.js
+EnvironmentFile=/root/newappai-build-v2/.env
+Restart=on-failure
+RestartSec=5
+User=root
+Group=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

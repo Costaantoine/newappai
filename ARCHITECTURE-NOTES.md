@@ -72,10 +72,12 @@ Décision : à migrer vers Prisma/iron-session (même mécanisme que l'admin) si
 ## Déploiement (procédure officielle — depuis le 03/08/2026)
 
 - Le déploiement passe UNIQUEMENT par `bash /root/newappai/scripts/deploy.sh` (build source → rsync standalone → restart systemd).
-- Le script de déploiement exclut désormais `.env` et `.env.*` du rsync pour éviter tout écrasement accidentel des variables de prod. Le `.env` de production vit dans `/root/newappai-build/.env` et n'est JAMAIS écrasé par un déploiement.
-- Un backup du build précédent est conservé automatiquement dans `/root/newappai-build-backup-pre-deploy` (rollback : `cp -a` de ce dossier vers `/root/newappai-build` puis `systemctl restart newappai`).
-- Ne JAMAIS déployer avec un rsync manuel sans l'exclusion `.env` (incident du 03/08 : HOSTNAME, PORT et SMTP_FROM avaient été perdus).
-- Les images uploadées via l'admin (`/api/local/upload`) sont servies par `/api/uploads/<fichier>` qui lit depuis `public/uploads` du build — servies immédiatement, sans restart (corrigé le 03/08 ; l'ancien fallback `/root/newappai-uploads` n'existait pas → 404).
+- **Répertoire de build prod : `/root/newappai-build-v2`** (la branche de prod est `master`, le service systemd `newappai` pointe vers ce dossier).
+- Le script de déploiement exclut `.env` et `.env.*` du rsync. Le `.env` de production vit dans `/root/newappai-build-v2/.env` et n'est JAMAIS écrasé par un déploiement.
+- Un backup du build précédent est conservé automatiquement dans `/root/newappai-build-v2-backup-pre-deploy` (rollback : `cp -a` de ce dossier vers `/root/newappai-build-v2` puis `systemctl restart newappai`).
+- Ne JAMAIS déployer avec un rsync manuel sans l'exclusion `.env`.
+- Les images uploadées via l'admin (`/api/local/upload`) sont servies par `/api/uploads/<fichier>` qui lit depuis `public/uploads` du build — servies immédiatement, sans restart.
+- Le fichier systemd est documenté dans `infra/newappai.service.reference` (copie du `/etc/systemd/system/newappai.service` — non versionné, cette copie sert de trace).
 
 ---
 
@@ -159,3 +161,29 @@ runtime). Toute rotation de ce secret nécessite : régénérer la valeur, mettr
 (source build /root/newappai/.env.production, prod runtime /root/newappai-build/.env, backup
 /root/newappai-full-backup-20260730/.env.production), puis REBUILD complet + redéploiement —
 un simple changement du .env sans rebuild ne suffit pas.
+
+---
+
+## Incident : divergence de branche non signalée (détecté le 10/09/2026)
+
+**Ce qui s'est passé** : le 15/08/2026, un chantier "outil vitrine/webdesign" a été mené
+sur une branche séparée `vitrine-v2` depuis `master`. Le dossier de build `/root/newappai-build-v2`
+a été créé, et le service systemd a été modifié le 17/08 pour pointer vers ce nouveau dossier.
+La branche `vitrine-v2` n'a jamais été mergée dans `master`, et `scripts/deploy.sh` n'a pas
+été mis à jour (il référençait encore `/root/newappai-build`, inexistant).
+
+**Conséquence** : pendant ~26 jours (15/08 → 10/09), le déploiement via `scripts/deploy.sh`
+échouait silencieusement (dossier source introuvable). Le site fonctionnait car le service
+systemd pointait vers `/root/newappai-build-v2`, mais tout déploiement via le script officiel
+était cassé.
+
+**Correction (10/09/2026)** :
+1. Réconciliation : `git checkout master && git merge vitrine-v2 --ff-only` (fast-forward, zéro conflit)
+2. Push `origin/master` (master inclut désormais tous les commits vitrine-v2 + EasyReadVoice)
+3. `scripts/deploy.sh` corrigé : `/root/newappai-build` → `/root/newappai-build-v2`
+4. Fichier systemd documenté dans `infra/newappai.service.reference`
+
+**Recommandation pour l'avenir** : si un chantier modifie l'infrastructure de déploiement
+(nouvelle branche déployée en prod, changement de service systemd, nouveau répertoire de build),
+il faut le signaler explicitement au début de la PROCHAINE session Hermes, même si c'est un
+autre intervenant qui a fait le changement.

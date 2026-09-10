@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # ============================================================
-# Deploiement NewAppAI — build source -> /root/newappai-build
+# Deploiement NewAppAI — build source -> /root/newappai-build-v2
 # Usage : bash scripts/deploy.sh
-# SECURITE : le .env de production vit dans /root/newappai-build/.env
+# SECURITE : le .env de production vit dans /root/newappai-build-v2/.env
 # et est EXCLU du rsync — il ne peut plus etre ecrase par un deploy.
 # ============================================================
 set -euo pipefail
 
 SRC=/root/newappai
-BUILD=/root/newappai-build
+BUILD=/root/newappai-build-v2
 SERVICE=newappai
 EXCLUDES=(--exclude='.env' --exclude='.env.*')
 
