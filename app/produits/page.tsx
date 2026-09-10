@@ -143,6 +143,12 @@ async function ProductsGrid({ products, lang }: { products: any[]; lang: string 
     const item = texts.find((x: any) => x.key === key)
     return item?.[lang] || item?.fr || fallback
   }
+  // Filtrer les sous-variantes EasyReadVoice (garder seulement la fiche représentante + Player)
+  const filteredProducts = products.filter((p: any) => {
+    const title = typeof p.title === 'string' ? p.title : (p.title?.fr || '')
+    return !title.includes('(Essentiel)') && !title.includes('(Standard)') && !title.includes('(Integral)')
+  })
+
   // Grouper par catégorie
   const categories: Record<string, any[]> = {}
   const categoryLabels: Record<string, string> = {
@@ -155,7 +161,7 @@ async function ProductsGrid({ products, lang }: { products: any[]; lang: string 
     'a-tester': getText('cat_a_tester', t('cat_a_tester', lang)),
   }
 
-  for (const p of products) {
+  for (const p of filteredProducts) {
     const cat = p.category || 'other'
     if (!categories[cat]) categories[cat] = []
     categories[cat].push(p)
@@ -170,9 +176,13 @@ async function ProductsGrid({ products, lang }: { products: any[]; lang: string 
             {categoryLabels[catKey] || catKey}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {catProducts.map((product: any) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {catProducts.map((product: any) => {
+              const productTitle = typeof product.title === 'string' ? product.title : (product.title?.fr || '')
+              const hideAddToCart = productTitle === 'EasyReadVoice - Texte vers Audio'
+              return (
+                <ProductCard key={product.id} product={product} hideAddToCart={hideAddToCart} />
+              )
+            })}
           </div>
         </div>
       ))}

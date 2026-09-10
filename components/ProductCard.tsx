@@ -69,6 +69,7 @@ interface ProductCardProps {
     image_settings?: Record<string, ImageSettings>
     status?: string
   }
+  hideAddToCart?: boolean
 }
 
 function getLocalizedText(text: string | ProductTitle | ProductDescription | undefined, lang: string): string {
@@ -89,7 +90,7 @@ function getImageUrl(imgData: string | undefined): string {
   }
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, hideAddToCart }: ProductCardProps) {
   const { lang, t } = useLanguage()
   const { addItem, items } = useCart()
 
@@ -174,15 +175,17 @@ export default function ProductCard({ product }: ProductCardProps) {
               {t?.product?.see_details || 'Voir détails'}
             </Link>
           )}
-          <button
-            onClick={handleAddToCart}
-          className={`px-6 py-2 rounded-full text-sm font-bold transition ${inCart
-            ? 'bg-green-500 text-white'
-            : 'btn-primary hover:brightness-110'
-            }`}
-        >
-          {inCart ? (t?.product?.add_one || 'Ajouter (+1)') : (t?.product?.add_cart || 'Ajouter au panier')}
-        </button>
+          {!hideAddToCart && (
+            <button
+              onClick={handleAddToCart}
+              className={`px-6 py-2 rounded-full text-sm font-bold transition ${inCart
+                ? 'bg-green-500 text-white'
+                : 'btn-primary hover:brightness-110'
+                }`}
+            >
+              {inCart ? (t?.product?.add_one || 'Ajouter (+1)') : (t?.product?.add_cart || 'Ajouter au panier')}
+            </button>
+          )}
         </div>
       </div>
     </div>
