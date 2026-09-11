@@ -10,7 +10,7 @@ export const revalidate = 0
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Mentions légales | NewAppAI',
-    description: 'Mentions légales du site NewAppAI (Premium à juste prix) — éditeur, hébergement OVH, SIRET 980 127 591 00017, directrice de publication Brigitte VALADIE.',
+    description: 'Mentions légales du site NewAppAI (Premium à juste prix) — éditeur, hébergement Hostinger, SIRET 980 127 591 00017, directrice de publication Brigitte VALADIE.',
     alternates: { canonical: 'https://newappai.com/mentions-legales' },
     openGraph: {
       title: 'Mentions légales | NewAppAI',
@@ -26,7 +26,7 @@ const FALLBACK: Record<string, string> = {
   legal_mentions_section_1_title: '1. Éditeur du site',
   legal_mentions_section_1_content: 'Le site newappai.com est édité par la société Premium à juste prix, SAS au capital social de 1 500 €, immatriculée au Registre du Commerce et des Sociétés de Bordeaux sous le numéro SIRET 980 127 591 00017, dont le siège social est situé 4 impasse ZA Landegrand, 33290 Parempuyre, France. Numéro de TVA intracommunautaire : FR57 980 127 591.',
   legal_mentions_section_2_title: '2. Hébergement',
-  legal_mentions_section_2_content: 'Le site est hébergé par OVH SAS, 2 rue Kellermann, 59100 Roubaix, France.',
+  legal_mentions_section_2_content: 'Le site est hébergé par UAB Hostinger, Jonavos g. 60C, 44192 Kaunas, Lituanie. Site web : www.hostinger.com',
   legal_mentions_section_3_title: '3. Propriété intellectuelle',
   legal_mentions_section_3_content: "L'ensemble du contenu de ce site (textes, images, graphismes, logo, icônes, sons, logiciels…) est la propriété exclusive de NewAppAI ou de ses partenaires. Toute reproduction, distribution, modification ou utilisation de ces contenus sans autorisation préalable est strictement interdite.",
   legal_mentions_section_4_title: '4. Limitation de responsabilité',
