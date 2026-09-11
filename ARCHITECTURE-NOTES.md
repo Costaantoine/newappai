@@ -202,3 +202,68 @@ Les images uploadées via l'admin (zone icons, hero, etc.) sont stockées dans
   utilisent `process.env.UPLOADS_DIR` ou `/root/newappai-uploads/` en fallback.
 - Les fichiers dans `/root/newappai/public/uploads/` (source git) ne contiennent
   que `hero-ai-v2-wide.jpg` — ne pas confondre avec le répertoire persistant.
+
+
+## Incident DB — 11/09/2026
+
+Le conteneur `newappai-db-prod` s'est arrêté à 08:55 UTC sans cause identifiée
+(exitCode=0, pas de OOM, pas de `docker stop` tracé, pas de redémarrage Docker daemon).
+
+**Conséquence** : la DB a été down 1h09 (08:55 → 10:04) avant redémarrage manuel.
+
+**Correctif appliqué** : `docker update --restart unless-stopped newappai-db-prod`
+- Avant : `RestartPolicy=no` → aucun auto-redémarrage
+- Après : `unless-stopped` → redémarre automatiquement sauf arrêt volontaire (`docker stop`)
+
+**Test validé** : crash simulé (SIGABRT sur PID 1) → auto-redémarrage confirmé,
+recovery PG automatique, DB prête en <2s.
+
+**Surveillance** : si ce crash se reproduit, chercher une cause récurrente
+(mémoire, connections, disque, coolify cleanup). L'absence de logs Docker
+autour de 08:55 suggère un arrêt externe non tracé.
+
+
+## Migration DeepSeek → Xiaomi Mimo (2026-09-11)
+
+### Routes migrées
+
+| Route | Ancien provider | Nouveau provider | Model |
+|-------|----------------|------------------|-------|
+| `/api/translate` | DeepSeek (api.deepseek.com) | Xiaomi Mimo (api.xiaomimimo.com) | mimo-v2.5 |
+| `/api/eva` | DeepSeek | Xiaomi Mimo | mimo-v2.5 |
+| `/api/assistant` | DeepSeek | Xiaomi Mimo | mimo-v2.5 |
+| `/api/lea/chat` | Xiaomi Mimo (déjà commité) | — | mimo-v2.5 |
+| `/api/test/qrcall/chat` | Xiaomi Mimo (déjà commité) | — | mimo-v2.5 |
+| `/api/ai/chat` (lib/ai.ts) | Multi-provider (xiaomi par défaut) | — | mimo-v2.5 |
+
+### `lib/ai.ts` — Provider par défaut
+
+Le fichier `lib/ai.ts` exporte `chatWithAI(messages, provider)` avec 3 providers :
+- `'xiaomi'` (défaut) → api.xiaomimimo.com, mimo-v2.5
+- `'deepseek'` → api.deepseek.com, deepseek-chat
+- `'gemini'` → generativelanguage.googleapis.com, gemini-pro
+
+Le provider par défaut est `'xiaomi'` (ligne 13). Ce choix est assumé : la route `/api/ai/chat` l'appelle sans provider explicite, donc elle utilise toujours Xiaomi. DeepSeek reste disponible en fallback si besoin.
+
+### Clés API
+
+- `XIAOMI_API_KEY` : présente dans `.env.production` (source) et `build-v2/.env` (prod)
+- `DEEPSEEK_API_KEY` : présente dans les 2 .env (utilisée par lib/ai.ts en fallback)
+- `GEMINI_API_KEY` : présente dans les 2 .env
+
+### Incident : migration non commitée
+
+La migration DeepSeek → Xiaomi pour translate/eva/assistant a été faite
+directement dans les fichiers source + rebuild, SANS commit git. Les 3
+fichiers avaient des unstaged diffs pendant ~10 jours.
+
+**Risque concrétisé** : si un rebuild avait été fait à partir de git (pas
+du working tree), les routes seraient repassées en DeepSeek silencieusement.
+Même pattern que l'incident vitrine-v2.
+
+**Correctif** : commit `7c7eecb` (2026-09-11) — les 3 fichiers commités
++ push. XIAOMI_API_KEY ajoutée dans `.env.production` (source). Rebuild
+complet depuis la source vérifié : translate ✅, eva ✅, assistant ✅.
+
+**Règle** : tout changement de provider API doit être commité AVANT le
+rebuild. Un fichier modifié en local sans commit = divergence prod/git.
