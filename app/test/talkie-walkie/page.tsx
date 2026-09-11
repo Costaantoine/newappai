@@ -4,38 +4,42 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Carousel from '@/components/TestCarousel'
+import { useLanguage } from '@/lib/LanguageContext'
 
 // ── Messages de démo (scénarios industriels) ─────────────────────────
-const MESSAGES = [
-  {
-    id: 'urgence',
-    label: 'Urgence production',
-    sender: 'Marc (Chef d\'atelier)',
-    color: 'red',
-    text: 'Urgence — Ligne 3 arrêtée, bris de piston. Intervenant svp.',
-  },
-  {
-    id: 'reunion',
-    label: 'Coordination équipe',
-    sender: 'Sophie (Responsable planning)',
-    color: 'amber',
-    text: 'Réunion équipe production à 14h30 en salle blanche. Confirmer présence.',
-  },
-  {
-    id: 'logistique',
-    label: 'Routine logistique',
-    sender: 'Karim (Magasinier)',
-    color: 'blue',
-    text: 'Palette 247 prête pour expédition — quai B, chargement prévu 16h.',
-  },
-  {
-    id: 'maintenance',
-    label: 'Intervention maintenance',
-    sender: 'Thomas (Technicien)',
-    color: 'amber',
-    text: 'Maintenance — Capteur température four C2 déréglé, mesure erronée depuis 11h.',
-  },
-]
+function getMessages(t: ReturnType<typeof useLanguage>['t']) {
+  const tw = t.talkieWalkie
+  return [
+    {
+      id: 'urgence',
+      label: tw.msg1Label,
+      sender: tw.msg1Sender,
+      color: 'red',
+      text: tw.msg1Text,
+    },
+    {
+      id: 'reunion',
+      label: tw.msg2Label,
+      sender: tw.msg2Sender,
+      color: 'amber',
+      text: tw.msg2Text,
+    },
+    {
+      id: 'logistique',
+      label: tw.msg3Label,
+      sender: tw.msg3Sender,
+      color: 'blue',
+      text: tw.msg3Text,
+    },
+    {
+      id: 'maintenance',
+      label: tw.msg4Label,
+      sender: tw.msg4Sender,
+      color: 'amber',
+      text: tw.msg4Text,
+    },
+  ]
+}
 
 // ── Composant Téléphone simulé ───────────────────────────────────────
 interface PhoneProps {
@@ -46,9 +50,18 @@ interface PhoneProps {
   isTransmitting: boolean
   hasNotification: boolean
   messageColor: string
+  tw: {
+    transmitting: string
+    waiting: string
+    holdToSpeak: string
+    waitingMessage: string
+    pttActive: string
+    newMessage: string
+    noMessage: string
+  }
 }
 
-function PhoneMockup({ label, sender, role, visibleWords, isTransmitting, hasNotification, messageColor }: PhoneProps) {
+function PhoneMockup({ label, sender, role, visibleWords, isTransmitting, hasNotification, messageColor, tw }: PhoneProps) {
   const isSender = role === 'sender'
   const fullText = visibleWords.join(' ')
 
@@ -84,7 +97,7 @@ function PhoneMockup({ label, sender, role, visibleWords, isTransmitting, hasNot
           <div className="px-3 py-2 border-b border-neutral-800 flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${isSender && isTransmitting ? 'bg-yellow-400 animate-pulse' : hasNotification ? colors.pulse : 'bg-neutral-700'}`} />
             <span className="text-[10px] text-neutral-500 font-medium tracking-wide">
-              {isSender ? 'Transmission...' : 'En attente'}
+              {isSender ? tw.transmitting : tw.waiting}
             </span>
           </div>
 
@@ -112,7 +125,7 @@ function PhoneMockup({ label, sender, role, visibleWords, isTransmitting, hasNot
                   )}
                 </div>
                 <p className="text-[10px] text-neutral-700">
-                  {isSender ? 'Maintenez pour parler' : 'En attente de message'}
+                  {isSender ? tw.holdToSpeak : tw.waitingMessage}
                 </p>
               </div>
             )}
@@ -121,10 +134,10 @@ function PhoneMockup({ label, sender, role, visibleWords, isTransmitting, hasNot
           {/* Footer phone — bouton push-to-talk pour Phone A */}
           <div className="px-3 py-2 border-t border-neutral-800 flex items-center justify-center">
             {isSender ? (
-              <span className="text-[9px] text-neutral-600 tracking-wide">↑ PTT ACTIF EN DESSOUS</span>
+              <span className="text-[9px] text-neutral-600 tracking-wide">{tw.pttActive}</span>
             ) : (
               <span className="text-[9px] text-neutral-600 tracking-wide">
-                {hasNotification ? '● NOUVEAU MESSAGE' : '— Aucun message'}
+                {hasNotification ? tw.newMessage : tw.noMessage}
               </span>
             )}
           </div>
@@ -139,6 +152,10 @@ function PhoneMockup({ label, sender, role, visibleWords, isTransmitting, hasNot
 
 // ════════════════════════════════════════════════════════════════════════
 export default function TestTalkieWalkiePage() {
+  const { t } = useLanguage()
+  const tw = t.talkieWalkie
+  const MESSAGES = getMessages(t)
+
   const [currentMsgIndex, setCurrentMsgIndex] = useState(0)
   const [visibleWordsA, setVisibleWordsA] = useState<string[]>([])
   const [visibleWordsB, setVisibleWordsB] = useState<string[]>([])
@@ -226,7 +243,11 @@ export default function TestTalkieWalkiePage() {
   const nextMessage = useCallback(() => {
     if (isTransmitting) return
     setCurrentMsgIndex(prev => (prev + 1) % MESSAGES.length)
-  }, [isTransmitting])
+  }, [isTransmitting, MESSAGES.length])
+
+  // Extraire le prénom du sender pour l'affichage sous le téléphone
+  const senderFirstName = currentMessage.sender.split(' (')[0]
+  const receiverRole = currentMessage.sender.split(' (')[1]?.replace(')', '') || tw.receiverFallback
 
   const overrideStyles = `
     #test-talkie-walkie-page header, #test-talkie-walkie-page footer { background: #000 !important; --color-header-bg: #000 !important; }
@@ -261,14 +282,13 @@ export default function TestTalkieWalkiePage() {
             {/* ── Titre + Pitch ─────────────────────────────── */}
             <div className="text-center mb-10">
               <span className="inline-block text-[10px] font-semibold tracking-[0.25em] uppercase text-yellow-400 mb-4">
-                Test — Talkie Walkie
+                {tw.badge}
               </span>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-tight text-white mb-3">
-                Communication instantanée en équipe
+                {tw.title}
               </h1>
               <p className="text-neutral-500 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-                Appuyez et maintenez pour parler — le message apparaît instantanément
-                sur l&apos;écran de votre collègue. Simple, rapide, sans jargon.
+                {tw.description}
               </p>
             </div>
 
@@ -301,13 +321,14 @@ export default function TestTalkieWalkiePage() {
             <div className="max-w-3xl mx-auto mb-10">
               <div className="flex items-start justify-center gap-4 sm:gap-8 md:gap-12">
                 <PhoneMockup
-                  label="Collègue A"
-                  sender={MESSAGES[currentMsgIndex].sender.split(' (')[0]}
+                  label={tw.phoneA}
+                  sender={senderFirstName}
                   role="sender"
                   visibleWords={visibleWordsA}
                   isTransmitting={isTransmitting}
                   hasNotification={false}
-                  messageColor={MESSAGES[currentMsgIndex].color}
+                  messageColor={currentMessage.color}
+                  tw={tw}
                 />
 
                 {/* Flèche de transmission */}
@@ -320,13 +341,14 @@ export default function TestTalkieWalkiePage() {
                 </div>
 
                 <PhoneMockup
-                  label="Collègue B"
-                  sender={MESSAGES[currentMsgIndex].sender.split(' (')[1]?.replace(')', '') || 'Récepteur'}
+                  label={tw.phoneB}
+                  sender={receiverRole}
                   role="receiver"
                   visibleWords={visibleWordsB}
                   isTransmitting={false}
                   hasNotification={hasNotification}
-                  messageColor={MESSAGES[currentMsgIndex].color}
+                  messageColor={currentMessage.color}
+                  tw={tw}
                 />
               </div>
             </div>
@@ -353,19 +375,19 @@ export default function TestTalkieWalkiePage() {
                     <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
                       <circle cx="12" cy="12" r="10" />
                     </svg>
-                    Transmission en cours...
+                    {tw.btnTransmitting}
                   </>
                 ) : (
                   <>
                     <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                     </svg>
-                    Appuyez pour parler
+                    {tw.btnTransmit}
                   </>
                 )}
               </button>
               <p className="text-center text-[10px] text-neutral-600 mt-2">
-                {isTransmitting ? 'Maintenez l\'appui pour envoyer' : 'Maintenez le bouton pour transmettre'}
+                {isTransmitting ? tw.btnHoldToSend : tw.btnHoldToTransmit}
               </p>
             </div>
 
@@ -379,20 +401,20 @@ export default function TestTalkieWalkiePage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
                 </svg>
-                Choisir un autre message
+                {tw.btnChangeScenario}
               </button>
             </div>
 
             {/* ── Comment ça marche ─────────────────────────── */}
             <div className="mt-16 max-w-3xl mx-auto">
               <h2 className="text-center text-neutral-400 text-xs tracking-widest uppercase mb-8">
-                Comment ça marche
+                {tw.howItWorks}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { step: '1', title: 'Appuyez pour parler', desc: 'Maintenez le bouton et votre message vocal est transmis en temps réel via WiFi ou 4G.' },
-                  { step: '2', title: 'Transcription instantanée', desc: 'Chaque mot est automatiquement transcrit et affiché sur les écrans de toute l\'équipe.' },
-                  { step: '3', title: 'Notification immédiate', desc: 'Votre collègue reçoit une alerte et lit le message même s\'il est en zone silencieuse.' },
+                  { step: '1', title: tw.step1Title, desc: tw.step1Desc },
+                  { step: '2', title: tw.step2Title, desc: tw.step2Desc },
+                  { step: '3', title: tw.step3Title, desc: tw.step3Desc },
                 ].map(item => (
                   <div key={item.step} className="bg-neutral-950 border border-neutral-800 rounded-xl p-5 text-center">
                     <div className="w-10 h-10 rounded-full bg-yellow-500/10 text-yellow-400 flex items-center justify-center mx-auto mb-3 text-sm font-bold">
