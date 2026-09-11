@@ -33,17 +33,17 @@ export async function POST(request: NextRequest) {
     let reply: string = ''
     let usedProvider: string = ''
 
-    // Try DeepSeek first (meme provider que Hermes)
-    if (process.env.DEEPSEEK_API_KEY) {
+    // Try Xiaomi Mimo first
+    if (process.env.XIAOMI_API_KEY) {
       try {
-        reply = await callDeepSeek(messages, process.env.DEEPSEEK_API_KEY)
-        usedProvider = 'DeepSeek'
+        reply = await callMimo(messages, process.env.XIAOMI_API_KEY)
+        usedProvider = 'Mimo'
       } catch (error) {
-        console.error('DeepSeek failed, trying next provider:', error)
+        console.error('Xiaomi Mimo failed, trying next provider:', error)
       }
     }
 
-    // Try Groq if DeepSeek failed
+    // Try Groq if Mimo failed
     if (!reply && process.env.GROQ_API_KEY) {
       try {
         reply = await callGroq(messages, process.env.GROQ_API_KEY)
@@ -110,15 +110,15 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function callDeepSeek(messages: Message[], apiKey: string): Promise<string> {
-  const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+async function callMimo(messages: Message[], apiKey: string): Promise<string> {
+  const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: 'deepseek-chat',
+      model: 'mimo-v2.5',
       messages,
       temperature: 0.7,
       max_tokens: 500
@@ -127,7 +127,7 @@ async function callDeepSeek(messages: Message[], apiKey: string): Promise<string
 
   if (!response.ok) {
     const errorText = await response.text()
-    throw new Error(`DeepSeek API error: ${response.status} - ${errorText}`)
+    throw new Error(`Xiaomi API error: ${response.status} - ${errorText}`)
   }
 
   const data = await response.json()

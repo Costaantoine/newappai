@@ -185,26 +185,26 @@ export async function POST(request: NextRequest) {
       { role: 'user' as const, content: message + '\n\nRappel: reponds directement sans preamble, sans raisonnement, sans analyse.' }
     ]
 
-    // Appeler DeepSeek directement
+    // Appeler Xiaomi Mimo directement
     let reply = ''
 
     try {
-      const deepseekKey = process.env.DEEPSEEK_API_KEY
+      const apiKey = process.env.XIAOMI_API_KEY
 
-      if (!deepseekKey) {
-        console.error('DEEPSEEK_API_KEY not configured')
+      if (!apiKey) {
+        console.error('XIAOMI_API_KEY not configured')
       } else {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 30000)
-        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
           signal: controller.signal,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${deepseekKey}`
+            'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'deepseek-chat',
+            model: 'mimo-v2.5',
             messages,
             temperature: 0.6,
             max_tokens: 150
@@ -217,11 +217,11 @@ export async function POST(request: NextRequest) {
           reply = data.choices?.[0]?.message?.content || ''
         } else {
           const errText = await response.text().catch(() => '')
-          console.error('DeepSeek API failed:', response.status, errText)
+          console.error('Xiaomi API failed:', response.status, errText)
         }
       }
     } catch (error) {
-      console.error('DeepSeek API error:', error)
+      console.error('Xiaomi API error:', error)
     }
 
 

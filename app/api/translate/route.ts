@@ -7,25 +7,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
     }
 
-    if (!process.env.DEEPSEEK_API_KEY && process.env.NODE_ENV === 'production') {
-      console.error('DEEPSEEK_API_KEY not configured')
+    if (!process.env.XIAOMI_API_KEY && process.env.NODE_ENV === 'production') {
+      console.error('XIAOMI_API_KEY not configured')
     }
 
-    // Appeler DeepSeek directement
-    const deepseekKey = process.env.DEEPSEEK_API_KEY
+    // Appeler Xiaomi Mimo directement
+    const apiKey = process.env.XIAOMI_API_KEY
 
-    if (!deepseekKey) {
-      console.error('DEEPSEEK_API_KEY not configured')
-      return NextResponse.json({ error: 'DEEPSEEK_API_KEY not configured' }, { status: 500 })
+    if (!apiKey) {
+      console.error('XIAOMI_API_KEY not configured')
+      return NextResponse.json({ error: 'XIAOMI_API_KEY not configured' }, { status: 500 })
     }
 
-    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${deepseekKey}`
+        'Authorization': `Bearer ${apiKey}`
       },
-      body: JSON.stringify({ model: 'deepseek-chat',
+      body: JSON.stringify({ model: 'mimo-v2.5',
         messages: [
           {
             role: 'system',
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errText = await response.text()
-      console.error('DeepSeek API error:', response.status, errText)
+      console.error('Xiaomi API error:', response.status, errText)
       return NextResponse.json({ error: `Erreur API: ${response.status}` }, { status: 502 })
     }
 
