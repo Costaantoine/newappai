@@ -17,14 +17,15 @@ export interface TextItem {
  * RÈGLE STRICTE : si texts reste vide après tous les retries, loading ne passe
  * JAMAIS à false — la page reste sur le loader, aucune clé brute n'est rendue.
  */
-export function useTexts(): { texts: TextItem[]; loading: boolean } {
+export function useTexts(section?: string): { texts: TextItem[]; loading: boolean } {
   const [texts, setTexts] = useState<TextItem[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true
     const load = async () => {
-      const res = await fetchWithRetry(`/api/supabase/texts?t=${Date.now()}`)
+      const sectionParam = section ? `&section=${section}` : ''
+      const res = await fetchWithRetry(`/api/supabase/texts?t=${Date.now()}${sectionParam}`)
       if (mounted && res && res.ok) {
         try {
           const data = await res.json()
