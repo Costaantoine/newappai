@@ -134,7 +134,14 @@ export default function TestSerenitePage() {
                 </p>
               </div>
 
-              {/* Boutons d\u00e9xemple */}
+              {/* Lien vers la fiche produit */}
+              <a href="/produits/serenite"
+                 data-section="serenite_link_product"
+                 className="block text-center text-teal-400 hover:text-teal-300 text-sm font-medium py-2 px-4 rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition">
+                → {getText('serenite_link_product', 'Découvrir toutes les fonctionnalités de Sérénité')}
+              </a>
+
+              {/* Boutons d'exemple */}
               <div className="grid grid-cols-2 gap-2">
                 {EXAMPLE_IDS.map((id) => (
                   <button key={id}
