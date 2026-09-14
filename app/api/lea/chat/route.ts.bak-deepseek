@@ -58,18 +58,18 @@ export async function POST(request: NextRequest) {
 
     // Appel à l'API DeepSeek via le gateway Hermes
     let reply = ''
-    const apiKey = process.env.API_SERVER_KEY || process.env.XIAOMI_API_KEY
+    const apiKey = process.env.API_SERVER_KEY || process.env.DEEPSEEK_API_KEY
 
     if (apiKey) {
       try {
         const endpoint = process.env.API_SERVER_KEY
           ? 'http://76.13.141.221:8642/v1/chat/completions'
-          : 'https://api.xiaomimimo.com/v1/chat/completions'
+          : 'https://api.deepseek.com/v1/chat/completions'
 
         const authHeader = `Bearer ${apiKey}`
 
         const payload: any = {
-          model: 'mimo-v2.5',
+          model: 'deepseek-chat',
           messages: [
             { role: 'system', content: systemPrompt },
             ...history.slice(-8).map((m: Message) => ({ role: m.role, content: m.content })),

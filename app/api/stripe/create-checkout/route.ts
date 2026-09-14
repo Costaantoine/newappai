@@ -2,9 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 
+const SUPPORTED_LANGS = ['fr', 'en', 'pt', 'es']
+
+function resolveLanguage(value: unknown): string {
+  return typeof value === 'string' && SUPPORTED_LANGS.includes(value) ? value : 'fr'
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { productId, successUrl, cancelUrl, waiver_accepted, waiver_timestamp } = await request.json()
+    const { productId, successUrl, cancelUrl, waiver_accepted, waiver_timestamp, lang } = await request.json()
+
+    // Langue du client (body prioritaire, sinon cookie `lang` posé par le middleware)
+    const language = resolveLanguage(lang || request.cookies.get('lang')?.value)
     
     const product = await prisma.product.findUnique({ where: { id: productId } })
     if (!product) {
@@ -31,6 +40,7 @@ export async function POST(request: NextRequest) {
       cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/checkout/cancel`,
       metadata: {
         product_id: product.id,
+        lang: language,
         ...(waiver_accepted ? {
           waiver_accepted: 'true',
           waiver_timestamp: waiver_timestamp || new Date().toISOString(),

@@ -224,7 +224,7 @@ export default function TestSerenitePage() {
                       <div className="text-3xl mb-3">{'\uD83D\uDEE1\uFE0F'}</div>
                       <p className="text-red-200 text-sm leading-relaxed font-medium">
                         {getText('serenite_critique_msg',
-                          "Cette d\u00e9mo n'est pas con\u00e7ue pour traiter ce type de message. " + EMERGENCY[lang] || EMERGENCY.fr)}
+                          "Cette d\u00e9mo n'est pas con\u00e7ue pour traiter ce type de message. " + (EMERGENCY[lang] || EMERGENCY.fr))}
                       </p>
                     </div>
                   )}

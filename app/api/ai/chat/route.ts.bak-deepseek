@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Messages requis' }, { status: 400 })
     }
 
-    const response = await chatWithAI(messages, provider || 'xiaomi')
+    const response = await chatWithAI(messages, provider || 'deepseek')
     return NextResponse.json(response)
   } catch (error) {
     console.error('Erreur chat IA:', error)

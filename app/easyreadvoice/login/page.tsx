@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { supabase } from '@/lib/supabase'
 
-export default function EasyReadVoiceLoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -34,7 +35,7 @@ export default function EasyReadVoiceLoginPage() {
       return
     }
 
-    router.push('/easyreadvoice/dashboard')
+    router.push(searchParams.get('next') || '/easyreadvoice/dashboard')
   }
 
   return (
@@ -117,5 +118,13 @@ export default function EasyReadVoiceLoginPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function EasyReadVoiceLoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   )
 }

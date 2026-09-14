@@ -2,10 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 
+const SUPPORTED_LANGS = ['fr', 'en', 'pt', 'es']
+
+function resolveLanguage(value: unknown): string {
+  return typeof value === 'string' && SUPPORTED_LANGS.includes(value) ? value : 'fr'
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { items, customer, waiver_accepted, waiver_timestamp } = body
+    const { items, customer, waiver_accepted, waiver_timestamp, lang } = body
+
+    // Langue du client (body prioritaire, sinon cookie `lang` posé par le middleware)
+    const language = resolveLanguage(lang || request.cookies.get('lang')?.value)
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'Panier vide' }, { status: 400 })
@@ -44,6 +53,7 @@ export async function POST(request: NextRequest) {
       cancel_url: `${request.nextUrl.origin}/produits`,
       metadata: {
         items: JSON.stringify(items.map((i: any) => ({ id: i.productId, qty: i.quantity }))),
+        lang: language,
         ...(waiver_accepted ? {
           waiver_accepted: 'true',
           waiver_timestamp: waiver_timestamp || new Date().toISOString(),

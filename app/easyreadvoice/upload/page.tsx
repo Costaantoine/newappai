@@ -30,6 +30,67 @@ function formatEta(seconds: number): string {
   return `~${m} min ${s}s restantes`
 }
 
+// Brouillon d'upload conservé en sessionStorage avant redirection vers login/register
+const DRAFT_KEY = 'erv-upload-draft'
+const DRAFT_MAX_FILE_SIZE = 4 * 1024 * 1024 // 4 Mo : limite safe de sessionStorage
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+async function saveDraft(title: string, file: File | null) {
+  try {
+    const base = { title }
+    if (!file) {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(base))
+      return
+    }
+    if (file.size <= DRAFT_MAX_FILE_SIZE) {
+      const dataUrl = await fileToDataUrl(file)
+      sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          ...base,
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          dataUrl,
+        })
+      )
+    } else {
+      // Fichier trop volumineux pour sessionStorage : on garde le titre + nom du fichier
+      sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({ ...base, fileName: file.name, fileType: file.type, fileSize: file.size })
+      )
+    }
+  } catch {
+    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ title })) } catch {}
+  }
+}
+
+function restoreDraft(): { title?: string; fileName?: string; fileType?: string; dataUrl?: string } | null {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY)
+    if (!raw) return null
+    const data = JSON.parse(raw)
+    return typeof data === 'object' && data !== null ? data : null
+  } catch {
+    return null
+  }
+}
+
+async function dataUrlToFile(dataUrl: string, fileName: string, fileType: string): Promise<File> {
+  const res = await fetch(dataUrl)
+  const blob = await res.blob()
+  return new File([blob], fileName, { type: fileType || blob.type })
+}
+
 export default function UploadPage() {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
@@ -38,6 +99,7 @@ export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [authRequired, setAuthRequired] = useState(false)
   const [userEmail, setUserEmail] = useState('')
   const [pendingBookId, setPendingBookId] = useState<string | null>(null)
   const [status, setStatus] = useState<string>('pending')
@@ -52,6 +114,21 @@ export default function UploadPage() {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user?.email) setUserEmail(data.user.email)
     })
+  }, [])
+
+  // Restaurer le titre/fichier conservés avant redirection vers login/register
+  useEffect(() => {
+    const draft = restoreDraft()
+    if (!draft) return
+    if (draft.title) setTitle(draft.title)
+    if (draft.dataUrl && draft.fileName) {
+      dataUrlToFile(draft.dataUrl, draft.fileName, draft.fileType || '')
+        .then((f) => setFile(f))
+        .catch(() => {})
+    } else if (draft.fileName) {
+      setError('Votre fichier doit être re-sélectionné (trop volumineux pour être conservé). Votre titre a été restauré.')
+    }
+    sessionStorage.removeItem(DRAFT_KEY)
   }, [])
 
   const poll = useCallback(async () => {
@@ -83,19 +160,35 @@ export default function UploadPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!file || !title) return
-    setLoading(true); setError(''); setUploadPct(0)
+    setLoading(true); setError(''); setAuthRequired(false); setUploadPct(0)
     if (!supabase) return
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user?.email) { setError('Connectez-vous pour uploader'); setLoading(false); return }
+    if (!user?.email) { setAuthRequired(true); setLoading(false); return }
     const result = await uploadBook(user.email, title, file, plan, (pct) => setUploadPct(pct))
     if (result.success) {
       setUserEmail(user.email)
       setPendingBookId(result.book.id)
       setStatus('pending')
+      // Déclenche la génération audio (ne bloque pas le polling si elle échoue)
+      fetch(`/api/easyreadvoice/books/${result.book.id}/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      }).catch(() => {})
     } else {
       setError(result.error || "Erreur lors de l'upload")
       setLoading(false)
     }
+  }
+
+  async function handleRequireLogin() {
+    await saveDraft(title, file)
+    router.push('/easyreadvoice/login?next=/easyreadvoice/upload')
+  }
+
+  async function handleRequireRegister() {
+    await saveDraft(title, file)
+    router.push('/easyreadvoice/register?next=/easyreadvoice/upload')
   }
 
   if (pendingBookId) {
@@ -189,6 +282,30 @@ export default function UploadPage() {
             🔒 Vos fichiers sont supprimés immédiatement après la génération audio. Seuls les documents libres de droit
             doivent être traités. Vous êtes seul responsable des fichiers téléversés.
           </div>
+          {authRequired && (
+            <div className="bg-purple-50 border border-purple-200 text-purple-800 text-sm rounded-xl p-4 mb-6 animate-fade-in-up">
+              <p className="font-semibold mb-1">Connectez-vous pour uploader</p>
+              <p className="mb-3">
+                Votre titre et votre fichier ont été conservés. Connectez-vous ou créez un compte pour lancer la génération.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={handleRequireLogin}
+                  className="px-4 py-2 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition"
+                >
+                  Se connecter
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRequireRegister}
+                  className="px-4 py-2 rounded-xl border border-purple-300 text-purple-700 font-semibold hover:bg-purple-100 transition"
+                >
+                  Créer un compte
+                </button>
+              </div>
+            </div>
+          )}
           {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm">{error}</div>}
           <form onSubmit={handleSubmit} className="backdrop-blur-md bg-white/80 border border-white/20 shadow-xl rounded-3xl p-8 space-y-5">
             <div>

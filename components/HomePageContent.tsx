@@ -151,6 +151,7 @@ export default function HomePageContent() {
   const [tryItems, setTryItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
+  const [remoteHero, setRemoteHero] = useState<{titre?: string; sous_titre?: string; cta?: string} | null>(null)
 
   const zonesRef = useRef<HTMLDivElement>(null)
   const productsRef = useRef<HTMLDivElement>(null)
@@ -194,6 +195,15 @@ export default function HomePageContent() {
   }, [pathname])
 
   useEffect(() => {
+    fetch('https://reseaux.sociaux.maxnewappai.com/api/current-hero')
+      .then(r => r.json())
+      .then(data => {
+        if (data?.hero?.titre) setRemoteHero(data.hero)
+      })
+      .catch(() => {}) // silent fail
+  }, [])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -212,16 +222,19 @@ export default function HomePageContent() {
   }, [])
 
   // Hero texts
-  const heroTitle = globalSettings?.hero_texts?.title?.[lang as keyof typeof globalSettings.hero_texts.title]
+  const heroTitle = remoteHero?.titre
+    || globalSettings?.hero_texts?.title?.[lang as keyof typeof globalSettings.hero_texts.title]
     || globalSettings?.hero_texts?.title?.fr
     || 'Donnez une voix humaine à tous vos documents, en moins de 2 minutes.'
-  const heroSubtitle1 = globalSettings?.hero_texts?.subtitle?.[lang as keyof typeof globalSettings.hero_texts.subtitle]
+  const heroSubtitle1 = remoteHero?.sous_titre
+    || globalSettings?.hero_texts?.subtitle?.[lang as keyof typeof globalSettings.hero_texts.subtitle]
     || globalSettings?.hero_texts?.subtitle?.fr
     || 'Adoptez des solutions intelligentes conçues pour simplifier votre quotidien, booster votre productivité et satisfaire vos clients.'
   const heroSubtitle2 = globalSettings?.hero_texts?.subtitle2?.[lang as keyof typeof globalSettings.hero_texts.subtitle2]
     || globalSettings?.hero_texts?.subtitle2?.fr
     || 'Dans un monde qui s\'accélère, la technologie doit être un moteur. Nous créons des outils sur-mesure qui connectent vos équipes, automatisent vos processus et valorisent votre savoir-faire.'
-  const heroCta1 = globalSettings?.hero_texts?.cta1?.[lang as keyof typeof globalSettings.hero_texts.cta1]
+  const heroCta1 = remoteHero?.cta
+    || globalSettings?.hero_texts?.cta1?.[lang as keyof typeof globalSettings.hero_texts.cta1]
     || globalSettings?.hero_texts?.cta1?.fr
     || 'Explorer nos Solutions'
   const heroCta2 = globalSettings?.hero_texts?.cta2?.[lang as keyof typeof globalSettings.hero_texts.cta2]

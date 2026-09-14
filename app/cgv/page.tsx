@@ -43,6 +43,7 @@ export default async function CGVPage() {
   const sections = [
     { num: 1, key: '1', label: 'Objet' },
     { num: 2, key: '2', label: 'Commandes' },
+    { num: null as number | null, key: '2bis', label: 'Prestations sur-mesure (B2B)' },
     { num: 3, key: '3', label: 'Prix' },
     { num: 4, key: '4', label: 'Paiement' },
     { num: null as number | null, key: '4bis', label: 'TVA' },

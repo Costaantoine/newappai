@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import DemoSite from '@/components/test-vitrine/DemoSite'
+import Preview from './Preview'
 import CompanyStep from './steps/CompanyStep'
 import ServicesStep from './steps/ServicesStep'
 import GalleryStep from './steps/GalleryStep'
@@ -135,7 +135,7 @@ export default function Wizard() {
         })}
       </ol>
 
-      <div className="grid lg:grid-cols-[1fr_minmax(360px,440px)] gap-8 items-start">
+      <div className="grid lg:grid-cols-[1fr_1.4fr] gap-6 items-start">
         {/* Formulaire */}
         <div className="min-w-0">
           <div className="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-6 sm:p-8">
@@ -193,9 +193,9 @@ export default function Wizard() {
 
         {/* Aperçu sticky — le site apparaît PAS À PAS à la dernière étape (retour Antoine :
             questionnaire d'abord, puis le site se construit section par section, design réel) */}
-        <div className="hidden lg:block sticky top-24 h-[calc(100vh-8rem)]">
+        <div className="hidden lg:block sticky top-24 h-[calc(100vh-8rem)] rounded-2xl overflow-hidden">
           {isLast ? (
-            <DemoSite key={`wizard-${config.business.name.trim()}`} config={config} anchorPrefix="apercu" />
+            <Preview config={config} />
           ) : (
             <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-neutral-700 bg-neutral-900/40 p-8 text-center">
               <p className="text-slate-400 text-sm">
@@ -210,15 +210,7 @@ export default function Wizard() {
 
       {/* Aperçu sous le formulaire (mobile/tablette) */}
       <div className="mt-10 lg:hidden">
-        {isLast ? (
-          <DemoSite key={`wizard-mobile-${config.business.name.trim()}`} config={config} anchorPrefix="apercu" />
-        ) : (
-          <div className="flex items-center justify-center rounded-2xl border border-dashed border-neutral-700 bg-neutral-900/40 p-8 text-center">
-            <p className="text-slate-400 text-sm">
-              Votre aperçu s&apos;affichera à la dernière étape ✨
-            </p>
-          </div>
-        )}
+        <Preview config={config} />
       </div>
     </div>
   )

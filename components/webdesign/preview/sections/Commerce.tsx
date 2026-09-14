@@ -30,7 +30,7 @@ export function ServicesPricesSection({ config, anchorPrefix = 'pv' }: { config:
               ))}
             </ul>
             {services.length > 0 && (
-              <a href="#pv-prices" className="ws-btn ws-btn--outline" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.45)' }}>
+              <a href={`#${anchorPrefix}-prices`} className="ws-btn ws-btn--outline" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.45)' }}>
                 Voir les tarifs
               </a>
             )}

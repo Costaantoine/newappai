@@ -63,23 +63,23 @@ export async function POST(request: NextRequest) {
       { role: 'user' as const, content: message }
     ]
 
-    // Appeler DeepSeek
+    // Appeler MiMo (Xiaomi)
     let reply = ''
-    const apiKey = process.env.DEEPSEEK_API_KEY
+    const apiKey = process.env.XIAOMI_API_KEY
 
     if (apiKey) {
       try {
-        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'deepseek-chat',
+            model: 'mimo-v2.5',
             messages,
             temperature: 0.7,
-            max_tokens: 300
+            max_tokens: 1024
           })
         })
 
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
           reply = data.choices?.[0]?.message?.content || ''
         }
       } catch (error) {
-        console.error('DeepSeek failed:', error)
+        console.error('MiMo failed:', error)
       }
     }
 

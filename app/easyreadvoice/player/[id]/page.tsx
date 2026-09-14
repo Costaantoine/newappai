@@ -28,16 +28,20 @@ function fmt(t: number): string {
 export default function PlayerPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
-  const { user, loading: userLoading } = useEasyReadVoiceUser({ requireAuth: false })
+  const { user, loading: userLoading } = useEasyReadVoiceUser({ requireAuth: true })
   const audioRef = useRef<HTMLAudioElement>(null)
   const objectUrlRef = useRef<string | null>(null)
   const bookmarkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const shareTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const autoPlayNextRef = useRef(false)
   const storageKey = `erv-player-${id}`
   const bookmarkKey = `erv-bookmarks-${id}`
 
   const [bookTitle, setBookTitle] = useState('')
+  const [bookOwnerEmail, setBookOwnerEmail] = useState<string | null>(null)
+  const [accessState, setAccessState] = useState<'loading' | 'granted' | 'denied'>('loading')
+  const [shareCopied, setShareCopied] = useState(false)
   const [chapters, setChapters] = useState<Chapter[]>([])
   const [chapterIdx, setChapterIdx] = useState(0)
   const [loadingManifest, setLoadingManifest] = useState(true)
@@ -51,16 +55,30 @@ export default function PlayerPage() {
   const [bookmarkSaved, setBookmarkSaved] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
 
-  // Charger le manifest + titre du livre
+  // Charger le manifest + titre du livre, puis determiner le statut d'acces
   useEffect(() => {
     if (!id) return
-    fetch(`/api/easyreadvoice/audio/${id}/manifest`)
-      .then(r => {
-        if (!r.ok) throw new Error('manifest')
-        return r.json()
-      })
-      .then(data => {
+    let active = true
+
+    async function loadManifest() {
+      try {
+        const res = await fetch(`/api/easyreadvoice/audio/${id}/manifest`)
+        if (res.status === 403) {
+          // Non proprietaire sans player : le manifest renvoie 403 avec le user_email
+          const body = await res.json().catch(() => ({}))
+          if (!active) return
+          setBookOwnerEmail(body.user_email || null)
+          setAccessState('denied')
+          return
+        }
+        if (!res.ok) throw new Error('manifest')
+        const data = await res.json()
+        if (!active) return
+
         setChapters(data.chapters || [])
+        const ownerEmail = data.user_email || null
+        setBookOwnerEmail(ownerEmail)
+
         const saved = localStorage.getItem(storageKey)
         if (saved) {
           try {
@@ -69,14 +87,37 @@ export default function PlayerPage() {
             if (typeof parsed.rate === 'number') setRate(parsed.rate)
           } catch {}
         }
-      })
-      .catch(() => setError("Impossible de charger ce livre audio."))
-      .finally(() => setLoadingManifest(false))
+
+        // Proprietaire du livre : lecture normale
+        if (user?.email && ownerEmail && user.email === ownerEmail) {
+          setAccessState('granted')
+          return
+        }
+
+        // Autre utilisateur : le player EasyReadVoice (4,99 €) est requis
+        try {
+          const purchaseRes = await fetch('/api/easyreadvoice/player-purchase')
+          const purchase = await purchaseRes.json()
+          if (!active) return
+          setAccessState(purchase.purchased ? 'granted' : 'denied')
+        } catch {
+          if (active) setAccessState('denied')
+        }
+      } catch {
+        if (active) setError("Impossible de charger ce livre audio.")
+      } finally {
+        if (active) setLoadingManifest(false)
+      }
+    }
+
+    loadManifest()
 
     fetchBooks(user?.email || "").then(books => {
       const book = books.find((b: any) => b.id === id)
       if (book) setBookTitle(book.title)
     })
+
+    return () => { active = false }
   }, [user, id, storageKey])
 
   // Charger l'audio du chapitre courant via fetch+blob (pas de src direct)
@@ -125,6 +166,7 @@ export default function PlayerPage() {
       if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current)
       if (bookmarkTimeoutRef.current) clearTimeout(bookmarkTimeoutRef.current)
       if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current)
+      if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current)
     }
   }, [])
 
@@ -186,13 +228,60 @@ export default function PlayerPage() {
     bookmarkTimeoutRef.current = setTimeout(() => setBookmarkSaved(false), 2000)
   }
 
+  async function handleShare() {
+    try {
+      await navigator.clipboard.writeText(window.location.origin + '/easyreadvoice/player/' + id)
+      setShareCopied(true)
+      if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current)
+      shareTimeoutRef.current = setTimeout(() => setShareCopied(false), 2000)
+    } catch {
+      // Presse-papiers indisponible : on ne bloque pas le player
+    }
+  }
+
   const pct = duration > 0 ? (current / duration) * 100 : 0
   const chapter = chapters[chapterIdx]
+  const isOwner = !!user?.email && !!bookOwnerEmail && user.email === bookOwnerEmail
 
-  if (userLoading || loadingManifest) {
+  if (userLoading || loadingManifest || accessState === 'loading') {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  if (accessState === 'denied') {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header />
+        <main className="relative flex-1 bg-gradient-to-br from-purple-50 via-white to-violet-50 px-4 py-24">
+          <div className="max-w-md mx-auto text-center">
+            <div className="w-16 h-16 mx-auto rounded-full bg-purple-100 flex items-center justify-center text-3xl mb-6">
+              🔒
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">Ce livre est protégé</h1>
+            <p className="text-gray-600 mb-8">
+              Ce livre appartient à <strong>{bookOwnerEmail || 'son propriétaire'}</strong>. Achetez le player
+              EasyReadVoice (4,99 €) pour l'écouter.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => router.push(`/easyreadvoice/buy?next=/easyreadvoice/player/${id}`)}
+                className="w-full bg-gradient-to-r from-purple-600 to-violet-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-purple-600/20 hover:scale-[1.02] transition"
+              >
+                Acheter le player — 4,99 €
+              </button>
+              <button
+                onClick={() => router.push('/easyreadvoice/books')}
+                className="w-full border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition"
+              >
+                ← Retour à la bibliothèque
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
       </div>
     )
   }
@@ -210,7 +299,19 @@ export default function PlayerPage() {
           </button>
 
           <p className="text-xs font-semibold tracking-wide text-purple-500 uppercase mb-2">EasyReadVoice Player</p>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">{bookTitle || 'Livre audio'}</h1>
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <h1 className="text-2xl font-bold text-gray-900">{bookTitle || 'Livre audio'}</h1>
+            {isOwner && (
+              <button
+                onClick={handleShare}
+                title="Partager ce livre"
+                className="h-9 px-3 rounded-full border border-purple-200 text-purple-600 text-sm font-medium flex items-center gap-1.5 hover:bg-purple-50 active:scale-90 transition shrink-0"
+              >
+                <span className="text-base leading-none">🔗</span>
+                <span>{shareCopied ? 'Lien copié !' : 'Partager'}</span>
+              </button>
+            )}
+          </div>
           <p className="text-gray-500 mb-8">
             Chapitre {chapterIdx + 1} / {chapters.length}
             {chapter?.title ? ` — ${chapter.title}` : ''}

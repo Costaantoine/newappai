@@ -17,6 +17,7 @@ function getProductUrl(title: string | any): string | null {
     'redesign de site vitrine': '/produits/redesign-site-vitrine',
     'creation de site vitrine cle en main': '/produits/creation-site-vitrine',
     'chatbot client intelligent': '/produits/chatbot-client-intelligent',
+    'click and collect': '/produits/click-and-collect',
     'click and delivery': '/produits/click-and-delivery',
     'talkie walkie connecte': '/produits/talkie-walkie-connecte',
     'serenite': '/produits/serenite',

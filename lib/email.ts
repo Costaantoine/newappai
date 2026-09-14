@@ -180,6 +180,248 @@ export async function sendLeaDemoEmail(opts: LeaDemoEmailOptions): Promise<boole
   }
 }
 
+export interface OrderConfirmationItem {
+  title: string
+  quantity: number
+  /** Prix unitaire en centimes */
+  price: number
+}
+
+export interface OrderConfirmationEmailOptions {
+  customerEmail: string
+  customerName: string
+  items: OrderConfirmationItem[]
+  /** Montant total payé en centimes */
+  totalAmount: number
+  /** Langue du client : fr | en | pt | es */
+  language: string
+  /** Identifiant de la commande (session Stripe) — les 8 derniers caractères servent de n° de commande */
+  orderId: string
+}
+
+const ORDER_EMAIL_LOCALES: Record<string, string> = {
+  fr: 'fr-FR',
+  en: 'en-GB',
+  pt: 'pt-PT',
+  es: 'es-ES',
+}
+
+interface OrderEmailStrings {
+  subject: string
+  heading: string
+  greeting: string
+  intro: string
+  orderLabel: string
+  dateLabel: string
+  thProduct: string
+  thQty: string
+  thUnit: string
+  thTotal: string
+  totalLabel: string
+  closing: string
+  team: string
+  footer: string
+}
+
+const ORDER_EMAIL_STRINGS: Record<string, OrderEmailStrings> = {
+  fr: {
+    subject: 'Confirmation de votre commande — NewAppAI',
+    heading: 'Merci pour votre commande !',
+    greeting: 'Bonjour',
+    intro: 'Nous vous confirmons que votre paiement a bien été reçu et que votre commande est enregistrée.',
+    orderLabel: 'Numéro de commande',
+    dateLabel: 'Date',
+    thProduct: 'Produit',
+    thQty: 'Qté',
+    thUnit: 'Prix unitaire',
+    thTotal: 'Total',
+    totalLabel: 'Total payé',
+    closing: 'Merci de votre confiance.',
+    team: "L'équipe NewAppAI",
+    footer: 'Ce message a été envoyé automatiquement suite à votre paiement sur NewAppAI. Merci de ne pas répondre directement à cet email.',
+  },
+  en: {
+    subject: 'Order confirmation — NewAppAI',
+    heading: 'Thank you for your order!',
+    greeting: 'Hello',
+    intro: 'We confirm that your payment has been received and that your order has been recorded.',
+    orderLabel: 'Order number',
+    dateLabel: 'Date',
+    thProduct: 'Product',
+    thQty: 'Qty',
+    thUnit: 'Unit price',
+    thTotal: 'Total',
+    totalLabel: 'Total paid',
+    closing: 'Thank you for your trust.',
+    team: 'The NewAppAI team',
+    footer: 'This message was sent automatically after your payment on NewAppAI. Please do not reply directly to this email.',
+  },
+  pt: {
+    subject: 'Confirmação da sua encomenda — NewAppAI',
+    heading: 'Obrigado pela sua encomenda!',
+    greeting: 'Olá',
+    intro: 'Confirmamos que o seu pagamento foi recebido e que a sua encomenda foi registada.',
+    orderLabel: 'Número da encomenda',
+    dateLabel: 'Data',
+    thProduct: 'Produto',
+    thQty: 'Qtd',
+    thUnit: 'Preço unitário',
+    thTotal: 'Total',
+    totalLabel: 'Total pago',
+    closing: 'Obrigado pela sua confiança.',
+    team: 'A equipa NewAppAI',
+    footer: 'Esta mensagem foi enviada automaticamente após o seu pagamento na NewAppAI. Por favor, não responda diretamente a este email.',
+  },
+  es: {
+    subject: 'Confirmación de su pedido — NewAppAI',
+    heading: '¡Gracias por su pedido!',
+    greeting: 'Hola',
+    intro: 'Le confirmamos que hemos recibido su pago y que su pedido ha quedado registrado.',
+    orderLabel: 'Número de pedido',
+    dateLabel: 'Fecha',
+    thProduct: 'Producto',
+    thQty: 'Cant.',
+    thUnit: 'Precio unitario',
+    thTotal: 'Total',
+    totalLabel: 'Total pagado',
+    closing: 'Gracias por su confianza.',
+    team: 'El equipo de NewAppAI',
+    footer: 'Este mensaje se ha enviado automáticamente tras su pago en NewAppAI. Por favor, no responda directamente a este correo.',
+  },
+}
+
+function formatOrderAmount(cents: number, language: string): string {
+  const locale = ORDER_EMAIL_LOCALES[language] || ORDER_EMAIL_LOCALES.fr
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'EUR',
+  }).format((cents || 0) / 100)
+}
+
+function formatOrderDate(date: Date, language: string): string {
+  const locale = ORDER_EMAIL_LOCALES[language] || ORDER_EMAIL_LOCALES.fr
+  return new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+}
+
+export async function sendOrderConfirmationEmail(opts: OrderConfirmationEmailOptions): Promise<boolean> {
+  const transporter = createTransporter()
+  if (!transporter) return false
+
+  const siteName = process.env.SITE_NAME || 'NewAppAI'
+  const language = ORDER_EMAIL_STRINGS[opts.language] ? opts.language : 'fr'
+  const s = ORDER_EMAIL_STRINGS[language]
+  const from = process.env.SMTP_FROM || `"${siteName}" <${process.env.SMTP_USER}>`
+
+  const customerName = (opts.customerName || '').trim()
+  const greeting = customerName ? `${s.greeting} ${customerName},` : `${s.greeting},`
+  const orderNumber = (opts.orderId || '').slice(-8).toUpperCase()
+  const dateStr = formatOrderDate(new Date(), language)
+  const items = Array.isArray(opts.items) ? opts.items : []
+  const totalStr = formatOrderAmount(opts.totalAmount, language)
+
+  const rowsHtml = items
+    .map(item => {
+      const quantity = item.quantity || 1
+      const unit = formatOrderAmount(item.price, language)
+      const line = formatOrderAmount((item.price || 0) * quantity, language)
+      return `
+        <tr>
+          <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${escapeHtml(String(item.title || ''))}</td>
+          <td align="center" style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${quantity}</td>
+          <td align="right" style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${escapeHtml(unit)}</td>
+          <td align="right" style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${escapeHtml(line)}</td>
+        </tr>`
+    })
+    .join('')
+
+  const textLines = items
+    .map(item => {
+      const quantity = item.quantity || 1
+      const line = formatOrderAmount((item.price || 0) * quantity, language)
+      return `- ${item.title} x${quantity} : ${line}`
+    })
+    .join('\n')
+
+  try {
+    await transporter.sendMail({
+      from,
+      to: opts.customerEmail,
+      subject: s.subject,
+      text: [
+        greeting,
+        '',
+        s.intro,
+        '',
+        `${s.orderLabel} : #${orderNumber}`,
+        `${s.dateLabel} : ${dateStr}`,
+        '',
+        `${s.thProduct} :`,
+        textLines,
+        '',
+        `${s.totalLabel} : ${totalStr}`,
+        '',
+        s.closing,
+        s.team,
+      ].join('\n'),
+      html: `
+        <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; color: #0f172a;">
+          <div style="background: #7c3aed; padding: 24px; border-radius: 12px 12px 0 0;">
+            <h1 style="color: #ffffff; font-size: 20px; margin: 0; letter-spacing: 0.5px;">${escapeHtml(siteName)}</h1>
+          </div>
+          <div style="padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+            <h2 style="color: #7c3aed; margin: 0 0 16px;">${escapeHtml(s.heading)}</h2>
+            <p style="margin: 0 0 12px;">${escapeHtml(greeting)}</p>
+            <p style="color: #475569; margin: 0 0 20px;">${escapeHtml(s.intro)}</p>
+
+            <table style="width: 100%; border-collapse: collapse; background: #f5f3ff; border-radius: 8px; margin-bottom: 20px;">
+              <tr>
+                <td style="padding: 10px 14px; color: #64748b; font-size: 13px;">${escapeHtml(s.orderLabel)}</td>
+                <td style="padding: 10px 14px; font-weight: bold; text-align: right;">#${escapeHtml(orderNumber)}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 14px; color: #64748b; font-size: 13px;">${escapeHtml(s.dateLabel)}</td>
+                <td style="padding: 10px 14px; text-align: right;">${escapeHtml(dateStr)}</td>
+              </tr>
+            </table>
+
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #7c3aed; color: #ffffff;">
+                  <th align="left" style="padding: 10px 12px; font-size: 13px;">${escapeHtml(s.thProduct)}</th>
+                  <th align="center" style="padding: 10px 12px; font-size: 13px;">${escapeHtml(s.thQty)}</th>
+                  <th align="right" style="padding: 10px 12px; font-size: 13px;">${escapeHtml(s.thUnit)}</th>
+                  <th align="right" style="padding: 10px 12px; font-size: 13px;">${escapeHtml(s.thTotal)}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+                <tr>
+                  <td colspan="3" align="right" style="padding: 12px; font-weight: bold; border-top: 2px solid #7c3aed;">${escapeHtml(s.totalLabel)}</td>
+                  <td align="right" style="padding: 12px; font-weight: bold; color: #7c3aed; border-top: 2px solid #7c3aed;">${escapeHtml(totalStr)}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p style="margin: 24px 0 0;">${escapeHtml(s.closing)}<br><strong>${escapeHtml(s.team)}</strong></p>
+
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
+            <p style="color: #94a3b8; font-size: 12px; margin: 0;">${escapeHtml(s.footer)}</p>
+          </div>
+        </div>
+      `,
+    })
+    logger.info({ to: opts.customerEmail, order: orderNumber, lang: language }, 'Order confirmation email sent')
+    return true
+  } catch (error) {
+    logger.error({ error, to: opts.customerEmail, order: orderNumber }, 'Failed to send order confirmation email')
+    return false
+  }
+}
+
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, '&amp;')

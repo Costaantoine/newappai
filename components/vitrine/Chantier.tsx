@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Preview from '@/components/webdesign/Preview'
 import type { SiteConfig } from '@/components/webdesign/types'
-import { ESTIMATION, POLL_MS, STEPS, parseProgress } from '@/lib/vitrine/progress'
+import { POLL_MS, STEPS, parseProgress } from '@/lib/vitrine/progress'
 
 type JobStatus = 'queued' | 'running' | 'done' | 'error'
 
@@ -84,7 +84,7 @@ export default function Chantier({ config, jobId }: { config: SiteConfig; jobId?
         </div>
 
         <p className="text-xs text-slate-500 mt-4 leading-relaxed">
-          Les textes et le design finaux sont générés par notre IA en ce moment ({ESTIMATION}).
+          Les textes et le design finaux sont générés par notre IA en ce moment. Cela peut prendre 30 secondes.
         </p>
       </div>
 
@@ -93,7 +93,7 @@ export default function Chantier({ config, jobId }: { config: SiteConfig; jobId?
         <h2 className="text-xl font-bold text-white mb-1">Construction de votre site</h2>
         <div className="flex items-center justify-between text-sm text-slate-400 mb-6">
           <span>Temps écoulé : {formatElapsed(elapsed)}</span>
-          <span>Temps estimé : {ESTIMATION}</span>
+          <span>Temps estimé : ≈ 30 secondes</span>
         </div>
 
         <ol className="space-y-4 mb-6">

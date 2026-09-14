@@ -12,7 +12,7 @@ export const STEPS: { label: string; match: RegExp }[] = [
   { label: 'Vérification finale', match: /vérif|verif|checklist|validate|contr[ôo]le/i },
 ]
 
-export const ESTIMATION = '5-15 min'
+export const ESTIMATION = '≈ 30 secondes'
 export const POLL_MS = 2000
 
 /**
