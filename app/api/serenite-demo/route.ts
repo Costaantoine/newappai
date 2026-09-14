@@ -14,8 +14,8 @@ TA MISSION :
 
 NIVEAUX D'ALERTE :
 - "ok" : message neutre ou l\u00e9g\u00e8rement tendu mais acceptable tel quel \u2192 pas de reformulation n\u00e9cessaire
-- "tendu" : message contenant du sarcasme, des reproches, un ton accusateur, de la passive-agressivit\u00e9, des sous-entendus blessants \u2192 reformulation propos\u00e9e
-- "critique" : menaces explicites ou implicites, insultes, humiliation, d\u00e9nigrement de l'autre parent visant \u00e0 nuire, mention de violence physique, chantage affectif via les enfants, propos pouvant indiquer un danger pour un enfant ou un adulte \u2192 reformulation propos\u00e9e ET alerte d\u00e9clench\u00e9e
+- "tendu" : message contenant du sarcasme, des reproches, un ton accusateur, de la passive-agressivité, des sous-entendus blessants, insultes simples (\"tu es nul\", \"tu es incapable\"), jugements de valeur, dénigrement émotionnel, humiliation verbale SANS menace sous-jacente \\u2192 reformulation proposée
+- "critique" : SEULEMENT les cas impliquant un danger réel : menaces de violence physique ou de mort, mention d'armes, enlèvement ou soustraction d'enfants, privation forcée de contact avec les enfants, chantage affectif grave via les enfants, localisation de la victime (\"je sais où tu habites\"), incitation à la violence, propos indiquant un danger pour un enfant ou un adulte \\u2192 reformulation proposée ET alerte déclenchée
 
 R\u00c9GLES DE REFORMULATION :
 - Conserve tous les faits concrets : dates, heures, lieux, montants, \u00e9v\u00e9nements
@@ -35,6 +35,58 @@ R\u00e9ponds UNIQUEMENT avec un objet JSON valide, sans texte avant ni apr\u00e8
   "message_reformule": "string ou null si niveau = ok",
   "raison": "explication courte en une phrase"
 }`
+
+
+// ============================================================
+// FILET DE SÉCURITÉ DÉTERMINISTE
+// Force "critique" quand le message matche un pattern de danger,
+// indépendamment du résultat IA. Zéro faux négatif = priorité.
+// Tier 1 : un seul pattern → critique
+// Tier 2 : 2+ signaux combinés → critique (messages borderline)
+// ============================================================
+function safetyNetOverride(message: string): 'critique' | null {
+  const lower = message.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+  // ── TIER 1 : pattern unique = critique ──────────────────
+  // Violence physique directe
+  if (/\bje\s+(?:vais\s+)?(?:te\s+)?(?:tuer|frapper|battre|meurtrir|assassiner|tabasser|violenter)\b/.test(lower)) return 'critique'
+  // Menace de mort
+  if (/\b(?:tu|on|je\s+vais\s+te\s+faire)\s+(?:vas?\s+)?(?:mourir|crever)\b/.test(lower)) return 'critique'
+  // Armes
+  if (/\b(?:arme|couteau|pistolet|fusil|b[âa]ton|objet\s*tranchant)\b/.test(lower)) return 'critique'
+  if (/\bje\s+(?:vais\s+)?(?:te\s+)?tirer\b/.test(lower)) return 'critique'
+  // Enlèvement / prise de force d'enfants
+  if (/\benlever\b/.test(lower)) return 'critique'
+  if (/\b(?:prendre|emmener|emporter|saisir)\b/.test(lower) && /\bde\s+force\b/.test(lower)) return 'critique'
+  if (/\b(?:prendre|emmener|emporter)\b/.test(lower) && /\b(?:les?\s+)?(?:enfant|gamin|goss|bambin)s?\b/.test(lower)) return 'critique'
+  // Suppression / destruction
+  if (/\bje\s+(?:vais\s+)?(?:te\s+)?supprimer\b/.test(lower)) return 'critique'
+  // Incitation à la violence
+  if (/\b(?:vas-y|viens)\b.*\btue\b/.test(lower)) return 'critique'
+  // Localisation de la victime (élargi)
+  if (/\b(?:je\s+)?(?:sais|connais)\s+(?:o[ùu]\s+)?(?:tu|vous)\s+(?:habites?|vives?)\b/.test(lower)) return 'critique'
+  if (/\b(?:je\s+)?(?:sais|connais)\s+(?:ton|votre)\s+(?:adresse|r[ée]sidence|maison|logement)\b/.test(lower)) return 'critique'
+  // Menace de destruction / privation de garde
+  if (/\b(?:je\s+)?(?:vais\s+)?(?:te\s+)?(?:d[ée]truire|an[ée]antir)\b/.test(lower)) return 'critique'
+  if (/\b(?:tu\s+)?(?:ne\s+)?(?:garderas?|obtiendras?|auras?)\s+(?:plus\s+)?rien\b/.test(lower)) return 'critique'
+  // Porte plainte comme menace de privation
+  if (/\bporter?\s+plainte\b/.test(lower)) return 'critique'
+  // Présence d'enfants + ne plus voir/revenir = privation de contact
+  if (/\b(?:les?\s+)?(?:enfant|gamin|goss|bambin)s?\b/.test(lower) && /\b(?:ne\s+)?(?:reviennent?|verront?|reverras?)\s+(?:plus\s+)?(?:jamais|chez)\b/.test(lower)) return 'critique'
+  // "arrête de contacter les enfants" = menace de privation
+  if (/\barr[êe]te\s+(?:de\s+)?contacter\b/.test(lower) && /\b(?:les?\s+)?(?:enfant|gamin|goss|bambin)s?\b/.test(lower)) return 'critique'
+
+  // ── TIER 2 : 2+ signaux combinés = critique ────────────
+  let tier2 = 0
+  if (/\bne\s+(?:les|me|l')\s+(?:reverras?|reviennent?|verront?)\s+(?:plus\s+)?(?:jamais|chez)\b/.test(lower)) tier2++
+  if (/\b(?:je\s+)?(?:vais\s+)?te\s+retrouver\b/.test(lower)) tier2++
+  if (/\b(?:vas?\s+)?(?:regretter|paieras?|payer\s+ce)\b/.test(lower)) tier2++
+  if (/\b(?:je\s+)?(?:vais\s+)?(?:passer|venir)\s+(?:te\s+)?(?:chercher|reprendre)\b/.test(lower)) tier2++
+  if (tier2 >= 2) return 'critique'
+
+  return null
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -75,7 +127,7 @@ export async function POST(request: NextRequest) {
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: message.trim() },
         ],
-        temperature: 0.3,
+        temperature: 0,
         max_tokens: 1024,
       }),
     })
@@ -90,20 +142,32 @@ export async function POST(request: NextRequest) {
     const content = data.choices?.[0]?.message?.content || ''
 
     const jsonMatch = content.match(/\{[\s\S]*"niveau_alerte"[\s\S]*\}/)
-    if (!jsonMatch) {
+    let niveau = 'ok'
+    let messageReformule = null
+    let raison = 'Analyse non disponible'
+
+    if (jsonMatch) {
+      const result = JSON.parse(jsonMatch[0])
+      niveau = result.niveau_alerte || 'ok'
+      messageReformule = result.message_reformule || null
+      raison = result.raison || ''
+    } else {
       console.error('Could not parse AI response:', content)
-      return NextResponse.json({
-        niveau_alerte: 'ok',
-        message_reformule: null,
-        raison: 'Analyse non disponible',
-      })
     }
 
-    const result = JSON.parse(jsonMatch[0])
+    // Filet de sécurité déterministe : force "critique" si le message
+    // matche un pattern de danger, QUE L'AI AIT RÉUSSI OU NON
+    const override = safetyNetOverride(message)
+    if (override) {
+      niveau = override
+      // Masquer la reformulation pour les messages critiques
+      messageReformule = null
+    }
+
     return NextResponse.json({
-      niveau_alerte: result.niveau_alerte || 'ok',
-      message_reformule: result.message_reformule || null,
-      raison: result.raison || '',
+      niveau_alerte: niveau,
+      message_reformule: messageReformule,
+      raison: raison,
     })
   } catch (error: any) {
     console.error('Serenite demo error:', error)
