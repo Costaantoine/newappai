@@ -12,6 +12,7 @@ export default function SuccessContent() {
   const sessionId = searchParams.get('session_id')
   const [productName, setProductName] = useState('')
   const [customerEmail, setCustomerEmail] = useState('')
+  const isTest = sessionId?.startsWith('cs_test_') || false
 
   useEffect(() => {
     if (sessionId) {
@@ -32,16 +33,29 @@ export default function SuccessContent() {
       <section className="relative pt-48 pb-20 px-6 flex flex-col items-center">
         <div className="absolute top-10 w-[500px] h-[500px] bg-green-500/10 blur-[150px] rounded-full -z-10"></div>
         
-        <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-8">
+        <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-8 relative">
           <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
           </svg>
+          {isTest && (
+            <span className="absolute -top-2 -right-4 bg-amber-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+              TEST STRIPE
+            </span>
+          )}
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">
           {t.success.title.replace('confirmé', <span className="neon-text" key="conf">confirmé</span> as any)}
         </h1>
-        
+
+        {isTest && (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-6 py-3 mb-6 text-center">
+            <p className="text-amber-300 font-semibold text-sm">
+              ✓ Paiement test validé — Aucun montant réel n&apos;a été débité
+            </p>
+          </div>
+        )}
+
         <p className="text-slate-300 max-w-xl text-lg mb-8 text-center leading-relaxed">
           {t.success.subtitle} <strong className="text-white">{productName || 'votre produit'}</strong>.
           {customerEmail && (
