@@ -37,7 +37,9 @@ export async function POST(request: NextRequest) {
           currency: 'eur',
           product_data: {
             name: item.title,
-            images: item.image ? [item.image] : [],
+            images: item.image
+              ? [item.image.startsWith("http") ? item.image : `${request.nextUrl.origin}${item.image}`]
+              : [],
           },
           unit_amount: verifiedPrice,
         },
