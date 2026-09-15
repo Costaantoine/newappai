@@ -51,8 +51,8 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${request.nextUrl.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${request.nextUrl.origin}/produits`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin}/produits`,
       metadata: {
         items: JSON.stringify(items.map((i: any) => ({ id: i.productId, qty: i.quantity }))),
         lang: language,

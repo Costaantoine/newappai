@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: successUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/checkout/cancel`,
+      success_url: successUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://newappai.com'}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://newappai.com'}/checkout/cancel`,
       metadata: {
         product_id: product.id,
         lang: language,
