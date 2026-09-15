@@ -203,6 +203,9 @@ export default function TestTalkieWalkiePage() {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
     if (!SpeechRecognition) return
 
+    // Don't create a new instance if one is already running
+    if (recognitionRef.current) return
+
     const recognition = new SpeechRecognition()
     recognition.lang = SPEECH_LANGS[lang] || 'fr-FR'
     recognition.continuous = true
@@ -210,32 +213,29 @@ export default function TestTalkieWalkiePage() {
     recognition.maxAlternatives = 1
 
     recognition.onresult = (event: any) => {
-      const interim: string[] = []
-      const final: string[] = []
+      // event.results is CUMULATIVE — use resultIndex to only process NEW results
+      const newFinalWords: string[] = []
+      const newInterimWords: string[] = []
 
-      for (let i = 0; i < event.results.length; i++) {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i]
         const text = result[0].transcript.trim()
+        const words = text.split(/\s+/)
         if (result.isFinal) {
-          final.push(...text.split(/\s+/))
+          newFinalWords.push(...words)
         } else {
-          interim.push(...text.split(/\s+/))
+          newInterimWords.push(...words)
         }
       }
 
-      // Merge all final words (accumulated across events)
-      const allFinal = [...finalWordsRef.current]
-      // Rebuild final from the last finalIndex
-      const allWords: string[] = []
-      for (let i = 0; i < event.results.length; i++) {
-        const result = event.results[i]
-        const text = result[0].transcript.trim()
-        allWords.push(...text.split(/\s+/))
+      // Accumulate final words across events (they never change once final)
+      if (newFinalWords.length > 0) {
+        finalWordsRef.current = [...finalWordsRef.current, ...newFinalWords]
       }
 
-      finalWordsRef.current = allWords
-      setLiveWords([...allWords, ...interim])
-      setFinalWords(allWords)
+      // Display: all accumulated finals + current interim (replaces each time)
+      setLiveWords([...finalWordsRef.current, ...newInterimWords])
+      setFinalWords([...finalWordsRef.current])
     }
 
     recognition.onerror = (event: any) => {
@@ -249,10 +249,8 @@ export default function TestTalkieWalkiePage() {
     }
 
     recognition.onend = () => {
-      // Restart if still supposed to be listening
-      if (isListeningRef.current) {
-        try { recognition.start() } catch {}
-      }
+      // Don't auto-restart — startRecognition is called explicitly when needed
+      recognitionRef.current = null
     }
 
     recognitionRef.current = recognition
@@ -273,26 +271,16 @@ export default function TestTalkieWalkiePage() {
     setHasNotification(false)
     finalWordsRef.current = []
 
-    // Start recognition fresh for this transmission
-    if (recognitionRef.current) {
-      try { recognitionRef.current.abort() } catch {}
-    }
+    // Ensure recognition is running (don't abort/restart — just start if not already)
     startRecognition()
   }, [isTransmitting, micState, startRecognition])
 
   const stopTransmission = useCallback(() => {
     if (!isTransmitting) return
     setIsTransmitting(false)
-    isListeningRef.current = false
-    setIsListening(false)
 
-    // Stop recognition
-    if (recognitionRef.current) {
-      try { recognitionRef.current.abort() } catch {}
-    }
-
-    // Get the final words
-    const words = finalWordsRef.current.length > 0 ? finalWordsRef.current : liveWords
+    // Get the final words from ref (always up to date, no stale closure)
+    const words = finalWordsRef.current
     if (words.length === 0) return
 
     // Cascade to Phone B after 1s
@@ -308,7 +296,7 @@ export default function TestTalkieWalkiePage() {
         }
       }, 80)
     }, 1000)
-  }, [isTransmitting, liveWords])
+  }, [isTransmitting])
 
   // ── Touch handling ────────────────────────────────────────────────
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
