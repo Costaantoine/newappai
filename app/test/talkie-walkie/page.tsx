@@ -151,6 +151,7 @@ export default function TestTalkieWalkiePage() {
   const finalWordsRef = useRef<string[]>([])
   const isListeningRef = useRef(false)
   const cascadeTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const isTouchActiveRef = useRef(false)
 
   // Cleanup
   useEffect(() => {
@@ -279,9 +280,14 @@ export default function TestTalkieWalkiePage() {
     if (!isTransmitting) return
     setIsTransmitting(false)
 
-    // Get the final words from ref (always up to date, no stale closure)
-    const words = finalWordsRef.current
-    if (words.length === 0) return
+    // Get the final words from ref, fallback to liveWords (interims) if ref is empty
+    // (user may release PTT before any result isFinal)
+    let words = finalWordsRef.current
+    if (words.length === 0) {
+      // Promote current interims as "final" for the cascade
+      words = liveWords
+      if (words.length === 0) return
+    }
 
     // Cascade to Phone B after 1s
     cascadeTimerRef.current = setTimeout(() => {
@@ -296,16 +302,21 @@ export default function TestTalkieWalkiePage() {
         }
       }, 80)
     }, 1000)
-  }, [isTransmitting])
+  }, [isTransmitting, liveWords])
 
   // ── Touch handling ────────────────────────────────────────────────
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
+    isTouchActiveRef.current = true
     startTransmission()
   }, [startTransmission])
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
+    isTouchActiveRef.current = false
+    stopTransmission()
+  }, [stopTransmission])
+
+  const handleTouchCancel = useCallback((e: React.TouchEvent) => {
+    isTouchActiveRef.current = false
     stopTransmission()
   }, [stopTransmission])
 
@@ -465,12 +476,13 @@ export default function TestTalkieWalkiePage() {
                 {/* Bouton Push-to-Talk */}
                 <div className="max-w-md mx-auto mb-8">
                   <button
-                    onMouseDown={startTransmission}
-                    onMouseUp={stopTransmission}
-                    onMouseLeave={stopTransmission}
+                    onMouseDown={() => { if (!isTouchActiveRef.current) startTransmission() }}
+                    onMouseUp={() => { if (!isTouchActiveRef.current) stopTransmission() }}
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
+                    onTouchCancel={handleTouchCancel}
                     disabled={!isListening && !isTransmitting}
+                    style={{ touchAction: 'manipulation' }}
                     className={`w-full py-4 rounded-xl font-medium text-sm flex items-center justify-center gap-3 transition-all duration-200 border select-none ${
                       isTransmitting
                         ? 'bg-red-500/20 border-red-500/40 text-red-300 cursor-wait'
