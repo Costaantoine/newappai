@@ -269,6 +269,14 @@ interface DbProduct {
   images: string[]
 }
 
+function ProductBadgeIcon() {
+  return (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+    </svg>
+  )
+}
+
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -298,6 +306,42 @@ export default function ProductDetailPage() {
       .catch(() => {})
     return () => { cancelled = true }
   }, [slug])
+
+  useEffect(() => {
+    document.body.dataset.theme = 'erv-light'
+
+    const styleId = 'erv-header-light'
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style')
+      style.id = styleId
+      style.textContent = `
+        body[data-theme="erv-light"] header,
+        body[data-theme="erv-light"] [class*="fixed"][class*="z-50"] {
+          background: rgba(255, 255, 255, 0.85) !important;
+          backdrop-filter: blur(12px) !important;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        }
+        body[data-theme="erv-light"] header a,
+        body[data-theme="erv-light"] header span,
+        body[data-theme="erv-light"] header button,
+        body[data-theme="erv-light"] [class*="fixed"][class*="z-50"] a,
+        body[data-theme="erv-light"] [class*="fixed"][class*="z-50"] span {
+          color: #374151 !important;
+        }
+        body[data-theme="erv-light"] header a:hover,
+        body[data-theme="erv-light"] [class*="fixed"][class*="z-50"] a:hover {
+          color: #7c3aed !important;
+        }
+      `
+      document.head.appendChild(style)
+    }
+
+    return () => {
+      const s = document.getElementById(styleId)
+      if (s) s.remove()
+      delete document.body.dataset.theme
+    }
+  }, [])
 
   const heroImage = (dbProduct?.images && dbProduct.images.length > 0 ? getImageUrl(dbProduct.images[0]) : '') || getStaticProductImage(resolvedSlug)
 
@@ -330,11 +374,11 @@ export default function ProductDetailPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-transparent pt-32 pb-20 flex items-center justify-center">
+        <main className="min-h-screen bg-white pt-32 pb-20 flex items-center justify-center">
           <div className="text-center max-w-lg mx-auto px-6">
-            <h1 className="text-3xl font-bold text-white mb-4">Produit non trouvé</h1>
-            <p className="text-slate-400 mb-6">Le produit que vous recherchez n'existe pas ou a été déplacé.</p>
-            <Link href="/produits" className="text-[#2997ff] hover:underline">Retour aux produits</Link>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Produit non trouvé</h1>
+            <p className="text-gray-500 mb-6">Le produit que vous recherchez n'existe pas ou a été déplacé.</p>
+            <Link href="/produits" className="text-purple-600 hover:underline">Retour aux produits</Link>
           </div>
         </main>
         <Footer />
@@ -348,30 +392,43 @@ export default function ProductDetailPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-[#000000] pt-32 pb-20">
-          <div className="max-w-[980px] mx-auto px-6">
-            <Link href="/produits" className="text-[#2997ff] hover:underline text-sm mb-8 inline-block">
-              &larr; Retour aux produits
-            </Link>
-            {heroImage && (
-              <div className="w-full max-h-96 rounded-lg overflow-hidden mb-8 flex justify-center bg-[#1d1d1f]">
-                <img src={heroImage} alt={getLocalizedField(dbProduct.title, lang)} className="max-w-full max-h-96 object-contain" />
-              </div>
-            )}
-            <h1 className="apple-headline mb-6">{getLocalizedField(dbProduct.title, lang)}</h1>
-            <p className="text-[17px] leading-[1.47] text-white/80 mb-12 whitespace-pre-line">
-              {getLocalizedField(dbProduct.description, lang)}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={handleAddToCart}
-                className={'px-[15px] py-2 rounded-lg font-normal text-[17px] transition ' + (inCart ? 'bg-green-600 text-white' : 'bg-[#0071e3] text-white hover:brightness-110')}>
-                {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
-              </button>
-              <Link href="/contact" className="px-[15px] py-2 rounded-[980px] font-normal text-[17px] text-white border border-white/40 hover:border-white transition">
-                Demander un devis
+        <main className="min-h-screen bg-white">
+          <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-white to-violet-50 pt-32 pb-16">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-violet-200/30 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+            <div className="relative max-w-4xl mx-auto px-6">
+              <Link href="/produits" className="text-purple-600 hover:underline text-sm mb-8 inline-block">
+                &larr; Retour aux produits
               </Link>
+              <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 text-sm font-semibold px-4 py-2 rounded-full mb-6">
+                <ProductBadgeIcon />
+                {getLocalizedField(dbProduct.title, lang)}
+              </div>
+              {heroImage && (
+                <div className="w-full max-h-96 rounded-2xl overflow-hidden mb-8 flex justify-center bg-white border border-gray-100 shadow-sm p-4">
+                  <img src={heroImage} alt={getLocalizedField(dbProduct.title, lang)} className="max-w-full max-h-96 object-contain" />
+                </div>
+              )}
+              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">{getLocalizedField(dbProduct.title, lang)}</h1>
             </div>
-          </div>
+          </section>
+
+          <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+            <div className="max-w-4xl mx-auto px-6">
+              <p className="text-[17px] leading-[1.6] text-gray-600 mb-12 whitespace-pre-line">
+                {getLocalizedField(dbProduct.description, lang)}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button onClick={handleAddToCart}
+                  className={'px-8 py-3 rounded-xl font-bold text-[17px] transition-all ' + (inCart ? 'bg-green-600 text-white' : 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-600/25 hover:scale-105')}>
+                  {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
+                </button>
+                <Link href="/contact" className="px-8 py-3 rounded-xl font-bold text-[17px] text-gray-700 border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition">
+                  Demander un devis
+                </Link>
+              </div>
+            </div>
+          </section>
         </main>
         <Footer />
       </>
@@ -381,103 +438,122 @@ export default function ProductDetailPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#000000] pt-32 pb-20">
-        <div className="max-w-[980px] mx-auto px-6">
-          <Link href="/produits" className="text-[#2997ff] hover:underline text-sm mb-8 inline-block">
-            &larr; Retour aux produits
-          </Link>
+      <main className="min-h-screen bg-white">
+        {/* Hero */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-white to-violet-50 pt-32 pb-16">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-violet-200/30 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+          <div className="relative max-w-4xl mx-auto px-6">
+            <Link href="/produits" className="text-purple-600 hover:underline text-sm mb-8 inline-block">
+              &larr; Retour aux produits
+            </Link>
 
-          {heroImage && (
-            <div className="w-full max-h-96 rounded-lg overflow-hidden mb-8 flex justify-center bg-[#1d1d1f]">
-              <img src={heroImage} alt={info!.titleFr} className="max-w-full max-h-96 object-contain" />
+            <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 text-sm font-semibold px-4 py-2 rounded-full mb-6">
+              <ProductBadgeIcon />
+              {info!.titleFr}
             </div>
-          )}
 
-          <div className="mb-6">
-            <h1 className="apple-headline mb-3">{info!.titleFr}</h1>
-            <p className="text-[21px] text-[#2997ff] font-normal">{info!.subtitle}</p>
-          </div>
-
-          <div className="text-white/80 text-[17px] leading-[1.47] mb-12 whitespace-pre-line">
-            {info.longDesc}
-          </div>
-
-          {/* À qui ça s'adresse */}
-          <div className="bg-[#272729] rounded-lg p-6 mb-10">
-            <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              <svg className="w-5 h-5 text-[#2997ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              À qui ça s'adresse
-            </h2>
-            <p className="text-slate-300">{info.forWho}</p>
-          </div>
-
-          {/* Fonctionnalités */}
-          {info.features && info.features.length > 0 && (
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-white mb-4">Fonctionnalités</h2>
-              <div className="grid gap-3">
-                {info.features.map((f, i) => (
-                  <div key={i} className="flex items-start gap-3 text-slate-300 bg-white/5 p-4 rounded-xl">
-                    <svg className="w-5 h-5 text-[#2997ff] mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>{f}</span>
-                  </div>
-                ))}
+            {heroImage && (
+              <div className="w-full max-h-96 rounded-2xl overflow-hidden mb-8 flex justify-center bg-white border border-gray-100 shadow-sm p-4">
+                <img src={heroImage} alt={info!.titleFr} className="max-w-full max-h-96 object-contain" />
               </div>
-            </div>
-          )}
-
-          {/* Options */}
-          {info.options && info.options.length > 0 && (
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-white mb-4">Options disponibles</h2>
-              <div className="grid gap-3">
-                {info.options.map((o, i) => (
-                  <div key={i} className="flex items-start gap-3 text-white/80 bg-[#272729] p-4 rounded-lg">
-                    <svg className="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{o}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Prix */}
-          {info.priceNote && (
-            <div className="bg-[#272729] rounded-lg p-6 mb-10">
-              <h2 className="text-xl font-bold text-white mb-2">Informations tarifs</h2>
-              <p className="text-slate-300">{info.priceNote}</p>
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-4">
-            {slug === 'webdesign-149' ? (
-              <Link href="/webdesign"
-                className="px-[15px] py-2 rounded-lg font-normal text-[17px] bg-[#0071e3] text-white hover:brightness-110 transition inline-flex items-center gap-2">
-                Créer mon site — 149€
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            ) : (
-              <button onClick={handleAddToCart}
-                className={'px-[15px] py-2 rounded-lg font-normal text-[17px] transition ' + (inCart ? 'bg-green-600 text-white' : 'bg-[#0071e3] text-white hover:brightness-110')}>
-                {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
-              </button>
             )}
-            <Link href="/contact" className="px-[15px] py-2 rounded-[980px] font-normal text-[17px] text-white border border-white/40 hover:border-white transition">
-              Demander un devis
-            </Link>
-            <Link href="/produits" className="px-[15px] py-2 rounded-[980px] font-normal text-[17px] text-white border border-white/40 hover:border-white transition">
-              Voir tous les produits
-            </Link>
+
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-3">{info!.titleFr}</h1>
+            <p className="text-xl sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-violet-500">
+              {info!.subtitle}
+            </p>
           </div>
-        </div>
+        </section>
+
+        {/* Contenu */}
+        <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+          <div className="max-w-4xl mx-auto px-6">
+            <div className="text-gray-600 text-[17px] leading-[1.6] mb-12 whitespace-pre-line">
+              {info.longDesc}
+            </div>
+
+            {/* À qui ça s'adresse */}
+            <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-10">
+              <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                À qui ça s'adresse
+              </h2>
+              <p className="text-gray-600">{info.forWho}</p>
+            </div>
+
+            {/* Fonctionnalités */}
+            {info.features && info.features.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Fonctionnalités</h2>
+                <div className="grid gap-3">
+                  {info.features.map((f, i) => (
+                    <div key={i} className="flex items-start gap-3 text-gray-600 bg-white border border-gray-100 rounded-2xl p-4">
+                      <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                      <span>{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Options */}
+            {info.options && info.options.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Options disponibles</h2>
+                <div className="grid gap-3">
+                  {info.options.map((o, i) => (
+                    <div key={i} className="flex items-start gap-3 text-gray-600 bg-white border border-gray-100 rounded-2xl p-4">
+                      <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </span>
+                      <span>{o}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Prix */}
+            {info.priceNote && (
+              <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-10">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Informations tarifs</h2>
+                <p className="text-gray-600">{info.priceNote}</p>
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-4">
+              {slug === 'webdesign-149' ? (
+                <Link href="/webdesign"
+                  className="px-8 py-3 rounded-xl font-bold text-[17px] bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-600/25 transition-all hover:scale-105 inline-flex items-center gap-2">
+                  Créer mon site — 149€
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+              ) : (
+                <button onClick={handleAddToCart}
+                  className={'px-8 py-3 rounded-xl font-bold text-[17px] transition-all ' + (inCart ? 'bg-green-600 text-white' : 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-600/25 hover:scale-105')}>
+                  {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
+                </button>
+              )}
+              <Link href="/contact" className="px-8 py-3 rounded-xl font-bold text-[17px] text-gray-700 border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition">
+                Demander un devis
+              </Link>
+              <Link href="/produits" className="px-8 py-3 rounded-xl font-bold text-[17px] text-gray-700 border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition">
+                Voir tous les produits
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </>
