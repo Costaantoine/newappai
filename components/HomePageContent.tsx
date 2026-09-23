@@ -8,7 +8,6 @@ import Footer from '@/components/Footer'
 import AudioButton from '@/components/AudioButton'
 import { useLanguage } from '@/lib/LanguageContext'
 import { useSettings } from '@/lib/SettingsContext'
-import AnimatedTitle from '@/components/AnimatedTitle'
 import ProductCarousel from '@/components/ProductCarousel'
 import { zoneIcons, zoneImages } from '@/lib/zoneIcons'
 
@@ -66,6 +65,12 @@ function getText(texts: TextItem[], key: string, lang: string, fallback: string 
   return fallback
 }
 
+function getLocalizedField(value: string | { fr: string; en: string; pt: string; es: string } | undefined, lang: string): string {
+  if (!value) return ''
+  if (typeof value === 'string') return value
+  return value[lang as keyof typeof value] || value.fr || ''
+}
+
 function getImageUrl(imagePath: string | undefined): string {
   if (!imagePath) return ''
   if (imagePath.startsWith('{')) {
@@ -80,16 +85,16 @@ function getImageUrl(imagePath: string | undefined): string {
 }
 
 const tryColors: Record<string, { icon: string; hover: string }> = {
-  violet:  { icon: 'bg-violet-500/10 text-violet-400', hover: 'hover:border-violet-500/30' },
-  purple:  { icon: 'bg-purple-500/10 text-purple-400', hover: 'hover:border-purple-500/30' },
-  emerald: { icon: 'bg-emerald-500/10 text-emerald-400', hover: 'hover:border-emerald-500/30' },
-  rose:    { icon: 'bg-rose-500/10 text-rose-400', hover: 'hover:border-rose-500/30' },
-  blue:    { icon: 'bg-blue-500/10 text-blue-400', hover: 'hover:border-blue-500/30' },
-  amber:   { icon: 'bg-amber-500/10 text-amber-400', hover: 'hover:border-amber-500/30' },
-  slate:   { icon: 'bg-slate-500/10 text-slate-400', hover: 'hover:border-slate-500/30' },
-  cyan:    { icon: 'bg-cyan-500/10 text-cyan-400', hover: 'hover:border-cyan-500/30' },
-  yellow:  { icon: 'bg-yellow-500/10 text-yellow-400', hover: 'hover:border-yellow-500/30' },
-  teal:    { icon: 'bg-teal-500/10 text-teal-400', hover: 'hover:border-teal-500/30' },
+  violet:  { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  purple:  { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  emerald: { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  rose:    { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  blue:    { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  amber:   { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  slate:   { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  cyan:    { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  yellow:  { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
+  teal:    { icon: 'bg-white/5 text-[#2997ff]', hover: 'hover:scale-[1.02]' },
 }
 
 const tryIcons: Record<string, any> = {
@@ -155,6 +160,8 @@ export default function HomePageContent() {
 
   const zonesRef = useRef<HTMLDivElement>(null)
   const productsRef = useRef<HTMLDivElement>(null)
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [fading, setFading] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -273,8 +280,46 @@ export default function HomePageContent() {
   const displayZones = zones.length > 0 ? zones : defaultZones
 
   const heroImage = getImageUrl(globalSettings?.hero?.image_url) || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=75&fm=webp'
-  const heroOpacity = (globalSettings?.hero?.opacity ?? 40) / 100
-  const heroBrightness = globalSettings?.hero?.brightness ?? 60
+
+  // Slides du hero rotatif — 100% données réelles : le message du jour (API
+  // interne reseaux.sociaux.maxnewappai.com) puis jusqu'à 3 produits réels avec image.
+  const productSlides = products
+    .filter(p => p.images && p.images.length > 0)
+    .slice(0, 3)
+    .map(p => ({
+      title: getLocalizedField(p.title, lang),
+      subtitle: getLocalizedField(p.description, lang),
+      image: getImageUrl(p.images[0]),
+      href: '/produits',
+    }))
+
+  const heroSlides = [
+    { title: heroTitle, subtitle: heroSubtitle1, image: heroImage, href: '/produits' },
+    ...(remoteHero?.titre
+      ? [{ title: remoteHero.titre, subtitle: remoteHero.sous_titre || '', image: heroImage, href: '/produits' }]
+      : []),
+    ...productSlides,
+  ]
+
+  useEffect(() => {
+    if (heroSlides.length < 2) return
+    const id = setInterval(() => {
+      setFading(true)
+      setTimeout(() => {
+        setActiveSlide(i => (i + 1) % heroSlides.length)
+        setFading(false)
+      }, 600)
+    }, 5000)
+    return () => clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [heroSlides.length])
+
+  const currentSlide = heroSlides[activeSlide % heroSlides.length] || heroSlides[0]
+  const socialLinks = [
+    { url: globalSettings?.contact?.linkedin_url, label: 'LinkedIn', path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+    { url: globalSettings?.contact?.facebook_url, label: 'Facebook', path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
+    { url: globalSettings?.contact?.instagram_url, label: 'Instagram', path: 'M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z' },
+  ].filter(s => !!s.url)
 
   const SOFTWARE_APPS = [
     {
@@ -364,113 +409,113 @@ export default function HomePageContent() {
       />
       <Header />
       <main className="min-h-screen bg-transparent overflow-x-hidden pt-[83px]">
-        {/* HERO SECTION — Apple style: noir pur, typo large, image dominante */}
+        {/* HERO SECTION — Apple style: noir pur, texte rotatif, réseaux sociaux */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden bg-[#000000]">
-          <div className="absolute inset-0 z-0">
-            <img
-              src={heroImage}
-              alt=""
-              fetchPriority="high"
-              className="w-full h-full object-cover"
-              style={{
-                opacity: heroOpacity,
-                filter: `brightness(${heroBrightness}%)`
-              }}
-            />
-          </div>
-          <div className="absolute inset-0 bg-[#000000] z-[2] pointer-events-none" style={{ opacity: 0.65 }}></div>
-
-          <div className="relative z-10 text-center max-w-5xl mx-auto flex flex-col items-center">
-            <h1 data-section="hero-title" className="text-5xl md:text-8xl font-bold mb-6 tracking-wide leading-tight text-[#f5f5f7]">
-              {heroTitle.includes('Intelligence') ? (
-                <>
-                  {heroTitle.split('Intelligence')[0]}
-                  <span className="text-[#a78bfa]">Intelligence</span>
-                  {heroTitle.split('Intelligence')[1]}
-                </>
-              ) : heroTitle}
+          <div className="relative z-10 text-center max-w-[980px] mx-auto flex flex-col items-center">
+            <span data-section="hero-daily-label" className="text-[12px] uppercase tracking-[0.08em] text-[#2997ff] mb-4 font-semibold">
+              {getText(texts, 'hero_daily_label', lang, 'Nos messages journaliers')}
+            </span>
+            <h1
+              data-section="hero-title"
+              className={`apple-headline mb-6 transition-opacity duration-[600ms] ${fading ? 'opacity-0' : 'opacity-100'}`}
+            >
+              {currentSlide.title}
             </h1>
-            <p data-section="hero-subtitle" className="text-[#86868b] max-w-2xl text-lg md:text-xl mb-12 leading-relaxed font-normal">
-              {heroSubtitle1}
+            <p
+              data-section="hero-subtitle"
+              className={`text-[21px] leading-[1.19] text-white/80 max-w-2xl mb-10 font-normal transition-opacity duration-[600ms] ${fading ? 'opacity-0' : 'opacity-100'}`}
+            >
+              {currentSlide.subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-10">
               <Link
                 data-section="hero-cta-1"
                 href="/contact"
-                className="inline-block text-white px-8 py-3.5 rounded-full font-semibold text-base transition"
-                style={{
-                  backgroundColor: globalSettings?.buttons?.primary_color || '#8b5cf6',
-                }}
+                className="inline-block text-white px-[15px] py-2 rounded-lg font-normal text-[17px] transition bg-[#0071e3] hover:brightness-110"
               >
                 {heroCta1}
               </Link>
               <Link
                 data-section="hero-cta-2"
                 href="/solutions"
-                className="inline-block text-[#f5f5f7] px-8 py-3.5 rounded-full font-semibold text-base transition border border-white/20 hover:border-white/40"
+                className="inline-block text-white px-[15px] py-2 rounded-[980px] font-normal text-[17px] transition border border-white/40 hover:border-white"
               >
                 {heroCta2}
               </Link>
             </div>
+
+            {socialLinks.length > 0 && (
+              <div className="flex items-center gap-3" data-section="hero-social-links">
+                {socialLinks.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="w-9 h-9 flex items-center justify-center rounded-full text-white/60 hover:text-[#2997ff] transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d={s.path} /></svg>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
-        {/* EXPERTISE SECTION — Apple style: fond uni, cartes sobres */}
-        <section id="solutions" ref={zonesRef} className="bg-apple-dark px-6 py-32">
-          <div className="max-w-6xl mx-auto">
-            <AnimatedTitle data-section="expertise-title" text={typeof expertiseTitle === 'string' ? expertiseTitle : "Notre savoir faire"} className="text-4xl md:text-6xl font-bold text-center text-[#f5f5f7] tracking-wide mb-20" as="h2" />
+        {/* EXPERTISE SECTION — Apple style: fond clair, cartes sobres sans bordure */}
+        <section id="solutions" ref={zonesRef} className="bg-apple-light px-6 py-24 md:py-32">
+          <div className="max-w-[980px] mx-auto">
+            <h2 data-section="expertise-title" className="apple-title text-center mb-16">
+              {typeof expertiseTitle === 'string' ? expertiseTitle : 'Notre savoir faire'}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {displayZones.filter(z => z.key !== 'a-tester').map((zone, index) => (
+              {displayZones.filter(z => z.key !== 'a-tester').map((zone) => (
                 <Link
                   key={zone.id}
                   href={zone.url}
                   aria-label={getText(texts, 'zone_' + zone.key + '_alt', lang, `Découvrir le pôle ${zone.key}`)}
-                  className={`backdrop-blur-2xl bg-white/[0.03] p-10 rounded-[2rem] border border-white/[0.08] shadow-lg shadow-black/30 hover:bg-white/[0.07] transition-all duration-500 cursor-pointer group flex flex-col items-start h-full relative overflow-hidden ${zone.order === 0 ? 'border-violet-500/20' : ''}`}
+                  className="scroll-reveal bg-white p-10 rounded-lg hover:scale-[1.02] transition-transform duration-300 cursor-pointer group flex flex-col items-start h-full relative overflow-hidden"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.22) 3px 5px 30px 0px' }}
                 >
                   {zoneImages[zone.key] && (
-                    <div className="w-full mb-6 rounded-2xl overflow-hidden flex justify-center">
+                    <div className="w-full mb-6 rounded-lg overflow-hidden flex justify-center">
                       <img src={zoneImages[zone.key]} alt={zone.key} className="max-w-full max-h-60 object-contain" />
                     </div>
                   )}
-                  <div className={`mb-5 w-16 h-16 flex items-center justify-center rounded-2xl text-2xl ${
-                    zone.color === 'purple' ? 'text-purple-400 bg-purple-400/10' : 'text-violet-400 bg-violet-400/10'
-                  }`}>
+                  <div className="mb-5 w-16 h-16 flex items-center justify-center rounded-lg text-2xl bg-[#0071e3]/10 text-[#0071e3]">
                     {zone.icon_url ? (
-                      <img src={zone.icon_url} alt="" className="w-full h-full object-cover rounded-2xl" />
+                      <img src={zone.icon_url} alt="" className="w-full h-full object-cover rounded-lg" />
                     ) : (
                       zoneIcons[zone.key] || <span className="font-bold">{zone.badge}</span>
                     )}
                   </div>
-                  <h3 data-section={zone.title_key} className={`text-3xl font-bold mb-3 tracking-wide transition ${
-                    zone.color === 'purple' ? 'group-hover:text-purple-400' : 'group-hover:text-violet-400'
-                  }`}>
+                  <h3 data-section={zone.title_key} className="text-[28px] font-normal leading-[1.14] mb-3 text-[#1d1d1f]">
                     {getText(texts, zone.title_key, lang, zone.key)}
                   </h3>
-                  <p data-section={zone.subtitle_key} className="text-[#86868b] font-normal mb-6 text-base leading-relaxed flex-grow">
+                  <p data-section={zone.subtitle_key} className="text-black/80 font-normal mb-6 text-base leading-relaxed flex-grow">
                     {getText(texts, zone.subtitle_key, lang, '')}
                   </p>
                   <div className="w-full grid grid-cols-1 gap-2 mb-6">
                     {cards.filter(c => c.zone_id === zone.id).slice(0, 3).map(card => (
-                      <div key={card.id} className="bg-white/[0.03] rounded-xl px-4 py-3 border border-white/[0.05]">
+                      <div key={card.id} className="bg-[#f5f5f7] rounded-lg px-4 py-3">
                         <div className="flex items-center justify-between mb-1">
-                          <span data-section={card.title_key} className="text-[#f5f5f7] font-medium text-sm">
+                          <span data-section={card.title_key} className="text-[#1d1d1f] font-medium text-sm">
                             {getText(texts, card.title_key, lang, card.title_key)}
                           </span>
                           {card.badge_key && (
-                            <span data-section={card.badge_key} className="text-xs bg-violet-500/15 text-violet-400 px-2 py-0.5 rounded-full">
+                            <span data-section={card.badge_key} className="text-xs bg-[#0071e3]/10 text-[#0071e3] px-2 py-0.5 rounded-full">
                               {getText(texts, card.badge_key, lang, card.badge_key)}
                             </span>
                           )}
                         </div>
-                        <p data-section={card.description_key} className="text-[#86868b] text-xs leading-relaxed">
+                        <p data-section={card.description_key} className="text-black/60 text-xs leading-relaxed">
                           {getText(texts, card.description_key, lang, card.description_key)}
                         </p>
                       </div>
                     ))}
                   </div>
-                  <div data-section={zone.cta_key} className={`flex items-center font-medium text-sm group-hover:translate-x-1 transition ${
-                    zone.color === 'purple' ? 'text-purple-400' : 'text-violet-400'
-                  }`}>
+                  <div data-section={zone.cta_key} className="flex items-center font-normal text-sm text-[#0066cc] group-hover:underline">
                     {getText(texts, zone.cta_key, lang, 'Découvrir')}
                     <svg className="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -484,9 +529,11 @@ export default function HomePageContent() {
 
         {/* PRODUCTS SECTION */}
         {products.length > 0 && (
-          <section id="products" ref={productsRef} className="bg-apple-black px-6 py-32">
-            <div className="max-w-6xl mx-auto">
-              <AnimatedTitle data-section="products-title" text={typeof productsTitle === 'string' ? productsTitle : 'Nos Produits'} className="text-4xl md:text-6xl font-bold mb-20 text-center text-[#f5f5f7] tracking-wide" as="h2" />
+          <section id="products" ref={productsRef} className="bg-apple-black px-6 py-24 md:py-32">
+            <div className="max-w-[980px] mx-auto">
+              <h2 data-section="products-title" className="apple-title text-center mb-16">
+                {typeof productsTitle === 'string' ? productsTitle : 'Nos Produits'}
+              </h2>
               <ProductCarousel
                 products={products}
                 lang={lang}
@@ -497,22 +544,21 @@ export default function HomePageContent() {
           </section>
         )}
 
-        {/* TESTER LES NOUVEAUTÉS — Apple style minimal (dynamique) */}
+        {/* NOS SÉLECTIONS (ex-page "Nos sélections", fusionnée sur l'accueil) — grille d'applications */}
         {tryItems.length > 0 && (
-        <section className="bg-apple-dark px-6 py-32">
-          <div className="max-w-6xl mx-auto">
+        <section className="bg-apple-black px-6 py-24 md:py-32 border-t border-white/10">
+          <div className="max-w-[980px] mx-auto">
             {displayZones.filter(z => z.key === 'a-tester').length > 0 && (
               <div className="mb-16 text-center">
-                <h3 className="text-4xl md:text-6xl font-bold mb-4 text-[#f5f5f7] tracking-wide" data-section={displayZones.find(z => z.key === 'a-tester')!.title_key}>
-                  {getText(texts, displayZones.find(z => z.key === 'a-tester')!.title_key, lang, 'Tester les nouveautés')}
-                </h3>
-                <p className="text-[#86868b] text-lg max-w-xl mx-auto" data-section={displayZones.find(z => z.key === 'a-tester')!.subtitle_key}>
-                  {getText(texts, displayZones.find(z => z.key === 'a-tester')!.subtitle_key, lang, 'Nouveautés en phase de test')}
+                <h2 className="apple-title mb-4" data-section={displayZones.find(z => z.key === 'a-tester')!.title_key}>
+                  {getText(texts, displayZones.find(z => z.key === 'a-tester')!.title_key, lang, 'Nos sélections')}
+                </h2>
+                <p className="text-white/60 text-lg max-w-xl mx-auto" data-section={displayZones.find(z => z.key === 'a-tester')!.subtitle_key}>
+                  {getText(texts, displayZones.find(z => z.key === 'a-tester')!.subtitle_key, lang, 'Nos applications innovantes pour booster votre activité')}
                 </p>
               </div>
             )}
 
-            {/* Pictos des apps en test */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {tryItems.map(item => {
                 const color = tryColors[item.color] || tryColors.violet
@@ -520,9 +566,9 @@ export default function HomePageContent() {
                   <Link
                     key={item.id}
                     href={item.url || '/test'}
-                    className={`group backdrop-blur-2xl bg-white/[0.03] p-6 rounded-2xl border border-white/[0.08] ${color.hover} transition-all duration-300 flex flex-col items-center text-center`}
+                    className={`scroll-reveal group bg-[#272729] p-6 rounded-lg ${color.hover} transition-transform duration-300 flex flex-col items-center text-center`}
                   >
-                    <div className={`w-14 h-14 rounded-xl ${color.icon} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <div className={`w-14 h-14 rounded-lg ${color.icon} flex items-center justify-center mb-4`}>
                       {item.icon_url ? (
                         <img src={getImageUrl(item.icon_url)} alt="" className="w-7 h-7 object-contain" />
                       ) : (
@@ -530,7 +576,7 @@ export default function HomePageContent() {
                       )}
                     </div>
                     <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">{getText(texts, item.title_key, lang, '')}</h4>
-                    <p data-section={`home-app-${item.icon_key || item.id}-desc`} className="text-[10px] text-[#86868b] leading-relaxed">{getText(texts, item.description_key, lang, '')}</p>
+                    <p data-section={`home-app-${item.icon_key || item.id}-desc`} className="text-[10px] text-white/60 leading-relaxed">{getText(texts, item.description_key, lang, '')}</p>
                   </Link>
                 )
               })}

@@ -6,7 +6,6 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useLanguage } from '@/lib/LanguageContext'
 import AnimatedTitle from '@/components/AnimatedTitle'
-import ParticlesBackground from '@/components/ParticlesBackground'
 import TestimonialCarousel from '@/components/TestimonialCarousel'
 import AppleHero from '@/components/AppleHero'
 import AppleCard from '@/components/AppleCard'
@@ -108,8 +107,6 @@ export default function SolutionsPage() {
           subtitle={<span>{t('solutions_subtitle', "Choisissez l'innovation qui s'adapte à votre métier.")}</span>}
           titleDataSection="solutions-title"
           subtitleDataSection="solutions-subtitle"
-          particlesCount={20}
-          glowColor="violet-500"
           backgroundImage="https://newappai.com/uploads/hero-ai-v2-wide.jpg"
         />
 
@@ -118,7 +115,7 @@ export default function SolutionsPage() {
             const cs = colorStyles[zone.color] || colorStyles.violet
             const siteUrl = zone.site_url || t(zone.key + '_site_url', '')
             return (
-              <AppleCard key={zone.id} id={zone.key} padding="lg" hover glowColor={zone.color} className={`animate-fade-in-up scroll-mt-28 ${zone.order === 0 ? 'border-violet-500/30' : ''}`} style={{ animationDelay: `${0.1 + index * 0.15}s` }}>
+              <AppleCard key={zone.id} id={zone.key} padding="lg" hover className="animate-fade-in-up scroll-mt-28" style={{ animationDelay: `${0.1 + index * 0.15}s` }}>
                 
                 {/* Zone image banner */}
                 {zoneImages[zone.key] && (

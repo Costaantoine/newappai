@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
             'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'mimo-v2.5',
+            model: 'mimo-v2.6-flash',
             messages,
             temperature: 0.7,
             max_tokens: 1024

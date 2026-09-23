@@ -164,7 +164,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
             if (isERVGroup(product)) {
               const variant = ERV_VARIANTS[selectedVariant]
               return (
-                <div key="erv-group" className="animate-fade-in-up backdrop-blur-2xl bg-white/[0.03] p-8 rounded-[1.5rem] border border-white/[0.08] shadow-lg shadow-black/30 hover:bg-white/[0.06] hover:border-violet-400/30 transition-all duration-300 flex flex-col">
+                <div key="erv-group" className="animate-fade-in-up bg-[#272729] p-8 rounded-lg hover:scale-[1.02] transition-transform duration-300 flex flex-col">
                   <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -193,7 +193,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                         onClick={() => setSelectedVariant(i)}
                         className={`px-3 py-2 rounded-xl text-sm font-bold transition border ${
                           i === selectedVariant
-                            ? 'bg-violet-500 text-white border-violet-400'
+                            ? 'bg-[#0071e3] text-white border-[#0071e3]'
                             : 'bg-white/5 text-[#86868b] border-white/10 hover:bg-white/10'
                         }`}
                       >
@@ -204,11 +204,11 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                   </div>
 
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-violet-400 font-bold text-lg">{(variant.price / 100).toFixed(2)} €</span>
+                    <span className="text-[#2997ff] font-bold text-lg">{(variant.price / 100).toFixed(2)} €</span>
                     {variant.id ? (
                       <Link
                         href={`/checkout?productId=${variant.id}`}
-                        className="bg-violet-500 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-violet-400 transition"
+                        className="bg-[#0071e3] text-white px-6 py-2 rounded-full text-sm font-normal hover:brightness-110 transition"
                       >
                         {t?.product?.add_cart || 'Acheter'}
                       </Link>
@@ -222,7 +222,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
 
             // Normal product card
             return (
-              <div key={product.id} className="animate-fade-in-up backdrop-blur-2xl bg-white/[0.03] p-8 rounded-[1.5rem] border border-white/[0.08] shadow-lg shadow-black/30 hover:bg-white/[0.06] hover:border-violet-400/30 transition-all duration-300 flex flex-col">
+              <div key={product.id} className="animate-fade-in-up bg-[#272729] p-8 rounded-lg hover:scale-[1.02] transition-transform duration-300 flex flex-col">
                 <script
                   type="application/ld+json"
                   dangerouslySetInnerHTML={{
@@ -243,10 +243,10 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
                 <h3 className="text-xl font-bold mb-2 text-[#f5f5f7]">{getLocalizedText(product.title, lang)}</h3>
                 <p className="text-[#86868b] text-sm mb-4 line-clamp-2 flex-grow">{getLocalizedText(product.description, lang)}</p>
                 <div className="flex items-center justify-between mt-auto">
-                  <span className="text-violet-400 font-bold text-lg">{(product.price / 100).toFixed(2)} €</span>
+                  <span className="text-[#2997ff] font-bold text-lg">{(product.price / 100).toFixed(2)} €</span>
                   <Link
                     href={`/checkout?productId=${product.id}`}
-                    className="bg-violet-500 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-violet-400 transition"
+                    className="bg-[#0071e3] text-white px-6 py-2 rounded-full text-sm font-normal hover:brightness-110 transition"
                   >
                     {t?.product?.add_cart || 'Acheter'}
                   </Link>
@@ -270,7 +270,7 @@ export default function ProductCarousel({ products, lang, getText, autoPlayDelay
           {/* Dots */}
           <div className="flex justify-center mt-8 gap-2">
             {Array.from({ length: totalSlides }).map((_, i) => (
-              <button key={i} onClick={() => goTo(i)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-violet-400 w-8' : 'bg-white/20 hover:bg-white/40'}`} aria-label={`${t?.product?.slide_label || "Aller à la slide"} ${i + 1}`} />
+              <button key={i} onClick={() => goTo(i)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-[#0071e3] w-8' : 'bg-white/20 hover:bg-white/40'}`} aria-label={`${t?.product?.slide_label || "Aller à la slide"} ${i + 1}`} />
             ))}
           </div>
         </>

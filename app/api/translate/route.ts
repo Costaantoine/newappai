@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
-      body: JSON.stringify({ model: 'mimo-v2.5',
+      body: JSON.stringify({ model: 'mimo-v2.6-flash',
         messages: [
           {
             role: 'system',

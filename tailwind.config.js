@@ -12,7 +12,7 @@ module.exports = {
       },
       keyframes: {
         'fade-in-up': {
-          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '0%': { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         'fade-in-left': {
@@ -41,9 +41,9 @@ module.exports = {
         },
       },
       animation: {
-        'fade-in-up': 'fade-in-up 0.8s ease both',
-        'fade-in-left': 'fade-in-left 0.8s ease both',
-        'fade-in-right': 'fade-in-right 0.8s ease both',
+        'fade-in-up': 'fade-in-up 600ms cubic-bezier(0.4, 0, 0.2, 1) both',
+        'fade-in-left': 'fade-in-left 600ms cubic-bezier(0.4, 0, 0.2, 1) both',
+        'fade-in-right': 'fade-in-right 600ms cubic-bezier(0.4, 0, 0.2, 1) both',
         'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
         float: 'float 3s ease-in-out infinite',
       },

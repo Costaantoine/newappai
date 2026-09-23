@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         const authHeader = `Bearer ${apiKey}`
 
         const payload: any = {
-          model: 'mimo-v2.5',
+          model: 'mimo-v2.6-flash',
           messages: [
             { role: 'system', content: systemPrompt },
             ...history.slice(-8).map((m: Message) => ({ role: m.role, content: m.content })),

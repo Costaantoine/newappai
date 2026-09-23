@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Contactez NewAppAI — Bordeaux | Innovation Logicielle',
-  description: 'Contactez l\'équipe NewAppAI. Une question, un projet ? Nous sommes à votre écoute.',
+  title: 'Contactez NewAppAI | Innovation Logicielle — IA pour votre entreprise',
+  description: 'Vous avez un projet innovant ? Contactez NewAppAI pour vos solutions IA et logicielles. Réponse sous 24h.',
   alternates: { canonical: "https://newappai.com/contact" },
 }
 

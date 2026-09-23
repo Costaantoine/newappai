@@ -74,7 +74,7 @@ const TEST_APPS = [
   {
     name: 'Site Vitrine',
     description: 'Génération de sites professionnels par IA.',
-    href: '/test',
+    href: '/test/vitrine',
     color: 'cyan',
     icon: (
       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@ const TEST_APPS = [
   {
     name: 'Talkie Walkie',
     description: 'Communication instantanée en équipe.',
-    href: '/test',
+    href: '/test/talkie-walkie',
     color: 'yellow',
     icon: (
       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@ const TEST_APPS = [
   {
     name: 'Sérénité',
     description: 'Bien-être et suivi au quotidien.',
-    href: '/test',
+    href: '/test/serenite',
     color: 'teal',
     icon: (
       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">

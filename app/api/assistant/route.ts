@@ -118,7 +118,7 @@ async function callMimo(messages: Message[], apiKey: string): Promise<string> {
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: 'mimo-v2.5',
+      model: 'mimo-v2.6-flash',
       messages,
       temperature: 0.7,
       max_tokens: 500

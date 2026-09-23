@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import ParticlesBackground from '@/components/ParticlesBackground'
 
 const pages = [
   { title: 'Accueil', url: '/', keywords: ['accueil','home','newapp','newappai'] },
@@ -89,7 +88,6 @@ export default function RecherchePage() {
     <>
       <Header />
       <main className="min-h-screen bg-transparent pt-32 pb-20">
-        <ParticlesBackground count={15} />
         <div className="max-w-4xl mx-auto px-6">
           <Suspense fallback={
             <div className="flex items-center justify-center py-20">

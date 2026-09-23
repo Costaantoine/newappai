@@ -2,7 +2,7 @@ interface AppleCardProps {
   className?: string
   id?: string
   padding?: 'sm' | 'md' | 'lg'
-  glowColor?: string
+  variant?: 'dark' | 'light'
   hover?: boolean
   style?: React.CSSProperties
   children: React.ReactNode
@@ -14,42 +14,22 @@ const paddingClasses: Record<string, string> = {
   lg: 'p-10 md:p-14',
 }
 
-const glowColorMap: Record<string, string> = {
-  'violet-500': 'rgba(139, 92, 246, 0.05)',
-  'purple-500': 'rgba(168, 85, 247, 0.05)',
-  'emerald-500': 'rgba(16, 185, 129, 0.05)',
-  'pink-500': 'rgba(236, 72, 153, 0.05)',
-  'amber-500': 'rgba(245, 158, 11, 0.05)',
-  'rose-500': 'rgba(244, 63, 94, 0.05)',
-  violet: 'rgba(139, 92, 246, 0.05)',
-  purple: 'rgba(168, 85, 247, 0.05)',
-  emerald: 'rgba(16, 185, 129, 0.05)',
-  pink: 'rgba(236, 72, 153, 0.05)',
-  amber: 'rgba(245, 158, 11, 0.05)',
-  rose: 'rgba(244, 63, 94, 0.05)',
-}
-
 export default function AppleCard({
   className = '',
   id,
   padding = 'md',
-  glowColor,
+  variant = 'dark',
   hover = false,
   style,
   children,
 }: AppleCardProps) {
+  const bg = variant === 'light' ? 'bg-[#f5f5f7] text-[#1d1d1f]' : 'bg-[#272729] text-white'
   return (
     <div
       id={id}
-      style={style}
-      className={`backdrop-blur-2xl bg-white/[0.03] border border-white/[0.08] shadow-lg shadow-black/30 relative overflow-hidden rounded-[2rem] ${paddingClasses[padding]} ${hover ? 'hover:border-violet-500/30 transition-all duration-300 group' : ''} ${className}`}
+      style={{ boxShadow: 'rgba(0, 0, 0, 0.22) 3px 5px 30px 0px', ...style }}
+      className={`${bg} rounded-lg relative overflow-hidden ${paddingClasses[padding]} ${hover ? 'transition-transform duration-300 hover:scale-[1.02]' : ''} ${className}`}
     >
-      {glowColor && (
-        <div
-          className="absolute top-0 right-0 w-[400px] h-[400px] blur-[100px] rounded-full -z-10"
-          style={{ background: glowColorMap[glowColor] || glowColorMap.violet }}
-        />
-      )}
       {children}
     </div>
   )

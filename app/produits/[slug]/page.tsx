@@ -1,12 +1,63 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import ParticlesBackground from '@/components/ParticlesBackground'
 import { useCart } from '@/lib/cartContext'
+import { useLanguage } from '@/lib/LanguageContext'
+import { getStaticProductImage } from '@/lib/productImages'
+
+// Les slugs réels du catalogue (Supabase) ne correspondent pas tous aux clés
+// historiques de slugMap ci-dessous — cette table fait le pont pour que
+// chaque produit du catalogue ait bien sa page, avec le texte existant.
+const SLUG_ALIASES: Record<string, string> = {
+  'serenite-communication-apaisee': 'serenite',
+  'paperasse-services-ia-pour-votre-entreprise': 'paperasse',
+  'redesign-de-site-vitrine': 'redesign-site-vitrine',
+  'creation-de-site-vitrine-cle-en-main': 'creation-site-vitrine',
+  'creation-de-site-vitrine': 'creation-site-vitrine',
+  'application-de-gestion-de-production': 'gestion-production',
+}
+
+// Variantes du catalogue (EasyReadVoice, QRcall) qui ont déjà leur propre
+// page dédiée en dehors de /produits/[slug] : on y redirige plutôt que de
+// dupliquer le contenu.
+const SLUG_REDIRECTS: Record<string, string> = {
+  'easyreadvoice': '/easyreadvoice',
+  'easyreadvoice-standard': '/easyreadvoice',
+  'easyreadvoice-essentiel': '/easyreadvoice',
+  'easyreadvoice-texte-vers-audio': '/easyreadvoice',
+  'easyreadvoice-player': '/easyreadvoice/player',
+  'qrcall-scan-call': '/qrcall',
+}
+
+function getImageUrl(imagePath: string | undefined): string {
+  if (!imagePath) return ''
+  if (imagePath.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(imagePath)
+      return parsed.original || parsed.thumbnail || ''
+    } catch {
+      return ''
+    }
+  }
+  return imagePath
+}
+
+function getLocalizedField(value: string | { fr: string; en: string; pt: string; es: string } | undefined, lang: string): string {
+  if (!value) return ''
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value)
+      return parsed[lang] || parsed.fr || value
+    } catch {
+      return value
+    }
+  }
+  return value[lang as keyof typeof value] || value.fr || ''
+}
 
 interface ProductInfo {
   titleFr: string
@@ -209,12 +260,46 @@ const slugMap: Record<string, ProductInfo> = {
   },
 }
 
+interface DbProduct {
+  id: string
+  slug: string
+  title: string | { fr: string; en: string; pt: string; es: string }
+  description: string | { fr: string; en: string; pt: string; es: string }
+  price: number
+  images: string[]
+}
+
 export default function ProductDetailPage() {
   const params = useParams()
+  const router = useRouter()
+  const { lang } = useLanguage()
   const slug = params?.slug as string || ''
-  const info = slugMap[slug]
+  const redirectTo = SLUG_REDIRECTS[slug]
+  const resolvedSlug = slugMap[slug] ? slug : (SLUG_ALIASES[slug] || slug)
+  const info = slugMap[resolvedSlug]
   const { addItem, items } = useCart()
   const inCart = items.find(item => item.id?.startsWith(slug))
+  const [dbProduct, setDbProduct] = useState<DbProduct | null>(null)
+
+  useEffect(() => {
+    if (redirectTo) router.replace(redirectTo)
+  }, [redirectTo, router])
+
+  useEffect(() => {
+    if (redirectTo) return
+    let cancelled = false
+    fetch('/api/supabase/products')
+      .then(res => res.json())
+      .then(data => {
+        if (cancelled) return
+        const match = (data.products || []).find((p: DbProduct) => p.slug === slug)
+        if (match) setDbProduct(match)
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [slug])
+
+  const heroImage = (dbProduct?.images && dbProduct.images.length > 0 ? getImageUrl(dbProduct.images[0]) : '') || getStaticProductImage(resolvedSlug)
 
   const handleAddToCart = () => {
     if (!info) return
@@ -237,7 +322,11 @@ export default function ProductDetailPage() {
     })
   }
 
-  if (!info) {
+  if (redirectTo) {
+    return <Header />
+  }
+
+  if (!info && !dbProduct) {
     return (
       <>
         <Header />
@@ -245,7 +334,43 @@ export default function ProductDetailPage() {
           <div className="text-center max-w-lg mx-auto px-6">
             <h1 className="text-3xl font-bold text-white mb-4">Produit non trouvé</h1>
             <p className="text-slate-400 mb-6">Le produit que vous recherchez n'existe pas ou a été déplacé.</p>
-            <Link href="/produits" className="text-violet-400 hover:text-violet-300">Retour aux produits</Link>
+            <Link href="/produits" className="text-[#2997ff] hover:underline">Retour aux produits</Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
+
+  // Produit du catalogue sans fiche rédigée dédiée : page générée depuis les
+  // données réelles (titre, description, prix, image) plutôt qu'un 404.
+  if (!info && dbProduct) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-screen bg-[#000000] pt-32 pb-20">
+          <div className="max-w-[980px] mx-auto px-6">
+            <Link href="/produits" className="text-[#2997ff] hover:underline text-sm mb-8 inline-block">
+              &larr; Retour aux produits
+            </Link>
+            {heroImage && (
+              <div className="w-full max-h-96 rounded-lg overflow-hidden mb-8 flex justify-center bg-[#1d1d1f]">
+                <img src={heroImage} alt={getLocalizedField(dbProduct.title, lang)} className="max-w-full max-h-96 object-contain" />
+              </div>
+            )}
+            <h1 className="apple-headline mb-6">{getLocalizedField(dbProduct.title, lang)}</h1>
+            <p className="text-[17px] leading-[1.47] text-white/80 mb-12 whitespace-pre-line">
+              {getLocalizedField(dbProduct.description, lang)}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <button onClick={handleAddToCart}
+                className={'px-[15px] py-2 rounded-lg font-normal text-[17px] transition ' + (inCart ? 'bg-green-600 text-white' : 'bg-[#0071e3] text-white hover:brightness-110')}>
+                {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
+              </button>
+              <Link href="/contact" className="px-[15px] py-2 rounded-[980px] font-normal text-[17px] text-white border border-white/40 hover:border-white transition">
+                Demander un devis
+              </Link>
+            </div>
           </div>
         </main>
         <Footer />
@@ -256,26 +381,31 @@ export default function ProductDetailPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-transparent pt-32 pb-20">
-        <ParticlesBackground count={15} />
-        <div className="max-w-4xl mx-auto px-6">
-          <Link href="/produits" className="text-violet-400 hover:text-violet-300 text-sm mb-8 inline-block">
+      <main className="min-h-screen bg-[#000000] pt-32 pb-20">
+        <div className="max-w-[980px] mx-auto px-6">
+          <Link href="/produits" className="text-[#2997ff] hover:underline text-sm mb-8 inline-block">
             &larr; Retour aux produits
           </Link>
 
+          {heroImage && (
+            <div className="w-full max-h-96 rounded-lg overflow-hidden mb-8 flex justify-center bg-[#1d1d1f]">
+              <img src={heroImage} alt={info!.titleFr} className="max-w-full max-h-96 object-contain" />
+            </div>
+          )}
+
           <div className="mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">{info.titleFr}</h1>
-            <p className="text-xl text-violet-400 font-medium">{info.subtitle}</p>
+            <h1 className="apple-headline mb-3">{info!.titleFr}</h1>
+            <p className="text-[21px] text-[#2997ff] font-normal">{info!.subtitle}</p>
           </div>
 
-          <div className="text-slate-300 text-lg leading-relaxed mb-12 whitespace-pre-line">
+          <div className="text-white/80 text-[17px] leading-[1.47] mb-12 whitespace-pre-line">
             {info.longDesc}
           </div>
 
           {/* À qui ça s'adresse */}
-          <div className="bg-purple-500/10 border border-purple-500/20 rounded-2xl p-6 mb-10">
+          <div className="bg-[#272729] rounded-lg p-6 mb-10">
             <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#2997ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               À qui ça s'adresse
@@ -290,7 +420,7 @@ export default function ProductDetailPage() {
               <div className="grid gap-3">
                 {info.features.map((f, i) => (
                   <div key={i} className="flex items-start gap-3 text-slate-300 bg-white/5 p-4 rounded-xl">
-                    <svg className="w-5 h-5 text-violet-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-[#2997ff] mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span>{f}</span>
@@ -306,7 +436,7 @@ export default function ProductDetailPage() {
               <h2 className="text-2xl font-bold text-white mb-4">Options disponibles</h2>
               <div className="grid gap-3">
                 {info.options.map((o, i) => (
-                  <div key={i} className="flex items-start gap-3 text-amber-300 bg-amber-500/5 p-4 rounded-xl border border-amber-500/20">
+                  <div key={i} className="flex items-start gap-3 text-white/80 bg-[#272729] p-4 rounded-lg">
                     <svg className="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -319,7 +449,7 @@ export default function ProductDetailPage() {
 
           {/* Prix */}
           {info.priceNote && (
-            <div className="bg-violet-500/10 border border-violet-500/20 rounded-2xl p-6 mb-10">
+            <div className="bg-[#272729] rounded-lg p-6 mb-10">
               <h2 className="text-xl font-bold text-white mb-2">Informations tarifs</h2>
               <p className="text-slate-300">{info.priceNote}</p>
             </div>
@@ -328,7 +458,7 @@ export default function ProductDetailPage() {
           <div className="flex flex-wrap gap-4">
             {slug === 'webdesign-149' ? (
               <Link href="/webdesign"
-                className="px-8 py-4 rounded-full font-bold bg-violet-500 text-white hover:bg-violet-400 transition inline-flex items-center gap-2">
+                className="px-[15px] py-2 rounded-lg font-normal text-[17px] bg-[#0071e3] text-white hover:brightness-110 transition inline-flex items-center gap-2">
                 Créer mon site — 149€
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -336,14 +466,14 @@ export default function ProductDetailPage() {
               </Link>
             ) : (
               <button onClick={handleAddToCart}
-                className={'px-8 py-4 rounded-full font-bold transition ' + (inCart ? 'bg-green-500 text-white' : 'bg-violet-500 text-white hover:bg-violet-400')}>
+                className={'px-[15px] py-2 rounded-lg font-normal text-[17px] transition ' + (inCart ? 'bg-green-600 text-white' : 'bg-[#0071e3] text-white hover:brightness-110')}>
                 {inCart ? 'Ajouter au panier (+1)' : 'Ajouter au panier'}
               </button>
             )}
-            <Link href="/contact" className="px-8 py-4 border border-violet-500/30 text-violet-400 rounded-full font-bold hover:bg-violet-500/10 transition">
+            <Link href="/contact" className="px-[15px] py-2 rounded-[980px] font-normal text-[17px] text-white border border-white/40 hover:border-white transition">
               Demander un devis
             </Link>
-            <Link href="/produits" className="px-8 py-4 border border-white/20 text-white rounded-full font-bold hover:bg-white/10 transition">
+            <Link href="/produits" className="px-[15px] py-2 rounded-[980px] font-normal text-[17px] text-white border border-white/40 hover:border-white transition">
               Voir tous les produits
             </Link>
           </div>

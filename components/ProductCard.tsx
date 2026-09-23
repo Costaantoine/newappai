@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useCart } from '@/lib/cartContext'
 import { useLanguage } from '@/lib/LanguageContext'
+import { getStaticProductImage } from '@/lib/productImages'
 import Link from 'next/link'
 
 // Mapping titre -> URL des pages dédiées
@@ -104,12 +105,13 @@ export default function ProductCard({ product, hideAddToCart }: ProductCardProps
 
   const title = getLocalizedText(product.title, lang)
   const description = getLocalizedText(product.description, lang)
-  const imageUrl = getImageUrl(product.images?.[0])
   const imgSettings = product.image_settings?.[0] || {}
 
   const inCart = items.find(item => item.id === product.id)
   const isDevelopment = product.status === 'development'
   const productUrl = getProductUrl(product.title)
+  const productSlug = productUrl?.startsWith('/produits/') ? productUrl.slice('/produits/'.length) : undefined
+  const imageUrl = getImageUrl(product.images?.[0]) || getStaticProductImage(productSlug)
 
   const handleAddToCart = () => {
     addItem({

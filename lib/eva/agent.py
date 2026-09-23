@@ -62,7 +62,7 @@ LANGUE:
 """
     
     llm = LLM(
-        model="mimo-v2.5",
+        model="mimo-v2.6-flash",
         temperature=0.7,
         max_tokens=300
     )

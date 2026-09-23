@@ -35,7 +35,7 @@ async function chatWithXiaomi(messages: AIChatMessage[]): Promise<AIChatResponse
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'mimo-v2.5',
+        model: 'mimo-v2.6-flash',
         messages: [
           { role: 'system', content: 'Tu es un assistant utile pour NewAppAI, un hub de services multi-services.' },
           ...messages,

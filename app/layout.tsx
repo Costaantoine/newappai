@@ -81,8 +81,9 @@ const organizationJsonLd = {
   },
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Bordeaux',
-    addressCountry: 'FR',
+    streetAddress: 'R. Associação Desportiva Oliveirense 567, Oliveira Santa Maria',
+    addressLocality: 'Vila Nova de Famalicão',
+    addressCountry: 'PT',
   },
 }
 
