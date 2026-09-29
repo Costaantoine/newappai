@@ -576,6 +576,11 @@ export default function HomePageContent() {
                         tryIcons[item.icon_key] || <span className="font-bold">{item.badge || '?'}</span>
                       )}
                     </div>
+                    {isDev && (
+                      <span className="mb-2 text-[10px] font-medium px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">
+                        En développement
+                      </span>
+                    )}
                     <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">{getText(texts, item.title_key, lang, '')}</h4>
                     <p data-section={`home-app-${item.icon_key || item.id}-desc`} className="text-[10px] text-white/60 leading-relaxed">{getText(texts, item.description_key, lang, '')}</p>
                   </Link>
