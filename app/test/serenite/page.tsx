@@ -277,12 +277,7 @@ export default function TestSerenitePage() {
               </div>
             </div>
 
-            {/* Carrousel bas */}
-            <div className="bottom-carousel fixed bottom-0 left-0 right-0 z-50 bg-black/90 border-t border-neutral-800 px-2 sm:px-4 py-1">
-              <div className="max-w-6xl mx-auto overflow-hidden">
-                <Carousel variant="brands" speed={90} />
-              </div>
-            </div>
+
           </div>
         </section>
         <Footer />

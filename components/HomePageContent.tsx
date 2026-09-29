@@ -562,6 +562,7 @@ export default function HomePageContent() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {tryItems.map(item => {
                 const color = tryColors[item.color] || tryColors.violet
+                const isDev = item.icon_key === 'talkie' || item.icon_key === 'chatbot'
                 return (
                   <Link
                     key={item.id}

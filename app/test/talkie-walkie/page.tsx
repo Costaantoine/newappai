@@ -11,6 +11,21 @@ const SPEECH_LANGS: Record<string, string> = {
   fr: 'fr-FR', en: 'en-US', pt: 'pt-PT', es: 'es-ES',
 }
 
+// ── Development Banner - Dev Banner Component ─────────────────────────────
+function DevelopmentBanner() {
+  return (
+    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mx-6 mt-24">
+      <div className="flex items-center justify-center gap-2">
+        <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6-3a6 6 0 0110.93-2.618M4.6 5.8C6.8 4.2 9.6 3 12.5 3c5.8 0 10.5 4.7 10.5 10.5 0 5.8-4.7 10.5-10.5 10.5-5.8 0-10.5-4.7-10.5-10.5 0-2.1.6-4.1 1.6-5.4m0 0L6.3 8.2m-2.3-.8C2.5 7.3 3.4 5.6 5.6 5.6m0 0L9 9.3m-7.7 0c-.2-.2-.5.1-.4.3l3.2 6.8c.2.4.6.6 1 .6h9.5c.4 0 .7-.2.9-.5l.4-.8c.2-.3.1-.7-.2-1L12 5.4m-7.7 0H4.6" />
+        </svg>
+        <span className="text-yellow-200 font-medium">En développement — Les fonctionnalités peuvent être incomplètes</span>
+      </div>
+    </div>
+  )
+}
+
+
 const overrideStyles = `
   #test-talkie-walkie-page header, #test-talkie-walkie-page footer { background: #000 !important; --color-header-bg: #000 !important; }
   #test-talkie-walkie-page header { backdrop-filter: none !important; border-bottom-color: rgb(38 38 38) !important; }
