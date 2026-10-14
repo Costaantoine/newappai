@@ -12,7 +12,7 @@ import { getCartIdForSlug, getCatalogPrice } from '@/lib/productPrices'
 import { getStaticProductImage } from '@/lib/productImages'
 import ProduitVisuel from '@/components/ProduitVisuel'
 
-const APP_URL = 'https://serenity.newappai.com/'
+const APP_URL = 'https://serenity.newappai.com/installer/?lang=fr'
 const MEDIA = '/produits/serenite'
 
 // Même article que l'ancienne fiche /produits/[slug] (id et prix du catalogue).
@@ -255,7 +255,7 @@ export default function SerenityShowcase({ className = '' }: { className?: strin
             <a href="#depenses">Dépenses</a>
             <a href="#bebe">Bébé</a>
           </nav>
-          <a className="btn btn-plein" href={APP_URL}>Essayer<span className="long">&nbsp;gratuitement</span></a>
+          <a className="btn btn-plein" href={APP_URL}>Télécharger et essayer gratuitement</a>
         </div>
       </header>
 
@@ -268,7 +268,7 @@ export default function SerenityShowcase({ className = '' }: { className?: strin
               <h1>La vie de famille, <em>en plus calme.</em></h1>
               <p className="chapo">Agenda, messages, dépenses, papiers, suivi de bébé : tout ce qui fait tourner la maison, partagé au même endroit. Et quand le ton monte, Serenity vous aide à dire les choses autrement.</p>
               <div className="actions">
-                <a className="btn btn-plein" href={APP_URL}>Essayer gratuitement <Icone nom="fleche" /></a>
+                <a className="btn btn-plein" href={APP_URL}>Télécharger et essayer gratuitement <Icone nom="fleche" /></a>
                 <a className="btn btn-clair" href="#messages">Voir comment ça marche</a>
               </div>
               <div className="reecriture" id="reecriture" aria-live="polite">
